@@ -18,8 +18,8 @@ Pure HTML5 Canvas and vanilla JavaScript: no build step, no dependencies.
 | M | Mute sound |
 |## Story
 
-"This is the story of Ada, who stopped drawing the day her little brother did not come home." One night the
-ink in an old pen pools on the floor like an open door, and the child follows a distant laugh down. Every floor
+Ada stopped drawing the day her little brother Theo did not come home. One night the
+ink in her old pen pools on the floor like an open door, and she follows his laughter down. Every floor
 is a memory: the nursery, the garden, the white hospital corridor, nine days of rain, an empty room, the last
 goodbye, and at the bottom, an unfinished page. Cutscenes play at the start, after every boss, before the final
 fight and at the ending. Item descriptions, enemy names and scribbled notes on the floor hold clues. Not every

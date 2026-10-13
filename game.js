@@ -30,8 +30,9 @@ const CODE_MAP = { KeyW: 'w', KeyA: 'a', KeyS: 's', KeyD: 'd', KeyP: 'p', KeyR: 
 const CYR_MAP = { 'ц': 'w', 'ф': 'a', 'ы': 's', 'в': 'd', 'з': 'p', 'к': 'r', 'ь': 'm', 'с': 'c', 'л': 'k' };
 const DEBUG = /[?&]debug=1/.test(location.search);
 const SEQ = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+const SEQ2 = ['KeyI', 'KeyN', 'KeyK', 'KeyK', 'KeyI', 'KeyL', 'KeyL'];
 let seqBuf = [];
-function physCode(e) { if (e.code) return e.code; return { 'и': 'KeyB', 'ф': 'KeyA' }[(e.key || '').toLowerCase()] || ''; }
+function physCode(e) { if (e.code) return e.code; return { 'и': 'KeyB', 'ф': 'KeyA', 'ш': 'KeyI', 'т': 'KeyN', 'л': 'KeyK', 'д': 'KeyL' }[(e.key || '').toLowerCase()] || ''; }
 function keyToken(e) {
   if (e.code && CODE_MAP[e.code]) return CODE_MAP[e.code];
   const k = (e.key || '').toLowerCase();
@@ -40,7 +41,7 @@ function keyToken(e) {
 window.addEventListener('keydown', (e) => {
   const k = keyToken(e);
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault();
-  if (!e.repeat && state === 'play') { seqBuf.push(physCode(e)); if (seqBuf.length > SEQ.length) seqBuf.shift(); if (seqBuf.join() === SEQ.join()) { seqBuf = []; grantSecret(); } }
+  if (!e.repeat && state === 'play') { seqBuf.push(physCode(e)); if (seqBuf.length > SEQ.length) seqBuf.shift(); const j = seqBuf.join(); if (j.endsWith(SEQ.join())) { seqBuf = []; grantSecret(); } else if (j.endsWith(SEQ2.join())) { seqBuf = []; grantStroke(); } }
   if (!keys.has(k)) onPress(k);
   keys.add(k);
 });
@@ -135,6 +136,14 @@ const SYNERGIES = [
 function checkSynergies() {
   const own = new Set(player.items.map((i) => i.id));
   for (const sy of SYNERGIES) if (!player.syn.has(sy.name) && own.has(sy.a) && own.has(sy.b)) { player.syn.add(sy.name); sy.apply(player.s); floatText('Synergy: ' + sy.name, player.x, player.y - 40); }
+}
+const STROKE = { id: 'laststroke', fl: "One line. That's all it ever needed.", name: 'Last Stroke', desc: 'Every hit ends it', apply: (s) => (s.oneShot = true) };
+function grantStroke() {
+  if (!player || player.stroke) return;
+  player.stroke = true;
+  const p = freeSpot(player.x - 60, player.y, 18);
+  pickups.push({ kind: 'item', item: STROKE, x: p.x, y: p.y, r: 18, bob: 0 });
+  sfx.secret(); flash = 0.6; burst(p.x, p.y, 40, 1.4);
 }
 function grantSecret() {
   if (!player || player.secret) return;
@@ -530,6 +539,7 @@ function dropPuddle(x, y, r) { if (room.puddles.length < 10) room.puddles.push({
 function damageEnemy(e, dmg, kx, ky) {
   const kb = player.s.knock;
   if (e.shielded > 0) dmg *= 0.35;
+  if (player.s.oneShot) dmg = e.boss && e.kind === 6 && e.phase < 2 ? Math.max(0, e.hp - e.maxHp * (e.phase === 0 ? 0.66 : 0.33)) + 1 : e.hp + 1;
   e.hp -= dmg; e.flash = 0.1; e.x += kx * (e.boss ? 0.3 : 3 * kb); e.y += ky * (e.boss ? 0.3 : 3 * kb);
   sfx.hit(); burst(e.x, e.y, 4, 0.6);
   if (e.hp <= 0 && !e.dead) killEnemy(e);
@@ -739,14 +749,14 @@ function debugBoss(n) {
 
 // ---------- story ----------
 const CUTS = {
-  intro: { m: 'pool', lines: ['This is the story of Ada, who stopped drawing the day her little brother did not come home.', 'That is how he always tells it, anyway.', 'Tonight the ink in the old pen began to move on its own.', 'It pooled on the bedroom floor, black and deep, like a door left open.', 'Somewhere far below, someone was laughing. So the child went down.'] },
+  intro: { m: 'pool', lines: ['Ada stopped drawing the day her little brother did not come home.', 'Tonight the ink in her old pen began to move on its own.', 'It pooled on the bedroom floor, black and deep, like a door left open.', 'Somewhere far below, Theo was laughing. So she went down.'] },
   f1: { m: 'cradle', lines: ['The nursery. A new baby, and a jealous older sister.', 'Someone asked Mother to send the baby back.', 'The baby grabbed her finger anyway, and would not let go.'] },
   f2: { m: 'jar', lines: ['The garden. Every flower, roots and all, given away.', '"They\'re ugly," someone said.', 'They were kept in a jar on a shelf until they turned to dust.'] },
   f3: { m: 'corridor', lines: ['The white corridor. Machines that hummed like tired bees.', 'From the bed, a small voice asked for a dragon.', 'The answer was: tomorrow.'] },
   f4: { m: 'window', lines: ['The window. It rained for nine days.', 'Someone counted the drops, so as not to count anything else.', 'From down in the yard, the window of room 12 looked very small.'] },
   f5: { m: 'chair', lines: ['Her room. Everything is still where she left it.', 'Mother still sets the table for four. Nobody says anything.'] },
   f6: { m: 'candle', lines: ['The last goodbye. Everyone was dressed in black.', 'The little brother did not cry. He did not speak.', 'In his pocket was the dragon, finished one day too late.'] },
-  final: { m: 'mask', lines: ['At the very bottom there are no more memories. Only an unfinished page.', 'There is no Ada down here. There never was a brother who did not come home.', 'Ada was the one in the white bed. Ada was the one who asked for a dragon.', 'Theo told the story backwards for years, so that he would be the one who left. Not her.', 'The page wears his face now. "You said tomorrow," it whispers.'] },
+  final: { m: 'mask', lines: ['At the very bottom there are no more memories. Only an unfinished page.', 'There is no Ada down here. There never was a brother who did not come home.', 'Ada was the one in the white bed. Ada was the one who asked for a dragon.', 'For years Theo told it as Ada\'s story: Ada left behind, Ada going down after him.', 'Anything, so that he would be the one who left. Not her.', 'The page wears his face now. "You said tomorrow," it whispers.'] },
   ending: { m: 'dragon', lines: ['The ink grows still. Theo unfolds the dragon, crooked and green and late.', '"I made it for you," he says. "I\'m sorry I said tomorrow."', 'No one answers. The laughter is gone. That is how he knows it was real.', 'He climbs back up, holding the drawing. He will be sad for a long time.', 'But he will draw again. Not tomorrow. Today.'] },
 };
 function playCut(id, after) { cut = { id, m: CUTS[id].m, lines: CUTS[id].lines, i: 0, chars: 0, t: 0, after }; state = 'cutscene'; keys.clear(); mouse.down = false; }
@@ -1083,4 +1093,4 @@ requestAnimationFrame(frame);
 
 // Small hook for automated smoke tests
 window.__ink = { get state() { return state; }, get floor() { return floor; }, get room() { return room; }, get map() { return map; }, get enemies() { return enemies; }, get player() { return player; }, get pickups() { return pickups; }, get cut() { return cut; },
-  newRun, nextFloor, enterRoom, makeEnemy, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, killAll: () => enemies.forEach((e) => killEnemy(e)) };
+  newRun, nextFloor, enterRoom, killEnemy, damage: (e) => damageEnemy(e, player.s.dmg, 0, 0), makeEnemy, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, killAll: () => enemies.forEach((e) => killEnemy(e)) };
