@@ -92,38 +92,38 @@ const sfx = {
 
 // ---------- items ----------
 const ITEMS = [
-  { id: 'ink', name: 'Bottle of Ink', desc: 'Damage up', apply: (s) => (s.dmg += 1) },
-  { id: 'quill', name: 'Sharp Quill', desc: 'Tears up', apply: (s) => (s.delay = Math.max(5, s.delay * 0.75)) },
-  { id: 'feather', name: 'Crow Feather', desc: 'Speed up', apply: (s) => (s.speed += 0.6) },
-  { id: 'needle', name: 'Iron Needle', desc: 'Piercing tears', apply: (s) => (s.pierce = true, s.dmg += 0.3) },
-  { id: 'eye', name: 'Third Eye', desc: 'Homing tears', apply: (s) => (s.homing = true) },
-  { id: 'fork', name: 'Forked Tongue', desc: 'Triple shot', apply: (s) => (s.multi = Math.min(5, s.multi + 2), s.delay *= 1.25) },
-  { id: 'lens', name: 'Cracked Lens', desc: 'Range and shot speed up', apply: (s) => (s.range += 120, s.shotSpeed += 2) },
-  { id: 'heart', name: 'Charcoal Heart', desc: 'Health up', apply: (s, p) => (p.maxHp += 2, p.hp += 2) },
-  { id: 'stone', name: 'Heavy Stone', desc: 'Huge tears, damage up, tears down', apply: (s) => (s.size += 4, s.dmg += 1.5, s.delay *= 1.2) },
-  { id: 'moon', name: 'Paper Moon', desc: 'All stats up', apply: (s) => (s.dmg += 0.4, s.delay *= 0.9, s.speed += 0.25, s.range += 40) },
-  { id: 'smoke', name: 'Wisp of Smoke', desc: 'Spectral tears pass rocks', apply: (s) => (s.spectral = true, s.dmg += 0.2) },
-  { id: 'twin', name: 'Twin Shadow', desc: 'Shoots backwards too', apply: (s) => (s.back = true) },
-  { id: 'salt', name: 'Salt Tear', desc: 'Tears slow enemies', apply: (s) => (s.slow = Math.max(s.slow, 1.6)) },
-  { id: 'nightshade', name: 'Nightshade Ink', desc: 'Poison tears', apply: (s) => (s.poison += 1.2) },
-  { id: 'die', name: 'Loaded Die', desc: '15% chance of critical tears', apply: (s) => (s.crit += 0.15) },
-  { id: 'prism', name: 'Glass Prism', desc: 'Tears split on hit', apply: (s) => (s.split = true) },
-  { id: 'eraser', name: 'Rubber Eraser', desc: 'Tears bounce off walls', apply: (s) => (s.bounce = true, s.range += 80) },
-  { id: 'ribbon', name: 'Silk Ribbon', desc: 'Wavy tears, damage up', apply: (s) => (s.wavy = true, s.dmg += 0.6) },
-  { id: 'moth', name: 'Paper Moth', desc: 'An orbiting moth guards you', apply: (s) => (s.orbitals = Math.min(4, s.orbitals + 1)) },
-  { id: 'locket', name: 'Silver Locket', desc: 'Orbital, health up', apply: (s, p) => (s.orbitals = Math.min(4, s.orbitals + 1), p.maxHp += 2, p.hp += 2) },
-  { id: 'pup', name: 'Shadow Pup', desc: 'A little shadow shoots for you', apply: (s) => (s.familiars = Math.min(3, s.familiars + 1)) },
-  { id: 'kite', name: 'Ink Kite', desc: 'Familiar, range up', apply: (s) => (s.familiars = Math.min(3, s.familiars + 1), s.range += 60) },
-  { id: 'tooth', name: 'Milk Tooth', desc: 'Knockback and damage up', apply: (s) => (s.knock *= 2.2, s.dmg += 0.3) },
-  { id: 'leech', name: 'Pale Leech', desc: 'Kills slowly heal you', apply: (s) => (s.leech += 1) },
-  { id: 'umbrella', name: 'Black Umbrella', desc: 'Blocks the first hit in every room', apply: (s) => (s.shield = true) },
-  { id: 'match', name: 'Burnt Match', desc: 'Enemies burst when they die', apply: (s) => (s.explode = true) },
-  { id: 'candle', name: 'Wax Candle', desc: 'A warm aura hurts nearby enemies', apply: (s) => (s.aura += 4) },
-  { id: 'musicbox', name: 'Music Box', desc: 'Cleared rooms may heal you', apply: (s) => (s.regen += 0.35) },
-  { id: 'photo', name: 'Old Photograph', desc: 'Damage x1.5 at full health', apply: (s) => (s.fullHp = true) },
-  { id: 'crayon', name: 'Crayon Drawing', desc: 'Tears up, shot speed up, health up', apply: (s, p) => (s.delay = Math.max(5, s.delay * 0.88), s.shotSpeed += 1, p.maxHp += 2, p.hp += 2) },
+  { id: 'ink', fl: "The pen she gave him for his birthday.", name: 'Bottle of Ink', desc: 'Damage up', apply: (s) => (s.dmg += 1) },
+  { id: 'quill', fl: "He learned to write her name before his own.", name: 'Sharp Quill', desc: 'Tears up', apply: (s) => (s.delay = Math.max(5, s.delay * 0.75)) },
+  { id: 'feather', fl: "Found on the hospital windowsill.", name: 'Crow Feather', desc: 'Speed up', apply: (s) => (s.speed += 0.6) },
+  { id: 'needle', fl: "The nurse said it would only sting a little.", name: 'Iron Needle', desc: 'Piercing tears', apply: (s) => (s.pierce = true, s.dmg += 0.3) },
+  { id: 'eye', fl: "She always knew when he was lying.", name: 'Third Eye', desc: 'Homing tears', apply: (s) => (s.homing = true) },
+  { id: 'fork', fl: "Two voices telling one story.", name: 'Forked Tongue', desc: 'Triple shot', apply: (s) => (s.multi = Math.min(5, s.multi + 2), s.delay *= 1.25) },
+  { id: 'lens', fl: "Her glasses. She could not see the yard without them.", name: 'Cracked Lens', desc: 'Range and shot speed up', apply: (s) => (s.range += 120, s.shotSpeed += 2) },
+  { id: 'heart', fl: "Drawn on the cast, signed by everyone.", name: 'Charcoal Heart', desc: 'Health up', apply: (s, p) => (p.maxHp += 2, p.hp += 2) },
+  { id: 'stone', fl: "He carried it in his pocket for luck. It did not work.", name: 'Heavy Stone', desc: 'Huge tears, damage up, tears down', apply: (s) => (s.size += 4, s.dmg += 1.5, s.delay *= 1.2) },
+  { id: 'moon', fl: "Stuck on her ceiling. It glowed for ten minutes every night.", name: 'Paper Moon', desc: 'All stats up', apply: (s) => (s.dmg += 0.4, s.delay *= 0.9, s.speed += 0.25, s.range += 40) },
+  { id: 'smoke', fl: "Blown-out candles. Nine of them, not ten.", name: 'Wisp of Smoke', desc: 'Spectral tears pass rocks', apply: (s) => (s.spectral = true, s.dmg += 0.2) },
+  { id: 'twin', fl: "Who is the shadow, and who is the one casting it?", name: 'Twin Shadow', desc: 'Shoots backwards too', apply: (s) => (s.back = true) },
+  { id: 'salt', fl: "Some tears were never cried.", name: 'Salt Tear', desc: 'Tears slow enemies', apply: (s) => (s.slow = Math.max(s.slow, 1.6)) },
+  { id: 'nightshade', fl: "The medicine tasted of this.", name: 'Nightshade Ink', desc: 'Poison tears', apply: (s) => (s.poison += 1.2) },
+  { id: 'die', fl: "They played until she was too tired to roll.", name: 'Loaded Die', desc: '15% chance of critical tears', apply: (s) => (s.crit += 0.15) },
+  { id: 'prism', fl: "She split the sunlight on the wall to make him laugh.", name: 'Glass Prism', desc: 'Tears split on hit', apply: (s) => (s.split = true) },
+  { id: 'eraser', fl: "He rubbed out her name and wrote his own instead.", name: 'Rubber Eraser', desc: 'Tears bounce off walls', apply: (s) => (s.bounce = true, s.range += 80) },
+  { id: 'ribbon', fl: "From her hair. Mother kept it in a drawer.", name: 'Silk Ribbon', desc: 'Wavy tears, damage up', apply: (s) => (s.wavy = true, s.dmg += 0.6) },
+  { id: 'moth', fl: "It circled the night lamp in her room.", name: 'Paper Moth', desc: 'An orbiting moth guards you', apply: (s) => (s.orbitals = Math.min(4, s.orbitals + 1)) },
+  { id: 'locket', fl: "Inside: a girl, and a smaller boy holding her finger.", name: 'Silver Locket', desc: 'Orbital, health up', apply: (s, p) => (s.orbitals = Math.min(4, s.orbitals + 1), p.maxHp += 2, p.hp += 2) },
+  { id: 'pup', fl: "The dog they were going to get when she came home.", name: 'Shadow Pup', desc: 'A little shadow shoots for you', apply: (s) => (s.familiars = Math.min(3, s.familiars + 1)) },
+  { id: 'kite', fl: "It flew once. She watched from the window.", name: 'Ink Kite', desc: 'Familiar, range up', apply: (s) => (s.familiars = Math.min(3, s.familiars + 1), s.range += 60) },
+  { id: 'tooth', fl: "He lost it the same week. Nobody noticed.", name: 'Milk Tooth', desc: 'Knockback and damage up', apply: (s) => (s.knock *= 2.2, s.dmg += 0.3) },
+  { id: 'leech', fl: "The machines took a little every day.", name: 'Pale Leech', desc: 'Kills slowly heal you', apply: (s) => (s.leech += 1) },
+  { id: 'umbrella', fl: "Nine days of rain, and he never opened it.", name: 'Black Umbrella', desc: 'Blocks the first hit in every room', apply: (s) => (s.shield = true) },
+  { id: 'match', fl: "Lit for a candle on a cake she did not eat.", name: 'Burnt Match', desc: 'Enemies burst when they die', apply: (s) => (s.explode = true) },
+  { id: 'candle', fl: "Still burning in the window of room 12.", name: 'Wax Candle', desc: 'A warm aura hurts nearby enemies', apply: (s) => (s.aura += 4) },
+  { id: 'musicbox', fl: "It played her lullaby. Now it plays his.", name: 'Music Box', desc: 'Cleared rooms may heal you', apply: (s) => (s.regen += 0.35) },
+  { id: 'photo', fl: "Two children. One of them is fading.", name: 'Old Photograph', desc: 'Damage x1.5 at full health', apply: (s) => (s.fullHp = true) },
+  { id: 'crayon', fl: "The dragon, half finished. Green, because green was her favourite.", name: 'Crayon Drawing', desc: 'Tears up, shot speed up, health up', apply: (s, p) => (s.delay = Math.max(5, s.delay * 0.88), s.shotSpeed += 1, p.maxHp += 2, p.hp += 2) },
 ];
-const SECRET = { id: 'inkheart', name: 'Ink Heart', desc: 'Something remembers you. Everything up', apply: (s, p) => (s.dmg += 4, s.homing = true, s.pierce = true, s.size += 2, s.delay = Math.max(5, s.delay * 0.8), p.maxHp += 2, p.hp = p.maxHp) };
+const SECRET = { id: 'inkheart', fl: "Her heart was never the broken one.", name: 'Ink Heart', desc: 'Something remembers you. Everything up', apply: (s, p) => (s.dmg += 4, s.homing = true, s.pierce = true, s.size += 2, s.delay = Math.max(5, s.delay * 0.8), p.maxHp += 2, p.hp = p.maxHp) };
 const SYNERGIES = [
   { a: 'eye', b: 'needle', name: 'Seeking Needle', apply: (s) => (s.dmg += 1) },
   { a: 'fork', b: 'twin', name: 'Mirror Tongue', apply: (s) => (s.backMulti = true) },
@@ -148,7 +148,7 @@ function grantSecret() {
 // ---------- game state ----------
 let state = 'title'; // title | play | pause | dead | win-floor
 let player, floor, map, room, tears, enemies, particles, pickups, floatTexts;
-let shake = 0, time = 0, banner = null, stats, fade = 0, flash = 0, cut = null, endTimer = 0;
+let meets = [], shake = 0, time = 0, banner = null, stats, fade = 0, flash = 0, cut = null, endTimer = 0;
 
 function newRun() {
   audio.init();
@@ -159,7 +159,7 @@ function newRun() {
       aura: 0, regen: 0, fullHp: false, backMulti: false, frostbite: false, orbDmg: 1, famDmg: 0 },
     items: [], syn: new Set(), fams: [], orbs: [], shieldUp: false, secret: false, leechN: 0,
   };
-  stats = { kills: 0, rooms: 0, items: 0, start: performance.now(), floor: 1 };
+  stats = { kills: 0, rooms: 0, items: 0, start: performance.now(), floor: 1, met: new Set() }; meets = [];
   floor = 0; seqBuf = []; endTimer = 0; splats = []; nextFloor(); state = 'play';
   playCut('intro');
 }
@@ -200,7 +200,8 @@ function genFloor(f) {
     if (ends.length < 2) continue;
     ends[0].type = 'boss'; ends[1].type = 'treasure';
     start.type = 'start'; start.cleared = true;
-    for (const r of list) r.rocks = r.type === 'normal' ? genRocks() : [];
+    for (const r of list) { r.rocks = r.type === 'normal' ? genRocks() : []; r.puddles = []; }
+    { const cand = list.filter((r) => r.type === 'normal'); if (cand.length) pick(cand).note = NOTES[(f - 1) % NOTES.length]; }
     return { rooms: list, start, N };
   }
   throw new Error('floor generation failed');
@@ -233,6 +234,10 @@ function freeSpot(x, y, r = 16, opt = {}) {
   return { x: RCX, y: RCY };
 }
 
+function freeSpotIgnoringDoors(x, y, r) {
+  for (let ring = 0; ring < 40; ring++) { const rad = ring * 6, n = Math.max(1, ring * 6); for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, px = x + Math.cos(a) * rad, py = y + Math.sin(a) * rad; if (px > RX0 + r && px < RX1 - r && py > RY0 + r && py < RY1 - r && !room.rocks.some((k) => Math.hypot(px - k.x, py - k.y) < k.r + r + 4)) return { x: px, y: py }; } }
+  return { x, y };
+}
 function doorPos(dir) {
   return { n: { x: RCX, y: RY0 }, s: { x: RCX, y: RY1 }, w: { x: RX0, y: RCY }, e: { x: RX1, y: RCY } }[dir];
 }
@@ -244,10 +249,14 @@ function enterRoom(r, fromDir) {
   if (!r.visited) { stats.rooms++; r.visited = true; }
   r.seen = true; for (const o of Object.values(r.n)) o.seen = o.seen || o.type !== 'normal' ? true : o.seen || 'adj';
   if (fromDir) {
-    const d = doorPos(OPP[fromDir]), off = 50;
-    player.x = d.x + (fromDir === 'e' ? off : fromDir === 'w' ? -off : 0);
-    player.y = d.y + (fromDir === 's' ? off : fromDir === 'n' ? -off : 0);
-    player.vx = player.vy = 0;
+    // fromDir is the side of the NEW room we walked in through: appear just inside that door
+    const d = doorPos(fromDir), off = 52;
+    let px = d.x + (fromDir === 'w' ? off : fromDir === 'e' ? -off : 0);
+    let py = d.y + (fromDir === 'n' ? off : fromDir === 's' ? -off : 0);
+    if (r.rocks.some((k) => Math.hypot(px - k.x, py - k.y) < k.r + player.r + 4)) { const sv = room; const p = freeSpotIgnoringDoors(px, py, player.r); px = p.x; py = p.y; void sv; }
+    player.x = px; player.y = py; player.vx = player.vy = 0;
+    player.face = fromDir === 'e' ? -1 : 1;
+    player.inv = Math.max(player.inv, 0.5);
   }
   player.shieldUp = player.s.shield; player.fams.forEach((f) => { f.x = player.x; f.y = player.y; });
   if (!r.cleared) {
@@ -276,21 +285,56 @@ const ENEMY = {
   splitter: { hp: 16, r: 22, speed: 0.9, score: 2 },
   dasher: { hp: 12, r: 15, speed: 0.5, score: 2 },
   turret: { hp: 18, r: 18, speed: 0, score: 2 },
+  ghost: { hp: 9, r: 14, speed: 1.15, score: 2 },
+  bomber: { hp: 14, r: 17, speed: 0.9, score: 2 },
+  spider: { hp: 10, r: 13, speed: 0, score: 2 },
+  sniper: { hp: 11, r: 14, speed: 0.5, score: 2 },
+  summoner: { hp: 18, r: 16, speed: 0.7, score: 3 },
+  bouncer: { hp: 14, r: 14, speed: 3.0, score: 2 },
 };
-function makeEnemy(type, x, y, scale = 1) {
-  const d = ENEMY[type], hpMul = 1 + (floor - 1) * 0.35;
-  return { type, x, y, r: d.r * scale, hp: d.hp * hpMul * scale, maxHp: d.hp * hpMul * scale, speed: d.speed * (1 + (floor - 1) * 0.08), vx: 0, vy: 0, t: rand(0, 2), scale, flash: 0, state: 0, spawn: 0.6 };
+// Every enemy is an echo of the story. Shown the first time you meet it.
+const ENEMY_INFO = {
+  chaser: ['Crayon Scribble', 'Someone pressed too hard.'],
+  fly: ['Hum', 'Machines that hummed like tired bees.'],
+  splitter: ['Ink Blot', 'Spilled, and spilled again.'],
+  bouncer: ['Rubber Ball', 'He threw it at her window so she would look out.'],
+  shooter: ['Watching Eye', 'Visiting hours are over.'],
+  spider: ['Night-light Spider', 'It jumps whenever the hallway light flickers.'],
+  ghost: ['Drip Wraith', 'It drips where her bed used to be.'],
+  turret: ['Pill Wheel', 'Twice a day, with water. She hated the big one.'],
+  dasher: ['Paper Dart', 'Folded from a get-well card.'],
+  bomber: ['Raincloud', 'It leaves puddles nobody wipes up.'],
+  sniper: ['Night Lamp', 'Someone always kept a light on for her.'],
+  summoner: ['Hush', '"Shh. Your sister is sleeping."'],
+};
+const POOL = ['chaser', 'fly', 'splitter', 'bouncer', 'shooter', 'spider', 'ghost', 'turret', 'dasher', 'bomber', 'sniper', 'summoner'];
+const POOL_N = [4, 6, 9, 10, 11, 12];
+// Faint scribbled notes on room floors, one line per floor
+const NOTES = ['i wanted to be the big one', 'dear dragon, please make her better', 'room 12. her name is on the door', 'she can see the yard from up there', 'the fourth chair is hers', 'it should have been me', 'tomorrow. tomorrow. tomorrow.'];
+function makeEnemy(type, x, y, scale = 1, elite = false) {
+  const d = ENEMY[type], hpMul = (1 + (floor - 1) * 0.35) * (elite ? 2.2 : 1), rs = elite ? 1.15 : 1;
+  return { type, x, y, r: d.r * scale * rs, hp: d.hp * hpMul * scale, maxHp: d.hp * hpMul * scale, speed: d.speed * (1 + (floor - 1) * 0.08) * (elite ? 1.1 : 1), vx: 0, vy: 0, t: rand(0, 2), scale, flash: 0, state: 0, spawn: 0.6, elite };
+}
+function meetEnemy(type) {
+  if (stats.met.has(type) || !ENEMY_INFO[type]) return;
+  stats.met.add(type); meets.push({ name: ENEMY_INFO[type][0], fl: ENEMY_INFO[type][1], t: 3.2 });
 }
 function spawnWave(r) {
-  const n = Math.min(9, randi(2, 4) + floor);
-  const types = ['fly', 'chaser', 'shooter', 'splitter', 'dasher', 'turret'].slice(0, Math.min(6, 3 + floor));
+  const horde = Math.random() < 0.15 + floor * 0.02;
+  const n = Math.min(14, randi(3, 4) + Math.floor(floor * 1.3) + (horde ? 4 : 0));
+  const types = POOL.slice(0, POOL_N[Math.min(floor, 6) - 1]);
+  const fresh = types.slice(-2); // the newest types for this floor show up more often
+  const eliteP = Math.min(0.35, 0.06 * floor);
   for (let i = 0; i < n; i++) {
-    let x, y, tries = 0;
-    do { x = rand(RX0 + 40, RX1 - 40); y = rand(RY0 + 40, RY1 - 40); tries++; }
-    while (tries < 50 && (Math.hypot(x - player.x, y - player.y) < 220 || blockedAt(x, y, 24, true)));
-    const p = freeSpot(x, y, 24, { noPick: true });
-    enemies.push(makeEnemy(pick(types), p.x, p.y));
+    let x, y, tries = 0, p;
+    do { x = rand(RX0 + 40, RX1 - 40); y = rand(RY0 + 40, RY1 - 40); p = freeSpot(x, y, 24, { noPick: true }); tries++; }
+    while (tries < 60 && Math.hypot(p.x - player.x, p.y - player.y) < 230);
+    if (Math.hypot(p.x - player.x, p.y - player.y) < 170) continue;
+    const type = horde && i % 2 ? 'fly' : Math.random() < 0.35 ? pick(fresh) : pick(types);
+    const e = makeEnemy(type, p.x, p.y, 1, Math.random() < eliteP);
+    enemies.push(e); meetEnemy(type);
   }
+  if (horde) banner = banner || { text: 'A crowded memory', sub: '', t: 1.5 };
 }
 const BOSSES = [
   { name: 'The Cradle Moth', sub: 'It still hums the lullaby', hp: 280, r: 38 },
@@ -299,12 +343,12 @@ const BOSSES = [
   { name: 'The Rain Choir', sub: 'Nine days of rain', hp: 620, r: 42 },
   { name: 'The Hollow Toybox', sub: 'Nobody plays with it now', hp: 740, r: 44 },
   { name: 'The Mourning Bell', sub: 'It rings for one', hp: 880, r: 46 },
-  { name: 'The Unwritten', sub: 'Everything you never said', hp: 1600, r: 50 },
+  { name: 'The Unwritten', sub: 'The dragon you never drew', hp: 1600, r: 50 },
 ];
 function bossIdx() { return floor <= 7 ? floor - 1 : (floor - 1) % 6; }
 function bossName() { return BOSSES[bossIdx()].name; }
 function spawnBoss() {
-  const k = bossIdx(), B = BOSSES[k], hp = B.hp * (floor > 7 ? 1 + (floor - 7) * 0.5 : 1);
+  const k = bossIdx(), B = BOSSES[k], hp = B.hp * 1.5 * (floor > 7 ? 1 + (floor - 7) * 0.5 : 1);
   enemies.push({ type: 'boss', boss: true, kind: k, x: RCX, y: RCY - 70, r: B.r, hp, maxHp: hp, speed: 1.1 + Math.min(floor, 9) * 0.08, vx: 0, vy: 0, t: 0, a: 0, b: 0, c: 0, spin: 0, flash: 0, state: 0, phase: 0, spawn: 1.0, alpha: 1, shots: 0 });
 }
 const ring = (e, n, spd, off = 0, r = 7, skip) => { for (let i = 0; i < n; i++) if (!skip || !skip(i)) enemyShot(e, off + i * Math.PI * 2 / n, spd, r); };
@@ -348,31 +392,67 @@ function updateEnemy(e, dt) {
       if (e.t > 2.4) { e.t = 0; const o = Math.random() * Math.PI; for (let i = 0; i < 8; i++) enemyShot(e, o + i * Math.PI / 4, 2.8); sfx.enemyShot(); }
       break;
     }
+    case 'ghost': { // drifts through rocks, fading in and out
+      steer(Math.cos(ang + Math.sin(e.t * 1.3) * 0.6), Math.sin(ang + Math.sin(e.t * 1.3) * 0.6), e.speed, 0.04);
+      e.alpha = 0.35 + 0.45 * (Math.sin(e.t * 2.2) * 0.5 + 0.5); break;
+    }
+    case 'bomber': {
+      if (!e.dir || e.t > 2) { e.t = 0; e.dir = Math.atan2(player.y - e.y, player.x - e.x) + rand(-1.2, 1.2); e.drops = (e.drops || 0) + 1; if (e.drops % 2 === 0) dropPuddle(e.x, e.y, 34); }
+      steer(Math.cos(e.dir), Math.sin(e.dir), e.speed, 0.05); break;
+    }
+    case 'spider': {
+      if (e.state === 0) { e.vx = e.vy = 0; if (e.t > 1.3) { e.state = 1; e.t = 0; e.fx = e.x; e.fy = e.y; const p = freeSpot(clamp(player.x, RX0 + 30, RX1 - 30), clamp(player.y, RY0 + 30, RY1 - 30), e.r, { noPick: true }); e.tx = p.x; e.ty = p.y; } }
+      else if (e.state === 1) { e.air = e.t < 0.65; const k = Math.min(1, e.t / 0.65); e.x = e.fx + (e.tx - e.fx) * k; e.y = e.fy + (e.ty - e.fy) * k; e.h = Math.sin(k * Math.PI) * 40; e.vx = e.vy = 0;
+        if (k >= 1) { e.state = 0; e.t = rand(0, 0.4); e.h = 0; e.air = false; shake = Math.max(shake, 3); if (floor >= 3) ring(e, 6, 2.6, rand(0, 1), 5); } }
+      break;
+    }
+    case 'sniper': {
+      if (e.state === 0) { steer(Math.cos(ang + Math.PI / 2), Math.sin(ang + Math.PI / 2), e.speed * Math.sign(Math.sin(e.t * 0.7 + 1)), 0.05); if (e.t > 1.8) { e.state = 1; e.t = 0; } }
+      else if (e.state === 1) { e.vx *= 0.8; e.vy *= 0.8; if (e.t < 0.65) e.aim = ang; if (e.t > 0.95) { enemyShot(e, e.aim, 9, 5); sfx.enemyShot(); e.state = 0; e.t = 0; } }
+      break;
+    }
+    case 'summoner': {
+      const want = d < 230 ? -1 : d > 340 ? 1 : 0;
+      steer(Math.cos(ang) * want + Math.cos(e.t) * 0.3, Math.sin(ang) * want + Math.sin(e.t) * 0.3, e.speed * 1.4, 0.04);
+      for (const o of enemies) if (o !== e && !o.boss && o.type !== 'summoner' && dist(o, e) < 230) o.shielded = 0.25;
+      if (e.t > 6.5) { e.t = 0; minions(e, 'fly', 2, 10); }
+      break;
+    }
+    case 'bouncer': {
+      if (!e.vx && !e.vy) { const a = pick([0.7, 2.4, 3.9, 5.5]); e.vx = Math.cos(a) * e.speed; e.vy = Math.sin(a) * e.speed; }
+      const sp = Math.hypot(e.vx, e.vy) || 1, want = Math.min(e.speed * 1.6, e.speed + e.t * 0.05); e.vx = e.vx / sp * want; e.vy = e.vy / sp * want;
+      for (const k of room.rocks) if (Math.hypot(e.x - k.x, e.y - k.y) < e.r + k.r) { const nx = (e.x - k.x), ny = (e.y - k.y), l = Math.hypot(nx, ny) || 1, dot = (e.vx * nx + e.vy * ny) / l; if (dot < 0) { e.vx -= 2 * dot * nx / l; e.vy -= 2 * dot * ny / l; } }
+      break;
+    }
     case 'boss': updateBoss(e, ang, d, dt, steer); break;
   }
   const mf = e.slow > 0 ? 0.5 : 1;
   e.x += e.vx * dt * 60 * mf; e.y += e.vy * dt * 60 * mf;
-  collideWalls(e, (e.type === 'dasher' && e.state === 2) || (e.boss && e.charging));
-  if (e.type !== 'fly') for (const k of room.rocks) pushOut(e, k);
+  collideWalls(e, (e.type === 'dasher' && e.state === 2) || (e.boss && e.charging) || e.type === 'bouncer');
+  if (e.shielded > 0) e.shielded -= dt;
+  if (e.type !== 'fly' && e.type !== 'ghost' && !e.air) for (const k of room.rocks) pushOut(e, k);
 }
 
 function updateBoss(e, ang, d, dt, steer) {
   const en = e.hp < e.maxHp * 0.5;
   if (en && e.phase === 0 && e.kind !== 6) { e.phase = 1; shake = 14; sfx.boss(); burst(e.x, e.y, 40, 1); }
   e.a += dt; e.b += dt; e.c += dt;
-  const R = en ? 0.7 : 1;
+  const R = en ? 0.6 : 0.82;
+  if (e.pend) { e.pend.t -= dt; if (e.pend.t <= 0) { const q = e.pend; e.pend = null; if (q.ring) ring(e, q.n, q.spd, q.off, q.r); else fan(e, q.ang, q.n, q.step, q.spd, q.r); sfx.enemyShot(); } }
   switch (e.kind) {
     case 0: // Cradle Moth: fluttering figure-eight, aimed spreads, summons flies, enraged dust spiral
       seek(e, RCX + Math.cos(e.t * 0.7) * 260, RCY - 40 + Math.sin(e.t * 1.4) * 90, e.speed * 1.6);
       if (e.a > 1.1 * R) { e.a = 0; fan(e, ang, 3, 0.22, 3.8); sfx.enemyShot(); }
       if (e.b > 4.5) { e.b = 0; minions(e, 'fly', 2, 5); }
-      if (en && e.c > 0.14) { e.c = 0; e.spin += 0.55; enemyShot(e, e.spin, 2.6, 6); }
+      if (en && e.c > 0.12) { e.c = 0; e.spin += 0.55; enemyShot(e, e.spin, 2.8, 6); }
+      if (en && e.t % 3 < dt) ring(e, 10, 3, rand(0, 1));
       break;
     case 1: // Thorn Gardener: slow stalk, thorn rings with a gap, vine lines, enraged plants turrets
       steer(Math.cos(ang), Math.sin(ang), e.speed * 0.55, 0.03);
       if (e.a > 2.3 * R) { e.a = 0; const gap = randi(0, 17); ring(e, 18, 2.8, 0, 8, (i) => Math.min(Math.abs(i - gap), 18 - Math.abs(i - gap)) < 2); sfx.enemyShot(); shake = 4; }
       if (e.b > 1.6 * R) { e.b = 0; for (let i = 0; i < 5; i++) enemyShot(e, ang, 2.4 + i * 0.7, 6); sfx.enemyShot(); }
-      if (en && e.c > 6) { e.c = 0; minions(e, 'turret', 1, 2); }
+      if (en && e.c > 5) { e.c = 0; minions(e, 'turret', 1, 2); }
+      if (en && e.t % 1.3 < dt) fan(e, ang, 3, 0.25, 4.2);
       break;
     case 2: // Night Nurse: fades out, reappears far away, fires aimed bursts; enraged adds rings
       e.vx *= 0.9; e.vy *= 0.9;
@@ -380,23 +460,25 @@ function updateBoss(e, ang, d, dt, steer) {
       else if (e.state === 1) {
         e.ghost = true; e.alpha = Math.max(0, 1 - e.a / 0.45);
         if (e.a > 0.5) { let p; for (let i = 0; i < 20; i++) { p = freeSpot(rand(RX0 + 80, RX1 - 80), rand(RY0 + 80, RY1 - 80), e.r, { noPick: true }); if (Math.hypot(p.x - player.x, p.y - player.y) > 220) break; } e.x = p.x; e.y = p.y; e.state = 2; e.a = 0; }
-      } else if (e.state === 2) { e.alpha = Math.min(1, e.a / 0.35); if (e.a > 0.4) { e.ghost = false; e.alpha = 1; e.state = 3; e.a = 0; e.shots = 0; if (en) ring(e, 12, 2.6, rand(0, 1)); } }
-      else if (e.a > 0.32) { e.a = 0; fan(e, ang, 3, 0.15, 4.6); sfx.enemyShot(); if (++e.shots >= 3) e.state = 0; }
+      } else if (e.state === 2) { e.alpha = Math.min(1, e.a / 0.35); if (e.a > 0.4) { e.ghost = false; e.alpha = 1; e.state = 3; e.a = 0; e.shots = 0; ring(e, en ? 16 : 10, 2.6, rand(0, 1)); } }
+      else if (e.a > 0.28) { e.a = 0; fan(e, ang, en ? 5 : 3, 0.15, 4.8); sfx.enemyShot(); if (++e.shots >= (en ? 4 : 3)) e.state = 0; }
       break;
     case 3: // Rain Choir: sways along the top wall, rain from above, enraged sideways rain
       seek(e, RCX + Math.sin(e.t * 0.6) * 300, RY0 + 90, e.speed * 1.5);
       if (e.a > (en ? 0.12 : 0.22)) { e.a = 0; rainDrop(rand(RX0 + 15, RX1 - 15), RY0 + 8, rand(-0.4, 0.4), rand(2.4, 3.4)); }
       if (en && e.c > 0.5) { e.c = 0; const left = Math.random() < 0.5; rainDrop(left ? RX0 + 8 : RX1 - 8, rand(RY0 + 30, RY1 - 30), left ? 3 : -3, rand(-0.3, 0.3)); }
-      if (e.b > 2.4 * R) { e.b = 0; fan(e, ang, 5, 0.2, 3.6, 8); sfx.enemyShot(); }
+      if (e.b > 2.4 * R) { e.b = 0; fan(e, ang, 5, 0.2, 3.8, 8); sfx.enemyShot(); }
+      if (en && e.t % 1 < dt) fan(e, ang, 3, 0.12, 5);
       break;
     case 4: // Hollow Toybox: wall-bouncing charges that spill shots, summons splitters
-      if (!e.charging) { e.vx *= 0.85; e.vy *= 0.85; if (e.a > (en ? 0.7 : 1.1)) { e.charging = true; e.a = 0; const sp = en ? 9 : 7.5; e.vx = Math.cos(ang) * sp; e.vy = Math.sin(ang) * sp; } }
+      if (!e.charging) { e.vx *= 0.85; e.vy *= 0.85; if (en && e.a > 0.3 && !e.restShot) { e.restShot = true; ring(e, 14, 2.8, rand(0, 1)); } if (e.a > (en ? 0.55 : 0.9)) { e.charging = true; e.restShot = false; e.a = 0; const sp = en ? 10 : 8.5; e.vx = Math.cos(ang) * sp; e.vy = Math.sin(ang) * sp; } }
       else if (e.a > 2.2) { e.charging = false; e.a = 0; if (Math.random() < 0.6) minions(e, 'splitter', 1, 3); }
       break;
     case 5: { // Mourning Bell: rotating spiral arms with rests, tolling slow rings
       seek(e, RCX + Math.sin(e.t * 0.4) * 120, RCY - 20, e.speed * 0.6);
-      if (e.t % 4.5 < 3 && e.a > 0.1) { e.a = 0; e.spin += 0.13; const arms = en ? 3 : 2; for (let i = 0; i < arms; i++) enemyShot(e, e.spin + i * Math.PI * 2 / arms, 2.9, 6); }
-      if (e.b > 3.2 * R) { e.b = 0; ring(e, 24, 2.1, rand(0, 1), 9); shake = 8; sfx.boss(); }
+      if (en && e.c > 2) { e.c = 0; fan(e, ang, 5, 0.18, 4.2, 7); }
+      if (e.t % 3.8 < 3 && e.a > 0.09) { e.a = 0; e.spin += 0.13; const arms = en ? 3 : 2; for (let i = 0; i < arms; i++) enemyShot(e, e.spin + i * Math.PI * 2 / arms, 2.9, 6); }
+      if (e.b > 3.2 * R) { e.b = 0; ring(e, 28, 2.2, rand(0, 1), 9); shake = 8; sfx.boss(); }
       break;
     }
     case 6: finalBoss(e, ang, steer); break;
@@ -412,28 +494,31 @@ function finalBoss(e, ang, steer) {
   }
   if (e.phase === 0) { // the mirror: copies you from the other side of the room
     seek(e, 2 * RCX - player.x, 2 * RCY - player.y, e.speed * 2.2, 0.06);
-    if (e.a > 0.55) { e.a = 0; enemyShot(e, ang, 4.2, 7); sfx.enemyShot(); }
-    if (e.b > 3) { e.b = 0; ring(e, 12, 2.6, rand(0, 1), 8); }
+    if (e.a > 0.45) { e.a = 0; enemyShot(e, ang, 4.4, 7); sfx.enemyShot(); }
+    if (e.b > 2.6) { e.b = 0; ring(e, 14, 2.6, rand(0, 1), 8); }
+    if (e.c > 3.4 && !e.pend) { e.c = 0; e.pend = { t: 0.6, ang, n: 5, step: 0.2, spd: 4.6, r: 8 }; }
   } else if (e.phase === 1) { // echoes of every memory: rain, spirals, flies
     const mode = Math.floor(e.t / 4) % 2;
     steer(Math.cos(ang), Math.sin(ang), e.speed * 0.5, 0.03);
-    if (mode === 0 && e.a > 0.16) { e.a = 0; rainDrop(rand(RX0 + 15, RX1 - 15), RY0 + 8, 0, rand(2.6, 3.6)); }
-    if (mode === 1 && e.a > 0.11) { e.a = 0; e.spin += 0.21; for (let i = 0; i < 2; i++) enemyShot(e, e.spin + i * Math.PI, 3, 6); }
+    if (mode === 0 && e.a > 0.13) { e.a = 0; rainDrop(rand(RX0 + 15, RX1 - 15), RY0 + 8, 0, rand(2.6, 3.6)); }
+    if (mode === 1 && e.a > 0.09) { e.a = 0; e.spin += 0.21; for (let i = 0; i < 2; i++) enemyShot(e, e.spin + i * Math.PI, 3, 6); }
     if (e.b > 5) { e.b = 0; minions(e, 'fly', 3, 6); }
-    if (e.c > 2.2) { e.c = 0; fan(e, ang, 5, 0.2, 4, 8); }
+    if (e.c > 2 && !e.pend) { e.c = 0; e.pend = { t: 0.55, ang, n: 7, step: 0.17, spd: 4.2, r: 8 }; }
   } else { // unravelling: counter-rotating spirals around the centre
     seek(e, RCX, RCY, e.speed, 0.05);
     if (e.a > 0.13) { e.a = 0; e.spin += 0.17; for (let i = 0; i < 2; i++) { enemyShot(e, e.spin + i * Math.PI, 2.7, 6); enemyShot(e, -e.spin * 1.3 + i * Math.PI, 2.2, 5); } }
-    if (e.b > 2.6) { e.b = 0; fan(e, ang, 7, 0.16, 4.4, 8); sfx.enemyShot(); }
+    if (e.b > 2.2 && !e.pend) { e.b = 0; e.pend = Math.random() < 0.5 ? { t: 0.6, ang, n: 7, step: 0.16, spd: 4.6, r: 8 } : { t: 0.8, ring: true, n: 22, spd: 2.4, off: rand(0, 1), r: 9 }; }
+    if (e.c > 0.2) { e.c = 0; rainDrop(rand(RX0 + 15, RX1 - 15), RY0 + 8, 0, rand(2.2, 2.8)); }
   }
 }
 
 function collideWalls(o, bounce) {
-  const r = o.r, vx = o.vx, vy = o.vy;
+  const r = o.r, vx = o.vx, vy = o.vy, sh = shake;
   if (o.x < RX0 + r) { o.x = RX0 + r; if (bounce) { o.vx *= -1; shake = 5; } }
   if (o.x > RX1 - r) { o.x = RX1 - r; if (bounce) { o.vx *= -1; shake = 5; } }
   if (o.y < RY0 + r) { o.y = RY0 + r; if (bounce) { o.vy *= -1; shake = 5; } }
   if (o.y > RY1 - r) { o.y = RY1 - r; if (bounce) { o.vy *= -1; shake = 5; } }
+  if (o.type === 'bouncer') shake = sh;
   if (bounce && o.boss && (o.vx !== vx || o.vy !== vy)) { ring(o, 8, 3, rand(0, 1)); sfx.enemyShot(); }
 }
 function pushOut(o, k) {
@@ -441,8 +526,10 @@ function pushOut(o, k) {
   if (d < m) { o.x = k.x + dx / d * m; o.y = k.y + dy / d * m; }
 }
 
+function dropPuddle(x, y, r) { if (room.puddles.length < 10) room.puddles.push({ x, y, r, life: 9, max: 9 }); }
 function damageEnemy(e, dmg, kx, ky) {
   const kb = player.s.knock;
+  if (e.shielded > 0) dmg *= 0.35;
   e.hp -= dmg; e.flash = 0.1; e.x += kx * (e.boss ? 0.3 : 3 * kb); e.y += ky * (e.boss ? 0.3 : 3 * kb);
   sfx.hit(); burst(e.x, e.y, 4, 0.6);
   if (e.hp <= 0 && !e.dead) killEnemy(e);
@@ -452,6 +539,7 @@ function killEnemy(e) {
   e.dead = true; stats.kills++; sfx.kill(); shake = Math.max(shake, e.boss ? 20 : 4);
   burst(e.x, e.y, e.boss ? 80 : 16, e.boss ? 2 : 1);
   splats.push({ x: e.x, y: e.y, r: e.r * rand(1.2, 1.8), room, rot: rand(0, 6) });
+  if (e.type === 'bomber') dropPuddle(e.x, e.y, 46);
   if (e.type === 'splitter' && e.scale > 0.55) for (let i = 0; i < 2; i++) { const c = makeEnemy('splitter', e.x + rand(-10, 10), e.y + rand(-10, 10), e.scale * 0.6); c.spawn = 0; c.vx = rand(-4, 4); c.vy = rand(-4, 4); enemies.push(c); }
   const s = player.s;
   if (s.leech && !e.boss && ++player.leechN >= Math.ceil(14 / s.leech)) { player.leechN = 0; if (player.hp < player.maxHp) { player.hp++; floatText('+half heart', player.x, player.y - 24); } }
@@ -503,7 +591,8 @@ function updatePlayer(dt) {
   let mx = 0, my = 0;
   if (keys.has('a')) mx--; if (keys.has('d')) mx++;
   if (keys.has('w')) my--; if (keys.has('s')) my++;
-  const l = Math.hypot(mx, my) || 1, sp = player.s.speed;
+  const inPud = room.puddles.some((q) => Math.hypot(player.x - q.x, player.y - q.y) < q.r);
+  const l = Math.hypot(mx, my) || 1, sp = player.s.speed * (inPud ? 0.55 : 1);
   player.vx += (mx / l * sp - player.vx) * 0.22; player.vy += (my / l * sp - player.vy) * 0.22;
   player.x += player.vx * dt * 60; player.y += player.vy * dt * 60;
   if (mx > 0) player.face = 1; else if (mx < 0) player.face = -1;
@@ -531,6 +620,7 @@ function updatePlayer(dt) {
   for (const k of room.rocks) pushOut(player, k);
   if (room.rocks.some((k) => Math.hypot(player.x - k.x, player.y - k.y) < k.r + player.r - 2)) { const p = freeSpot(player.x, player.y, player.r, { noPick: true }); player.x = p.x; player.y = p.y; }
   player.cool -= dt * 60; player.inv = Math.max(0, player.inv - dt);
+  for (const q of room.puddles) q.life -= dt; room.puddles = room.puddles.filter((q) => q.life > 0);
   shoot();
 }
 
@@ -566,6 +656,7 @@ function update(dt) {
   flash = Math.max(0, flash - dt * 2);
   if (state === 'cutscene') { updateCut(dt); return; }
   if (banner) { banner.t -= dt; if (banner.t <= 0) banner = null; }
+  if (meets.length && state === 'play') { meets[0].t -= dt; if (meets[0].t <= 0) meets.shift(); }
   fade = Math.max(0, fade - dt * 4);
   shake = Math.max(0, shake - dt * 40);
   for (const p of particles) { p.x += p.vx; p.y += p.vy; p.vx *= 0.92; p.vy *= 0.92; p.life -= dt; }
@@ -577,7 +668,7 @@ function update(dt) {
   if (state !== 'play') return;
   for (const e of enemies) {
     updateEnemy(e, dt);
-    if (e.spawn <= 0 && !e.ghost && dist(e, player) < e.r + player.r - 3) hurtPlayer(e.boss && floor > 2 ? 2 : 1);
+    if (e.spawn <= 0 && !e.ghost && !e.air && dist(e, player) < e.r + player.r - 3) hurtPlayer(e.boss && floor > 2 ? 2 : 1);
   }
   for (const t of tears) {
     if (t.homing && !t.enemy) {
@@ -630,7 +721,7 @@ function update(dt) {
     if (p.kind === 'heart' && player.hp < player.maxHp) { player.hp = Math.min(player.maxHp, player.hp + 2); p.taken = true; sfx.heart(); floatText('+1 heart', p.x, p.y); }
     else if (p.kind === 'item') {
       p.item.apply(player.s, player); player.items.push(p.item); stats.items++; p.taken = true; sfx.item(); burst(p.x, p.y, 30, 1.3);
-      banner = { text: p.item.name, sub: p.item.desc, t: 2.6 }; checkSynergies();
+      banner = { text: p.item.name, sub: p.item.desc, fl: p.item.fl, t: 3 }; checkSynergies();
     } else if (p.kind === 'trapdoor') { sfx.door(); const f = floor; pickups = room.pickups = pickups.filter((o) => !o.taken); if (f <= 6) playCut('f' + f, nextFloor); else nextFloor(); return; }
   }
   pickups = room.pickups = pickups.filter((p) => !p.taken);
@@ -648,15 +739,15 @@ function debugBoss(n) {
 
 // ---------- story ----------
 const CUTS = {
-  intro: { m: 'pool', lines: ['Ada stopped drawing the day her little brother did not come home.', 'Tonight the ink in her old pen began to move on its own.', 'It pooled on the bedroom floor, black and deep, like a door left open.', 'Somewhere far below, Theo was laughing. So she went down.'] },
-  f1: { m: 'cradle', lines: ['The nursery. She remembers the night he was born.', 'She was jealous. She asked Mother to send him back.', 'He grabbed her finger anyway, and would not let go.'] },
-  f2: { m: 'jar', lines: ['The garden. He picked every flower, roots and all, and gave them to her.', 'She told him they were ugly.', 'She kept them in a jar on her shelf until they turned to dust.'] },
-  f3: { m: 'corridor', lines: ['The white corridor. Machines that hummed like tired bees.', 'He asked her to draw him a dragon.', 'She said: tomorrow.'] },
-  f4: { m: 'window', lines: ['The window. It rained for nine days.', 'She counted the drops so she would not have to count anything else.'] },
-  f5: { m: 'chair', lines: ['His room. Everything is still where he left it.', 'Mother still sets the table for four. Nobody says anything.'] },
-  f6: { m: 'candle', lines: ['The last goodbye. Everyone was dressed in black.', 'She did not cry. She did not speak.', 'In her pocket was the dragon, finished one day too late.'] },
-  final: { m: 'mask', lines: ['At the very bottom there are no memories. Only a page she never finished.', 'It wears her face. It knows every word she swallowed.', '"If you had drawn it sooner," it whispers, "would he have stayed?"'] },
-  ending: { m: 'dragon', lines: ['The ink grows still. In the quiet, Ada unfolds the dragon.', '"I made it for you," she says. "I am sorry it was late."', 'No one answers. The laughter is gone. That is how she knows it was real.', 'She climbs back up, holding the drawing. She will be sad for a long time.', 'But tomorrow, she will draw again.'] },
+  intro: { m: 'pool', lines: ['This is the story of Ada, who stopped drawing the day her little brother did not come home.', 'That is how he always tells it, anyway.', 'Tonight the ink in the old pen began to move on its own.', 'It pooled on the bedroom floor, black and deep, like a door left open.', 'Somewhere far below, someone was laughing. So the child went down.'] },
+  f1: { m: 'cradle', lines: ['The nursery. A new baby, and a jealous older sister.', 'Someone asked Mother to send the baby back.', 'The baby grabbed her finger anyway, and would not let go.'] },
+  f2: { m: 'jar', lines: ['The garden. Every flower, roots and all, given away.', '"They\'re ugly," someone said.', 'They were kept in a jar on a shelf until they turned to dust.'] },
+  f3: { m: 'corridor', lines: ['The white corridor. Machines that hummed like tired bees.', 'From the bed, a small voice asked for a dragon.', 'The answer was: tomorrow.'] },
+  f4: { m: 'window', lines: ['The window. It rained for nine days.', 'Someone counted the drops, so as not to count anything else.', 'From down in the yard, the window of room 12 looked very small.'] },
+  f5: { m: 'chair', lines: ['Her room. Everything is still where she left it.', 'Mother still sets the table for four. Nobody says anything.'] },
+  f6: { m: 'candle', lines: ['The last goodbye. Everyone was dressed in black.', 'The little brother did not cry. He did not speak.', 'In his pocket was the dragon, finished one day too late.'] },
+  final: { m: 'mask', lines: ['At the very bottom there are no more memories. Only an unfinished page.', 'There is no Ada down here. There never was a brother who did not come home.', 'Ada was the one in the white bed. Ada was the one who asked for a dragon.', 'Theo told the story backwards for years, so that he would be the one who left. Not her.', 'The page wears his face now. "You said tomorrow," it whispers.'] },
+  ending: { m: 'dragon', lines: ['The ink grows still. Theo unfolds the dragon, crooked and green and late.', '"I made it for you," he says. "I\'m sorry I said tomorrow."', 'No one answers. The laughter is gone. That is how he knows it was real.', 'He climbs back up, holding the drawing. He will be sad for a long time.', 'But he will draw again. Not tomorrow. Today.'] },
 };
 function playCut(id, after) { cut = { id, m: CUTS[id].m, lines: CUTS[id].lines, i: 0, chars: 0, t: 0, after }; state = 'cutscene'; keys.clear(); mouse.down = false; }
 function updateCut(dt) {
@@ -742,6 +833,8 @@ function inkCircle(x, y, r, fill, stroke = '#000', lw = 2.5, wobble = 0.08, seed
 function drawRoom() {
   ctx.drawImage(grain, 0, 0);
   // splats from killed enemies stay on the floor
+  if (room.note) { ctx.save(); ctx.translate(RCX + 150, RY1 - 40); ctx.rotate(-0.04); ctx.font = 'italic 15px Georgia'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(230,230,230,0.22)'; ctx.fillText(room.note, 0, 0); ctx.restore(); }
+  for (const q of room.puddles) { ctx.globalAlpha = Math.min(1, q.life / 1.5) * 0.85; inkCircle(q.x, q.y, q.r, '#000', '#3a3a3a', 1.5, 0.12, q.x); ctx.globalAlpha = 1; }
   for (const s of splats) if (s.room === room) { ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rot); ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.beginPath(); ctx.ellipse(0, 0, s.r, s.r * 0.7, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
   // walls
   ctx.fillStyle = '#1d1d1d';
@@ -819,6 +912,36 @@ function drawEnemy(e) {
       ctx.fillStyle = body; ctx.fill(); ctx.strokeStyle = line; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
       ctx.fillStyle = e.t > 2 ? '#fff' : '#666'; ctx.beginPath(); ctx.arc(e.x, e.y, 5, 0, 7); ctx.fill(); break;
     }
+    case 'ghost': {
+      ctx.beginPath(); ctx.arc(e.x, e.y - 3, e.r, Math.PI, 0); for (let i = 0; i <= 4; i++) ctx.lineTo(e.x + e.r - i * e.r / 2, e.y + e.r + (i % 2 ? -5 : 2) + Math.sin(time * 6 + i) * 2); ctx.closePath();
+      ctx.fillStyle = e.flash > 0 ? '#fff' : 'rgba(215,215,215,0.85)'; ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.strokeStyle = '#999'; ctx.beginPath(); ctx.moveTo(e.x, e.y - e.r - 2); ctx.lineTo(e.x, e.y - e.r - 14); ctx.stroke();
+      for (const s of [-1, 1]) { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(e.x + s * 5, e.y - 4, 2.5, 4, 0, 0, 7); ctx.fill(); } break;
+    }
+    case 'bomber': {
+      inkCircle(e.x - e.r * 0.5, e.y + 2, e.r * 0.6, body, line, 2, 0.1, 1); inkCircle(e.x + e.r * 0.5, e.y + 2, e.r * 0.6, body, line, 2, 0.1, 2); inkCircle(e.x, e.y - e.r * 0.25, e.r * 0.75, body, line, 2.5, 0.1, e.t);
+      ctx.strokeStyle = '#888'; ctx.lineWidth = 1.5; for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(e.x + i * 8, e.y + e.r * 0.7); ctx.lineTo(e.x + i * 8 - 2, e.y + e.r * 0.7 + 6 + Math.sin(time * 8 + i) * 3); ctx.stroke(); }
+      eyes(0.3, 0.13); break;
+    }
+    case 'spider': {
+      const h = e.h || 0; if (e.state === 1) { ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(e.tx, e.ty, e.r + 6, 0, 7); ctx.stroke(); }
+      ctx.strokeStyle = '#ccc'; ctx.lineWidth = 2; for (const s of [-1, 1]) for (let i = 0; i < 4; i++) { const a = -0.9 + i * 0.6, w = Math.sin(time * 12 + i) * 2; ctx.beginPath(); ctx.moveTo(e.x, e.y - h); ctx.quadraticCurveTo(e.x + s * e.r * 1.2, e.y - h + a * e.r - 8, e.x + s * e.r * 1.8, e.y - h + a * e.r + w + 6); ctx.stroke(); }
+      inkCircle(e.x, e.y - h, e.r, body, line, 2.5, 0.06, e.t); ctx.fillStyle = '#fff'; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(e.x - 6 + i * 4, e.y - h - 3, 1.8, 0, 7); ctx.fill(); } break;
+    }
+    case 'sniper': {
+      if (e.state === 1) { const lock = e.t > 0.65; ctx.strokeStyle = `rgba(255,255,255,${lock ? 0.75 : 0.18 + e.t * 0.3})`; ctx.lineWidth = lock ? 2 : 1; ctx.setLineDash(lock ? [] : [8, 6]); ctx.beginPath(); ctx.moveTo(e.x, e.y); ctx.lineTo(e.x + Math.cos(e.aim) * 1200, e.y + Math.sin(e.aim) * 1200); ctx.stroke(); ctx.setLineDash([]); }
+      ctx.fillStyle = body; ctx.strokeStyle = line; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(e.x - e.r, e.y + e.r); ctx.lineTo(e.x - e.r * 0.5, e.y - e.r * 0.4); ctx.lineTo(e.x + e.r * 0.5, e.y - e.r * 0.4); ctx.lineTo(e.x + e.r, e.y + e.r); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = e.state === 1 ? 16 : 4; ctx.fillStyle = '#f2f2f2'; ctx.beginPath(); ctx.arc(e.x, e.y - e.r * 0.6, e.r * 0.45, 0, 7); ctx.fill(); ctx.restore(); break;
+    }
+    case 'summoner': {
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(e.x, e.y, 230, 0, 7); ctx.stroke();
+      ctx.fillStyle = body; ctx.strokeStyle = line; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(e.x, e.y - e.r * 1.4); ctx.quadraticCurveTo(e.x + e.r * 1.2, e.y, e.x + e.r, e.y + e.r); ctx.lineTo(e.x - e.r, e.y + e.r); ctx.quadraticCurveTo(e.x - e.r * 1.2, e.y, e.x, e.y - e.r * 1.4); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(e.x - 6, e.y - 2); ctx.lineTo(e.x + 6, e.y - 2); ctx.stroke();
+      for (let i = 0; i < 3; i++) { const a = time * 2 + i * 2.1; ctx.fillStyle = '#bbb'; ctx.beginPath(); ctx.arc(e.x + Math.cos(a) * e.r * 1.6, e.y + Math.sin(a) * e.r * 1.6, 2.5, 0, 7); ctx.fill(); } break;
+    }
+    case 'bouncer': {
+      inkCircle(e.x, e.y, e.r, body, line, 2.5, 0.03, 0); ctx.save(); ctx.translate(e.x, e.y); ctx.rotate(time * 6); ctx.strokeStyle = '#ddd'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, e.r * 0.6, -0.6, 0.6); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, e.r * 0.6, Math.PI - 0.6, Math.PI + 0.6); ctx.stroke(); ctx.restore(); break;
+    }
     case 'boss': {
       drawBoss(e, body);
       if (e.kind === 4) { const ang = Math.atan2(player.y - e.y, player.x - e.x); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x + s * 14 + Math.cos(ang) * 3, e.y + Math.sin(ang) * 3, 6, 0, 7); ctx.fill(); } }
@@ -826,11 +949,17 @@ function drawEnemy(e) {
       break;
     }
   }
+  if (e.elite) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(e.x, e.y - (e.h || 0), e.r + 6 + Math.sin(time * 5) * 1.5, 0, 7); ctx.stroke(); }
+  if (e.shielded > 0) { ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(e.x, e.y, e.r + 4, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
   if (!e.boss && e.hp < e.maxHp && e.spawn <= 0) { ctx.fillStyle = '#333'; ctx.fillRect(e.x - 14, e.y - e.r - 10, 28, 3); ctx.fillStyle = '#ddd'; ctx.fillRect(e.x - 14, e.y - e.r - 10, 28 * e.hp / e.maxHp, 3); }
   ctx.globalAlpha = 1;
 }
 
 function drawBoss(e, body) {
+  if (e.pend) { const q = e.pend, k = 1 - q.t / 0.8; ctx.save(); ctx.strokeStyle = `rgba(255,255,255,${0.15 + k * 0.5})`; ctx.lineWidth = 1.5; ctx.setLineDash([6, 6]);
+    if (q.ring) { ctx.beginPath(); ctx.arc(e.x, e.y, e.r + 20 + k * 40, 0, 7); ctx.stroke(); }
+    else for (let i = 0; i < q.n; i++) { const a = q.ang + (i - (q.n - 1) / 2) * q.step; ctx.beginPath(); ctx.moveTo(e.x, e.y); ctx.lineTo(e.x + Math.cos(a) * 320, e.y + Math.sin(a) * 320); ctx.stroke(); }
+    ctx.restore(); }
   const pulse = 1 + Math.sin(time * 4) * 0.04, r = e.r;
   switch (e.kind) {
     case 0: { const f = Math.sin(time * 14) * 0.5; for (const s of [-1, 1]) { ctx.save(); ctx.translate(e.x, e.y); ctx.scale(s, 1); ctx.rotate(-0.3 + f * 0.4); ctx.beginPath(); ctx.ellipse(r * 0.9, -r * 0.2, r * 1.1, r * 0.6, 0.3, 0, 7); ctx.fillStyle = '#1c1c1c'; ctx.fill(); ctx.strokeStyle = '#ddd'; ctx.lineWidth = 2.5; ctx.stroke(); ctx.beginPath(); ctx.arc(r * 0.9, -r * 0.2, r * 0.25, 0, 7); ctx.strokeStyle = '#888'; ctx.stroke(); ctx.restore(); } inkCircle(e.x, e.y, r * 0.65 * pulse, body, '#fff', 3, 0.1, e.t); break; }
@@ -927,12 +1056,13 @@ function render() {
   if (fade > 0) { ctx.fillStyle = `rgba(0,0,0,${fade})`; ctx.fillRect(0, HUD, W, H - HUD); }
   ctx.restore();
   drawHUD();
-  if (banner) { ctx.globalAlpha = Math.min(1, banner.t); ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, H / 2 - 150, W, 74); ctx.fillStyle = '#fff'; ctx.font = 'bold 30px Georgia'; ctx.textAlign = 'center'; ctx.fillText(banner.text, W / 2, H / 2 - 112); ctx.font = 'italic 16px Georgia'; ctx.fillStyle = '#aaa'; ctx.fillText(banner.sub, W / 2, H / 2 - 88); ctx.globalAlpha = 1; }
+  if (banner) { ctx.globalAlpha = Math.min(1, banner.t); ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, H / 2 - 150, W, banner.fl ? 100 : 74); if (banner.fl) { ctx.font = 'italic 14px Georgia'; ctx.fillStyle = '#7a7a7a'; ctx.textAlign = 'center'; ctx.fillText(banner.fl, W / 2, H / 2 - 62); } ctx.fillStyle = '#fff'; ctx.font = 'bold 30px Georgia'; ctx.textAlign = 'center'; ctx.fillText(banner.text, W / 2, H / 2 - 112); ctx.font = 'italic 16px Georgia'; ctx.fillStyle = '#aaa'; ctx.fillText(banner.sub, W / 2, H / 2 - 88); ctx.globalAlpha = 1; }
+  if (meets.length) { const m = meets[0]; ctx.globalAlpha = Math.min(1, m.t * 2); ctx.textAlign = 'left'; ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fillRect(RX0 + 6, RY1 - 54, 360, 46); ctx.fillStyle = '#eee'; ctx.font = 'bold 15px Georgia'; ctx.fillText(m.name, RX0 + 16, RY1 - 34); ctx.fillStyle = '#8a8a8a'; ctx.font = 'italic 13px Georgia'; ctx.fillText(m.fl, RX0 + 16, RY1 - 16); ctx.globalAlpha = 1; }
   if (state === 'pause') drawCenterText('PAUSED', ['Esc to resume  ·  R to restart  ·  M to mute', '', 'Items: ' + (player.items.map((i) => i.name).join(', ') || 'none')]);
   if (flash > 0) { ctx.fillStyle = `rgba(255,255,255,${flash * 0.5})`; ctx.fillRect(0, 0, W, H); }
   if (state === 'end') {
     const secs = Math.round(((stats.end || performance.now()) - stats.start) / 1000);
-    drawCenterText('THE END', ['Ada climbed back up, holding the drawing.', `Enemies slain: ${stats.kills}   Rooms explored: ${stats.rooms}   Items: ${stats.items}   Time: ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`, '', 'Ink Depths  ·  made by Shirenos  ·  thank you for playing', '', 'ENTER  play again     ·     C  keep descending'], 0.88);
+    drawCenterText('THE END', ['Theo climbed back up, holding the drawing.', `Enemies slain: ${stats.kills}   Rooms explored: ${stats.rooms}   Items: ${stats.items}   Time: ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`, '', 'Ink Depths  ·  made by Shirenos  ·  thank you for playing', '', 'ENTER  play again     ·     C  keep descending'], 0.88);
   }
   if (state === 'dead') {
     const secs = Math.round(((stats.end || performance.now()) - stats.start) / 1000);
@@ -953,4 +1083,4 @@ requestAnimationFrame(frame);
 
 // Small hook for automated smoke tests
 window.__ink = { get state() { return state; }, get floor() { return floor; }, get room() { return room; }, get map() { return map; }, get enemies() { return enemies; }, get player() { return player; }, get pickups() { return pickups; }, get cut() { return cut; },
-  newRun, nextFloor, enterRoom, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, killAll: () => enemies.forEach((e) => killEnemy(e)) };
+  newRun, nextFloor, enterRoom, makeEnemy, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, killAll: () => enemies.forEach((e) => killEnemy(e)) };
