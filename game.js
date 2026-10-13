@@ -985,10 +985,19 @@ function advanceCut() {
 }
 function endCut() { const f = cut && cut.after; cut = null; state = 'play'; keys.clear(); if (f) f(); }
 
-function child(x, y, s = 1, dark = false) {
+function child(x, y, s = 1, dark = false, girl = false) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  ctx.fillStyle = dark ? '#000' : '#e8e8e8'; if (dark) { ctx.shadowColor = '#fff'; ctx.shadowBlur = 12; } ctx.beginPath(); ctx.moveTo(-16, 40); ctx.lineTo(-10, 0); ctx.lineTo(10, 0); ctx.lineTo(16, 40); ctx.closePath(); ctx.fill();
-  ctx.beginPath(); ctx.arc(0, -14, 15, 0, 7); ctx.fill(); ctx.strokeStyle = dark ? '#ccc' : '#000'; ctx.lineWidth = 2; ctx.stroke();
+  const fill = dark ? '#000' : '#e8e8e8', line = dark ? '#ccc' : '#000'; if (dark) { ctx.shadowColor = '#fff'; ctx.shadowBlur = 12; }
+  ctx.fillStyle = fill; ctx.strokeStyle = line; ctx.lineWidth = 2;
+  if (girl) {
+    for (const k of [-1, 1]) { ctx.fillStyle = '#151515'; ctx.beginPath(); ctx.ellipse(k * 19, -6, 6, 15, k * 0.25, 0, 7); ctx.fill(); ctx.strokeStyle = '#ddd'; ctx.stroke(); ctx.fillStyle = '#f2f2f2'; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.moveTo(k * 17, -20); ctx.lineTo(k * 17 - 7, -26); ctx.lineTo(k * 17 - 7, -14); ctx.closePath(); ctx.moveTo(k * 17, -20); ctx.lineTo(k * 17 + 7, -26); ctx.lineTo(k * 17 + 7, -14); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    ctx.fillStyle = fill; ctx.strokeStyle = line; ctx.beginPath(); ctx.moveTo(-7, 0); ctx.lineTo(7, 0); ctx.lineTo(24, 36); ctx.quadraticCurveTo(0, 44, -24, 36); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-6, 39); ctx.lineTo(-6, 46); ctx.moveTo(6, 39); ctx.lineTo(6, 46); ctx.stroke();
+  } else {
+    ctx.beginPath(); ctx.rect(-9, 0, 18, 24); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.rect(-9, 24, 7, 16); ctx.rect(2, 24, 7, 16); ctx.fill(); ctx.stroke();
+  }
+  ctx.fillStyle = fill; ctx.strokeStyle = line; ctx.beginPath(); ctx.arc(0, -14, girl ? 15 : 13, 0, 7); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = dark ? '#ccc' : '#151515'; ctx.beginPath(); if (girl) { ctx.arc(0, -17, 15, Math.PI * 1.05, Math.PI * 1.95); ctx.quadraticCurveTo(0, -23, -14, -20); } else { ctx.moveTo(-13, -16); for (let i = 0; i <= 6; i++) ctx.lineTo(-13 + i * 4.3, -27 - (i % 2) * 5); ctx.lineTo(13, -16); ctx.quadraticCurveTo(0, -22, -13, -16); } ctx.fill();
   ctx.restore();
 }
 function drawMotif(m, t) {
@@ -996,16 +1005,16 @@ function drawMotif(m, t) {
   ctx.strokeStyle = '#ddd'; ctx.lineWidth = 3; ctx.fillStyle = '#0a0a0a';
   const sw = Math.sin(t * 1.5);
   switch (m) {
-    case 'pool': ctx.beginPath(); ctx.ellipse(60, 70, 120 + sw * 4, 26, 0, 0, 7); ctx.fillStyle = '#000'; ctx.fill(); ctx.stroke(); child(-90, 20); break;
+    case 'pool': ctx.beginPath(); ctx.ellipse(60, 70, 120 + sw * 4, 26, 0, 0, 7); ctx.fillStyle = '#000'; ctx.fill(); ctx.stroke(); child(-90, 20, 1, false, true); break;
     case 'cradle': ctx.save(); ctx.rotate(sw * 0.12); ctx.beginPath(); ctx.arc(0, 0, 80, 0.15, Math.PI - 0.15); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-80, 0); ctx.lineTo(80, 0); ctx.stroke(); ctx.restore(); ctx.beginPath(); ctx.moveTo(-60, 85); ctx.quadraticCurveTo(0, 105, 60, 85); ctx.stroke(); break;
     case 'jar': ctx.strokeRect(-45, -10, 90, 100); ctx.beginPath(); ctx.moveTo(-45, -10); ctx.lineTo(-35, -25); ctx.lineTo(35, -25); ctx.lineTo(45, -10); ctx.stroke(); for (let i = 0; i < 4; i++) { const x = -27 + i * 18; ctx.beginPath(); ctx.moveTo(x, 90); ctx.quadraticCurveTo(x + sw * 4, 40, x + 6, 10 + i * 6); ctx.stroke(); ctx.beginPath(); ctx.arc(x + 6, 6 + i * 6, 6, 0, 7); ctx.fillStyle = '#666'; ctx.fill(); } break;
     case 'corridor': for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(s * 220, -80); ctx.lineTo(s * 30, -20); ctx.lineTo(s * 30, 30); ctx.lineTo(s * 220, 100); ctx.stroke(); } ctx.strokeRect(-30, -20, 60, 50); ctx.globalAlpha *= 0.4 + 0.3 * Math.abs(sw); ctx.fillStyle = '#fff'; ctx.fillRect(-26, -16, 52, 42); break;
-    case 'window': ctx.strokeRect(-90, -70, 180, 160); ctx.beginPath(); ctx.moveTo(0, -70); ctx.lineTo(0, 90); ctx.moveTo(-90, 10); ctx.lineTo(90, 10); ctx.stroke(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#888'; for (let i = 0; i < 24; i++) { const x = -85 + (i * 37) % 170, y = -70 + ((i * 53 + t * 140) % 160); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 2, y + 10); ctx.stroke(); } child(0, 150, 0.7); break;
+    case 'window': ctx.strokeRect(-90, -70, 180, 160); ctx.beginPath(); ctx.moveTo(0, -70); ctx.lineTo(0, 90); ctx.moveTo(-90, 10); ctx.lineTo(90, 10); ctx.stroke(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#888'; for (let i = 0; i < 24; i++) { const x = -85 + (i * 37) % 170, y = -70 + ((i * 53 + t * 140) % 160); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 2, y + 10); ctx.stroke(); } child(0, 150, 0.7, false, true); break;
     case 'chair': ctx.beginPath(); ctx.moveTo(-140, 30); ctx.lineTo(140, 30); ctx.moveTo(-120, 30); ctx.lineTo(-120, 100); ctx.moveTo(120, 30); ctx.lineTo(120, 100); ctx.stroke(); for (const x of [-90, -30, 30, 90]) { ctx.beginPath(); ctx.ellipse(x, 22, 16, 5, 0, 0, 7); ctx.stroke(); } ctx.strokeRect(170, -30, 40, 60); ctx.beginPath(); ctx.moveTo(170, 30); ctx.lineTo(170, 100); ctx.moveTo(210, 30); ctx.lineTo(210, 100); ctx.stroke(); break;
     case 'candle': ctx.strokeRect(-14, 0, 28, 90); ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 20; ctx.fillStyle = '#f4f4f4'; ctx.beginPath(); ctx.ellipse(sw * 2, -14, 7, 16 + sw * 2, 0, 0, 7); ctx.fill(); ctx.restore(); break;
     case 'mask': inkCircle(0, 20, 80, '#000', '#eee', 3, 0.15, t); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(s * 28, 5, 9, 14, 0, 0, 7); ctx.fill(); } ctx.beginPath(); ctx.moveTo(-25, 60); ctx.quadraticCurveTo(0, 45, 25, 60); ctx.stroke(); break;
-    case 'theo': { const fadeOut = cut && cut.i >= 9 ? Math.max(0, 1 - cut.t / 2) : 1; child(-70, 20, 1); ctx.save(); ctx.globalAlpha *= fadeOut; child(60, 42, 0.65, true); ctx.fillStyle = '#e8e8e8'; ctx.save(); ctx.translate(18, 40); ctx.rotate(-0.15 + sw * 0.03); ctx.fillRect(-16, -12, 32, 24); ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-10, 6); ctx.quadraticCurveTo(-2, -8, 4, 2); ctx.lineTo(10, -6); ctx.stroke(); ctx.restore(); ctx.restore(); break; }
-    case 'sky': { drawRide(70, -60, 0.9); ctx.beginPath(); ctx.moveTo(-260, 90); ctx.lineTo(260, 90); ctx.stroke(); const k = Math.min(1, t / 6); ctx.lineWidth = 2; for (let i = 0; i < 4; i++) { if (k < i / 4) break; const x = -180 + i * 120, y = -40 + (i % 2) * 30; ctx.beginPath(); ctx.arc(x, y, 22, Math.PI, 0); ctx.arc(x + 30, y, 16, Math.PI, 0); ctx.stroke(); } ctx.beginPath(); ctx.arc(170, -70, 26, 0, Math.PI * 2 * k); ctx.stroke(); child(-200, 50, 0.8); ctx.beginPath(); ctx.moveTo(-185, 52); ctx.lineTo(-150, 20 - sw * 6); ctx.stroke(); break; }
+    case 'theo': { const fadeOut = cut && cut.i >= 9 ? Math.max(0, 1 - cut.t / 2) : 1; child(-70, 20, 1, false, true); ctx.save(); ctx.globalAlpha *= fadeOut; child(60, 42, 0.65, true); ctx.fillStyle = '#e8e8e8'; ctx.save(); ctx.translate(18, 40); ctx.rotate(-0.15 + sw * 0.03); ctx.fillRect(-16, -12, 32, 24); ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-10, 6); ctx.quadraticCurveTo(-2, -8, 4, 2); ctx.lineTo(10, -6); ctx.stroke(); ctx.restore(); ctx.restore(); break; }
+    case 'sky': { drawRide(70, -60, 0.9); ctx.beginPath(); ctx.moveTo(-260, 90); ctx.lineTo(260, 90); ctx.stroke(); const k = Math.min(1, t / 6); ctx.lineWidth = 2; for (let i = 0; i < 4; i++) { if (k < i / 4) break; const x = -180 + i * 120, y = -40 + (i % 2) * 30; ctx.beginPath(); ctx.arc(x, y, 22, Math.PI, 0); ctx.arc(x + 30, y, 16, Math.PI, 0); ctx.stroke(); } ctx.beginPath(); ctx.arc(170, -70, 26, 0, Math.PI * 2 * k); ctx.stroke(); child(-200, 50, 0.8, false, true); ctx.beginPath(); ctx.moveTo(-185, 52); ctx.lineTo(-150, 20 - sw * 6); ctx.stroke(); break; }
     case 'ada': { const n = cut && /^f\d$/.test(cut.id) ? +cut.id[1] + 1 : 1; ctx.strokeStyle = '#555'; ctx.lineWidth = 2; ctx.strokeRect(-150, -120, 300, 240); drawAda(0, 30, n, 3.4, { ay: 0.3 }); break; }
     case 'blank': case 'notepage': case 'ride': {
       ctx.save(); ctx.rotate(-0.03); ctx.fillStyle = '#e9e9e4'; ctx.fillRect(-170, -110, 340, 220); ctx.strokeStyle = '#b8b8b8'; ctx.lineWidth = 1; for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.moveTo(-160, -80 + i * 26); ctx.lineTo(160, -80 + i * 26); ctx.stroke(); } ctx.restore();
@@ -1311,8 +1320,13 @@ function drawAda(x, y, f, sc, o = {}) {
   const hx = hunch ? ax * 2 : 0, H0 = hunch ? -3 : -10, wet = f >= 4 && !won;
   if (f >= 6 && !won) { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.moveTo(hx - 23, 21); ctx.quadraticCurveTo(hx - 27, H0 - 25, hx, H0 - 25); ctx.quadraticCurveTo(hx + 27, H0 - 25, hx + 23, 21); ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#eee'; ctx.lineWidth = 1.6; ctx.stroke(); }
   ctx.fillStyle = wet ? '#a8a8a8' : '#d4d4d4'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath();
-  if (hunch) { ctx.moveTo(-13, 18); ctx.quadraticCurveTo(-14, 2, 0, 0); ctx.quadraticCurveTo(14, 2, 13, 18); } else { ctx.moveTo(-11, 18); ctx.lineTo(-7, -2); ctx.lineTo(7, -2); ctx.lineTo(11, 18); }
+  ctx.save(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-5, 16); ctx.lineTo(-5, 22); ctx.moveTo(5, 16); ctx.lineTo(5, 22); ctx.stroke(); ctx.restore(); ctx.beginPath();
+  if (hunch) { ctx.moveTo(-17, 17); ctx.quadraticCurveTo(-10, 4, -8, 2); ctx.quadraticCurveTo(0, -2, 8, 2); ctx.quadraticCurveTo(10, 4, 17, 17); } else { ctx.moveTo(-21, 17); ctx.lineTo(-6, -2); ctx.lineTo(6, -2); ctx.lineTo(21, 17); }
+  ctx.quadraticCurveTo(14, 21, 7, 18); ctx.quadraticCurveTo(0, 22, -7, 18); ctx.quadraticCurveTo(-12, 20, hunch ? -17 : -21, 17);
   ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-10, 9); ctx.lineTo(10, 9); ctx.stroke();
+  for (const k of [-1, 1]) { const px = hx + k * 17, py = H0 + 9; ctx.fillStyle = wet ? '#000' : '#151515'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(px + k * 2, py + (hunch ? 3 : 0), 5.5, 13, k * 0.25, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#f2f2f2'; ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(px, py - 10); ctx.lineTo(px - 9, py - 17); ctx.lineTo(px - 9, py - 3); ctx.closePath(); ctx.moveTo(px, py - 10); ctx.lineTo(px + 9, py - 17); ctx.lineTo(px + 9, py - 3); ctx.closePath(); ctx.fill(); ctx.stroke(); }
   ctx.beginPath(); ctx.arc(hx, H0, 15, 0, 7); ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.stroke(); ctx.fillStyle = wet ? '#e2e2e2' : '#fafafa'; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = '#000'; ctx.stroke();
   ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(hx, H0 - 3, 15, Math.PI * 1.05, Math.PI * 1.95); ctx.quadraticCurveTo(hx, H0 - 9, hx - 14, H0 - 6); ctx.fill();
   if (wet) { ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2.4; for (const k of [-1, 1]) { ctx.beginPath(); ctx.moveTo(hx + k * 13, H0 - 6); ctx.quadraticCurveTo(hx + k * 18, H0 + 6, hx + k * 14, H0 + 17); ctx.stroke(); ctx.fillStyle = '#ccc'; ctx.beginPath(); ctx.arc(hx + k * 14, H0 + 19 + ((time * 1.3 + k) % 1) * 6, 1.5, 0, 7); ctx.fill(); } }
@@ -1341,7 +1355,7 @@ function drawRide(x, y, s, k = 1) {
   ctx.strokeStyle = '#6fbf73'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-90, 10); ctx.quadraticCurveTo(-40, 30 + Math.sin(time * 2) * 4, 20, 10); ctx.quadraticCurveTo(60, -5, 80, -30); ctx.stroke();
   ctx.beginPath(); ctx.arc(88, -36, 11, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-90, 10); ctx.lineTo(-110, 0); ctx.stroke();
   const wf = Math.sin(time * 3) * 12; ctx.beginPath(); ctx.moveTo(-10, 12); ctx.lineTo(-30, -40 - wf); ctx.lineTo(20, 4); ctx.stroke();
-  if (k > 0.3) { child(-30, -22, 0.45); child(0, -18, 0.38); }
+  if (k > 0.3) { child(-30, -22, 0.45, false, true); child(4, -14, 0.34); }
   ctx.restore();
 }
 function drawPlayer() {
