@@ -25,6 +25,14 @@ and at the bottom, an unfinished page. Cutscenes play at the start, after every 
 fight and at the ending. Item descriptions, enemy names and the notes scribbled on the floors hold clues
 to what was really waiting at the bottom.
 
+## Rooms and floors
+
+Besides fights, treasure, challenge and boss rooms, every floor hides story rooms: a memory room with a short
+scene, Mr. Buttons' shop (Theo's old bunny, paid in ink drops that enemies leave behind), a birthday-candle
+puzzle, a heart-for-item trade and a secret room behind a cracked wall (shoot it open). Floors have their own
+hazards: thorns in the garden, flickering darkness in the hospital corridor, rain and puddles by the window.
+Ada changes as she descends, and so do her tears.
+
 ## Language
 
 The game is fully playable in English and Russian. Switch the language from the title menu or with L in

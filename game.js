@@ -79,6 +79,9 @@ const UI = {
     dead: 'YOU DISSOLVED', reached: (n) => `Reached floor ${n}`, deadHint: 'Press ENTER or click to try again',
     colTitle: 'COLLECTION', colEnemies: 'Enemies', colItems: 'Items', killed: (n) => `Slain: ${n}`, picked: (n) => `Picked up: ${n}`,
     locked: '???', lockedHint: 'Not found yet', complete: (p) => `${p}% complete`, colHint: 'Arrows / WASD move  ·  Tab, Q / E switch section  ·  Esc back', boss: 'Boss',
+    shop: 'Mr. Buttons', shopSub: "Theo's old bunny. He still keeps shop for him.", trade: 'A fair trade', tradeSub: 'One of your hearts for one of his things.',
+    puzzle: 'Birthday candles', puzzleSub: 'Light them the way he counted: one, two, three, four.', puzzleDone: 'He always blew them out in one breath.', puzzleWrong: 'not like that',
+    secret: 'A hidden room', secretSub: 'He hid things where she never looked.', need: (n) => `need ${n} ink drops`, noHeart: 'not enough hearts',
   },
   ru: {
     floor: (n) => `Этаж ${n}`, FLOOR: (n) => `ЭТАЖ ${n}`, bossDefeated: 'Босс повержен', takeItem: 'Возьми предмет и спускайся', inkStill: 'Чернила затихают',
@@ -97,6 +100,9 @@ const UI = {
     dead: 'ТЫ РАСТВОРИЛАСЬ', reached: (n) => `Дошла до этажа ${n}`, deadHint: 'Нажми ENTER или кликни, чтобы попробовать снова',
     colTitle: 'КОЛЛЕКЦИЯ', colEnemies: 'Враги', colItems: 'Предметы', killed: (n) => `Повержено: ${n}`, picked: (n) => `Подобрано: ${n}`,
     locked: '???', lockedHint: 'Ещё не найдено', complete: (p) => `Собрано ${p}%`, colHint: 'Стрелки / WASD — выбор  ·  Tab, Q / E — раздел  ·  Esc — назад', boss: 'Босс',
+    shop: 'Господин Пуговка', shopSub: 'Старый заяц Тео. Он до сих пор торгует за него.', trade: 'Честный обмен', tradeSub: 'Одно твоё сердце за одну его вещь.',
+    puzzle: 'Свечи на торте', puzzleSub: 'Зажги их так, как считал он: раз, два, три, четыре.', puzzleDone: 'Он всегда задувал их на одном дыхании.', puzzleWrong: 'не так',
+    secret: 'Тайная комната', secretSub: 'Он прятал вещи там, куда она никогда не смотрела.', need: (n) => `нужно капель: ${n}`, noHeart: 'не хватает сердец',
   },
 };
 const L = (k, ...a) => { const v = UI[lang][k] !== undefined ? UI[lang][k] : UI.en[k]; return typeof v === 'function' ? v(...a) : v; };
@@ -109,6 +115,7 @@ const BOSS_TXT = {"en": [["The Cradle Moth", "It still hums the lullaby"], ["The
 const BOSS_FL = {"en": ["A moth that never left the nursery lamp.", "He gave her every flower. She called them ugly.", "She whispered \"tomorrow\" back at every door.", "Nine days of counting drops.", "His toys, waiting for someone to play.", "It rang once, and she said nothing.", "It was never him. It was always her."], "ru": ["Мотылёк, который так и не улетел от лампы в детской.", "Он дарил ей все цветы. Она называла их некрасивыми.", "У каждой двери она шёпотом повторяла «завтра».", "Девять дней она считала капли.", "Его игрушки ждут, когда с ними поиграют.", "Он прозвонил один раз, а она промолчала.", "Это никогда не был он. Это всегда была она."]};
 const ENEMY_TXT = {"chaser": [["Crayon Scribble", "Someone pressed so hard the paper tore. Angry?"], ["Каракуля", "Кто-то давил так сильно, что порвал бумагу. Со злости?"]], "fly": [["Hum", "Machines that hummed like tired bees."], ["Гул", "Машины гудели, как уставшие пчёлы."]], "splitter": [["Ink Blot", "Spilled, and spilled again."], ["Клякса", "Пролилась, и снова, и снова."]], "bouncer": [["Rubber Ball", "He threw it at the wall for hours. Waiting."], ["Резиновый мячик", "Он часами бросал его в стену. Ждал."]], "shooter": [["Watching Eye", "Visiting hours are over."], ["Глаз", "Часы посещений окончены."]], "spider": [["Night-light Spider", "It jumps whenever the hallway light flickers."], ["Паук-ночник", "Прыгает каждый раз, когда мигает свет в коридоре."]], "ghost": [["Drip Wraith", "It drips where his bed used to be."], ["Капельный призрак", "Капает там, где раньше стояла его кровать."]], "turret": [["Pill Wheel", "Twice a day, with water. He hated the big one."], ["Таблетница", "Два раза в день, запивая водой. Большую он ненавидел."]], "dasher": [["Paper Dart", "Folded from a get-well card she never signed."], ["Бумажный самолётик", "Сложен из открытки «Выздоравливай», которую она так и не подписала."]], "bomber": [["Raincloud", "It leaves puddles nobody wipes up."], ["Тучка", "Оставляет лужи, которые никто не вытирает."]], "sniper": [["Night Lamp", "He kept it on late, drawing something under the blanket."], ["Ночник", "Он не выключал его допоздна. Что-то рисовал под одеялом."]], "summoner": [["Hush", "\"Shh. Your brother is sleeping.\""], ["Тише", "«Тсс. Твой брат спит»."]]};
 const ITEM_TXT = {"ink": ["The pen she stopped using. It still remembers her hand.", ["Пузырёк чернил", "Урон выше", "Ручка, которую она забросила. Она всё ещё помнит её руку."]], "quill": ["He learned to write her name before his own.", ["Острое перо", "Скорострельность выше", "Её имя он научился писать раньше своего."]], "feather": ["Found on his hospital windowsill.", ["Воронье перо", "Скорость выше", "Нашлось на подоконнике его больничной палаты."]], "needle": ["The nurse said it would only sting a little. He didn't cry.", ["Железная игла", "Пробивающие слёзы", "Медсестра сказала, будет чуть-чуть больно. Он не плакал."]], "eye": ["He always knew when she was sad.", ["Третий глаз", "Самонаводящиеся слёзы", "Он всегда знал, когда ей грустно."]], "fork": ["She said tomorrow. Tomorrow. Tomorrow.", ["Раздвоенный язык", "Тройной выстрел", "Она говорила: завтра. Завтра. Завтра."]], "lens": ["His glasses. Taped in the middle, twice.", ["Треснувшая линза", "Дальность и скорость слёз выше", "Его очки. Дважды заклеенные посередине."]], "heart": ["A heart he drew on her cast. Lopsided.", ["Угольное сердце", "Здоровье выше", "Сердечко, которое он нарисовал ей на гипсе. Кривое."]], "stone": ["He gave it to her for luck. She threw it away.", ["Тяжёлый камень", "Огромные слёзы, урон выше, скорострельность ниже", "Он подарил его ей на удачу. Она его выбросила."]], "moon": ["Stuck to his ceiling. It glowed for ten minutes every night.", ["Бумажная луна", "Все характеристики выше", "Наклеена у него на потолке. Светилась десять минут каждую ночь."]], "smoke": ["Seven candles on his last cake.", ["Струйка дыма", "Призрачные слёзы проходят сквозь камни", "Семь свечей на его последнем торте."]], "twin": ["Two shadows on the hospital wall at night. Hers and his.", ["Тень-близнец", "Стреляет и назад", "Две тени на больничной стене ночью. Её и его."]], "salt": ["Some tears were never cried.", ["Солёная слеза", "Слёзы замедляют врагов", "Некоторые слёзы так и не были выплаканы."]], "nightshade": ["His medicine tasted like this. He made faces to make her laugh.", ["Чернила белладонны", "Ядовитые слёзы", "Такой на вкус была его микстура. Он корчил рожи, чтобы она смеялась."]], "die": ["He always let her win. She never noticed.", ["Шулерский кубик", "15% шанс критической слезы", "Он всегда ей поддавался. Она так и не заметила."]], "prism": ["He made rainbows on the wall for her.", ["Стеклянная призма", "Слёзы раскалываются при попадании", "Он пускал для неё радуги на стену."]], "eraser": ["Worn thin. He kept starting the same drawing over.", ["Ластик", "Слёзы отскакивают от стен", "Стёрт почти до конца. Он раз за разом начинал один и тот же рисунок."]], "ribbon": ["From her hair. He borrowed it to tie his notebook shut.", ["Шёлковая лента", "Волнистые слёзы, урон выше", "Из её косы. Он взял её, чтобы перевязать свою тетрадку."]], "moth": ["It circled his night lamp. He named it Ada.", ["Бумажный мотылёк", "Мотылёк кружит рядом и защищает", "Кружил вокруг его ночника. Он назвал его Адой."]], "locket": ["Inside: a girl, and a smaller boy holding her finger.", ["Серебряный медальон", "Спутник, здоровье выше", "Внутри девочка и мальчик поменьше, держащий её за палец."]], "pup": ["The dog they were going to get when he came home.", ["Теневой щенок", "Маленькая тень стреляет за тебя", "Собака, которую они собирались завести, когда он вернётся домой."]], "kite": ["It flew once. He watched from the window and waved.", ["Чернильный змей", "Спутник-стрелок, дальность выше", "Взлетел всего раз. Он смотрел из окна и махал рукой."]], "tooth": ["He lost it in the hospital. He saved it for her.", ["Молочный зуб", "Отбрасывание и урон выше", "Выпал у него в больнице. Он сберёг его для неё."]], "leech": ["The machines took a little of him every day.", ["Бледная пиявка", "Убийства понемногу лечат", "Машины каждый день забирали у него чуть-чуть."]], "umbrella": ["Nine days of rain. She never opened it.", ["Чёрный зонт", "Блокирует первый удар в каждой комнате", "Девять дней дождя. Она так ни разу его и не раскрыла."]], "match": ["Seven candles. He made a wish and wouldn't say what.", ["Обгоревшая спичка", "Враги взрываются после смерти", "Семь свечей. Он загадал желание и никому не сказал какое."]], "candle": ["Still burning in the window of his room.", ["Восковая свеча", "Тёплая аура жжёт врагов рядом", "До сих пор горит в окне его комнаты."]], "musicbox": ["It played his lullaby. She can't bring herself to wind it.", ["Музыкальная шкатулка", "Зачищенные комнаты иногда лечат", "Играла его колыбельную. У неё не хватает сил её завести."]], "photo": ["Two children. He is hiding a notebook behind his back.", ["Старая фотография", "Урон ×1,5 при полном здоровье", "Двое детей. Он прячет за спиной тетрадку."]], "crayon": ["A green crayon, worn down to a stub. Where did it go?", ["Зелёный карандаш", "Скорострельность, скорость слёз и здоровье выше", "Зелёный карандаш, стёртый до огрызка. Куда же он делся?"]], "inkheart": ["He drew it for her. It never stopped beating.", ["Чернильное сердце", "Что-то тебя помнит. Всё выше", "Он нарисовал его для неё. Оно так и не перестало биться."]], "laststroke": ["One line. That's all it ever needed.", ["Последний штрих", "Каждый удар решает всё", "Одна линия. Больше никогда и не было нужно."]]};
+for (let i = 0; i < 7; i++) { CUT_M['mem' + (i + 1)] = ["cradle", "jar", "corridor", "window", "chair", "candle", "mask"][i]; CUTS_TXT.en['mem' + (i + 1)] = [["A memory. Theo, two years old, asleep on her drawing.", "She was angry about the smudge. She kept the drawing anyway."], ["A memory. He buried a crayon in the garden.", "\"So more green grows,\" he said. She laughed at him."], ["A memory. A nurse asked him what he was drawing.", "\"A secret,\" he whispered. \"For my sister.\""], ["A memory. He drew on the fogged window with his finger.", "A wing. Then the rain washed it away."], ["A memory. Mother found green wax under his pillow.", "She did not understand. Nobody asked."], ["A memory. On the day of the goodbye, his notebook was not in his room.", "Ada thought he had thrown it away. Because of her."], ["A memory. She is the one who said tomorrow.", "She has been saying it to herself ever since."]][i]; CUTS_TXT.ru['mem' + (i + 1)] = [["Воспоминание. Тео, два года, уснул прямо на её рисунке.", "Она злилась из-за пятна. Но рисунок всё равно сохранила."], ["Воспоминание. Он закопал карандаш в саду.", "«Чтобы выросло больше зелёного», — сказал он. Она над ним посмеялась."], ["Воспоминание. Медсестра спросила, что он рисует.", "«Секрет, — прошептал он. — Для сестры»."], ["Воспоминание. Он рисовал пальцем на запотевшем окне.", "Крыло. Потом дождь его смыл."], ["Воспоминание. Мама нашла под его подушкой зелёный воск.", "Она не поняла. А никто и не спросил."], ["Воспоминание. В день прощания его тетрадки не было в комнате.", "Ада решила, что он её выбросил. Из-за неё."], ["Воспоминание. Это она сказала «завтра».", "И с тех пор повторяет это себе."]][i]; }
 const SYN_RU = {"Seeking Needle": "Ищущая игла", "Mirror Tongue": "Зеркальный язык", "Frostbite": "Обморожение", "Keepsakes": "Памятные вещицы", "Playmates": "Друзья по играм", "Wildfire": "Лесной пожар"};
 const itemName = (it) => lang === 'ru' && ITEM_TXT[it.id] ? ITEM_TXT[it.id][1][0] : it.name;
 const itemDesc = (it) => lang === 'ru' && ITEM_TXT[it.id] ? ITEM_TXT[it.id][1][1] : it.desc;
@@ -227,7 +234,7 @@ function newRun() {
     s: { dmg: 3.5, delay: 22, speed: 3.4, range: 360, shotSpeed: 8, pierce: false, homing: false, multi: 1, size: 6, spectral: false, back: false,
       slow: 0, poison: 0, crit: 0, split: false, bounce: false, wavy: false, orbitals: 0, familiars: 0, knock: 1, leech: 0, shield: false, explode: false,
       aura: 0, regen: 0, fullHp: false, backMulti: false, frostbite: false, orbDmg: 1, famDmg: 0 },
-    items: [], syn: new Set(), fams: [], orbs: [], shieldUp: false, secret: false, leechN: 0,
+    items: [], drops: 0, syn: new Set(), fams: [], orbs: [], shieldUp: false, secret: false, leechN: 0,
   };
   stats = { kills: 0, rooms: 0, items: 0, start: performance.now(), floor: 1, met: new Set() }; meets = [];
   floor = 0; seqBuf = []; endTimer = 0; splats = []; nextFloor(); state = 'play';
@@ -271,7 +278,16 @@ function genFloor(f) {
     ends[0].type = 'boss'; ends[1].type = 'treasure'; if (f >= 2 && ends[2]) ends[2].type = 'challenge';
     start.type = 'start'; start.cleared = true;
     for (const r of list) { r.rocks = r.type === 'normal' || r.type === 'challenge' ? genRocks() : []; r.puddles = []; r.wavesLeft = r.type === 'challenge' ? 2 : r.type === 'normal' && f >= 2 && Math.random() < 0.3 ? 1 : 0; }
-    { const cand = list.filter((r) => r.type === 'normal'); if (cand.length) pick(cand).note = (f - 1) % 7; }
+    { const norm = shuffle(list.filter((r) => r.type === 'normal'));
+      const want = ['memory', 'shop'].concat(f >= 2 ? ['puzzle'] : [], f >= 3 && Math.random() < 0.7 ? ['trade'] : []);
+      for (const t of want) if (norm.length > 2) { const r = norm.pop(); r.type = t; r.rocks = []; r.wavesLeft = 0; }
+      const cand = list.filter((r) => r.type === 'normal'); if (cand.length) pick(cand).note = (f - 1) % 7;
+      for (const par of shuffle(cand.slice())) {
+        const opts = [['n', 0, -1], ['s', 0, 1], ['w', -1, 0], ['e', 1, 0]].filter(([d, dx, dy]) => { const x = par.gx + dx, y = par.gy + dy; return x >= 0 && y >= 0 && x < N && y < N && !grid.has(key(x, y)); });
+        if (!opts.length) continue;
+        const [d, dx, dy] = pick(opts), sec = { gx: par.gx + dx, gy: par.gy + dy, n: {}, type: 'secret', cleared: true, seen: false, visited: false, rocks: [], puddles: [], wavesLeft: 0, hidden: true, crack: 0 };
+        grid.set(key(sec.gx, sec.gy), sec); par.n[d] = sec; sec.n[OPP[d]] = par; list.push(sec); break;
+      } }
     return { rooms: list, start, N };
   }
   throw new Error('floor generation failed');
@@ -291,6 +307,8 @@ function blockedAt(x, y, r, noPick) {
   if (x < RX0 + r + 8 || x > RX1 - r - 8 || y < RY0 + r + 8 || y > RY1 - r - 8) return true;
   for (const k of room.rocks) if (Math.hypot(x - k.x, y - k.y) < k.r + r + 10) return true;
   for (const d of Object.keys(room.n)) { const p = doorPos(d); if (Math.hypot(x - p.x, y - p.y) < 90) return true; }
+  if (room.thorns) for (const k of room.thorns) if (Math.hypot(x - k.x, y - k.y) < k.r + r + 6) return true;
+  if (room.candles) for (const k of room.candles) if (Math.hypot(x - k.x, y - k.y) < 30 + r) return true;
   if (!noPick && pickups) for (const p of pickups) if (!p.taken && Math.hypot(x - p.x, y - p.y) < p.r + r + 10) return true;
   return false;
 }
@@ -308,16 +326,34 @@ function freeSpotIgnoringDoors(x, y, r) {
   for (let ring = 0; ring < 40; ring++) { const rad = ring * 6, n = Math.max(1, ring * 6); for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, px = x + Math.cos(a) * rad, py = y + Math.sin(a) * rad; if (px > RX0 + r && px < RX1 - r && py > RY0 + r && py < RY1 - r && !room.rocks.some((k) => Math.hypot(px - k.x, py - k.y) < k.r + r + 4)) return { x: px, y: py }; } }
   return { x, y };
 }
+const doorHidden = (dir) => { const nb = room.n[dir]; return nb && nb.type === 'secret' && nb.hidden; };
 function doorPos(dir) {
   return { n: { x: RCX, y: RY0 }, s: { x: RCX, y: RY1 }, w: { x: RX0, y: RCY }, e: { x: RX1, y: RCY } }[dir];
 }
 const OPP = { n: 's', s: 'n', w: 'e', e: 'w' };
 
+function initRoom(r) {
+  if (floor === 2 && (r.type === 'normal' || r.type === 'challenge')) { r.thorns = []; for (let i = 0; i < 3; i++) { const p = freeSpot(rand(RX0 + 120, RX1 - 120), rand(RY0 + 80, RY1 - 80), 26, { noPick: true }); r.thorns.push({ x: p.x, y: p.y, r: 24 }); } }
+  if (floor === 4 && r.type !== 'boss') for (let i = 0; i < 3; i++) { const p = freeSpot(rand(RX0 + 100, RX1 - 100), rand(RY0 + 70, RY1 - 70), 40, { noPick: true }); r.puddles.push({ x: p.x, y: p.y, r: 38, life: 1e9, max: 1e9 }); }
+  const put = (o, x, y) => { const p = freeSpot(x, y, o.r); o.x = p.x; o.y = p.y; pickups.push(o); return o; };
+  if (r.type === 'memory') { put({ kind: 'heart', r: 12, bob: 0 }, RCX, RCY + 40); playCut('mem' + Math.min(7, floor)); }
+  else if (r.type === 'shop') {
+    banner = { text: L('shop'), sub: L('shopSub'), t: 2.6 };
+    put(Object.assign(makeItemPickup(0, 0), { price: 6 + floor }), RCX - 130, RCY + 40);
+    put(Object.assign(makeItemPickup(0, 0), { price: 8 + floor }), RCX + 130, RCY + 40);
+    put({ kind: 'heart', r: 12, bob: 0, price: 3 }, RCX, RCY + 70);
+  } else if (r.type === 'trade') { banner = { text: L('trade'), sub: L('tradeSub'), t: 2.6 }; put(Object.assign(makeItemPickup(0, 0), { trade: true }), RCX, RCY + 20); }
+  else if (r.type === 'puzzle') {
+    banner = { text: L('puzzle'), sub: L('puzzleSub'), t: 3 };
+    const ord = shuffle([1, 2, 3, 4]); r.next = 1;
+    r.candles = [[-200, -90], [200, -90], [-200, 90], [200, 90]].map(([dx, dy], i) => ({ x: RCX + dx, y: RCY + dy, n: ord[i], lit: false, touch: false }));
+  } else if (r.type === 'secret') { banner = { text: L('secret'), sub: L('secretSub'), t: 2.6 }; put(makeItemPickup(0, 0), RCX, RCY); for (let i = 0; i < 4; i++) put({ kind: 'drop', r: 8 }, RCX + rand(-90, 90), RCY + rand(50, 100)); }
+}
 function enterRoom(r, fromDir) {
   room = r; tears = []; particles = particles || []; pickups = r.pickups || (r.pickups = []); floatTexts = [];
   enemies = [];
   if (!r.visited) { stats.rooms++; r.visited = true; }
-  r.seen = true; for (const o of Object.values(r.n)) o.seen = true;
+  r.seen = true; for (const o of Object.values(r.n)) if (!(o.type === 'secret' && o.hidden)) o.seen = true;
   if (fromDir) {
     // fromDir is the side of the NEW room we walked in through: appear just inside that door
     const d = doorPos(fromDir), off = 52;
@@ -338,6 +374,7 @@ function enterRoom(r, fromDir) {
     }
     else r.cleared = true;
   }
+  if (!r.init) { r.init = true; initRoom(r); }
   if (r.type === 'treasure' && !r.looted) { r.looted = true; const p = freeSpot(RCX, RCY, 18); pickups.push(makeItemPickup(p.x, p.y)); }
   fade = 1;
 }
@@ -613,6 +650,7 @@ function killEnemy(e) {
   burst(e.x, e.y, e.boss ? 80 : 16, e.boss ? 2 : 1);
   splats.push({ x: e.x, y: e.y, r: e.r * rand(1.2, 1.8), room, rot: rand(0, 6) });
   if (e.type === 'bomber') dropPuddle(e.x, e.y, 46);
+  if (e.boss || e.mini || Math.random() < (e.elite ? 0.9 : 0.28)) { const n = e.boss ? 5 : e.mini || e.elite ? 2 : 1; for (let i = 0; i < n; i++) { const p = freeSpot(e.x + rand(-20, 20), e.y + rand(-20, 20), 8); pickups.push({ kind: 'drop', x: p.x, y: p.y, r: 8 }); } }
   if (e.type === 'splitter' && e.scale > 0.55) for (let i = 0; i < 2; i++) { const c = makeEnemy('splitter', e.x + rand(-10, 10), e.y + rand(-10, 10), e.scale * 0.6); c.spawn = 0; c.vx = rand(-4, 4); c.vy = rand(-4, 4); enemies.push(c); }
   const s = player.s;
   if (s.leech && !e.boss && ++player.leechN >= Math.ceil(14 / s.leech)) { player.leechN = 0; if (player.hp < player.maxHp) { player.hp++; floatText(L('half'), player.x, player.y - 24); } }
@@ -674,13 +712,13 @@ function updatePlayer(dt) {
   for (const [dir, nb] of Object.entries(room.n)) {
     const d = doorPos(dir);
     const inGap = dir === 'n' || dir === 's' ? Math.abs(player.x - d.x) < DOOR - player.r * 0.3 : Math.abs(player.y - d.y) < DOOR - player.r * 0.3;
-    if (!open || !inGap) continue;
+    if (!open || !inGap || doorHidden(dir)) continue;
     if ((dir === 'n' && player.y < RY0 + 4) || (dir === 's' && player.y > RY1 - 4) || (dir === 'w' && player.x < RX0 + 4) || (dir === 'e' && player.x > RX1 - 4)) { sfx.door(); enterRoom(nb, OPP[dir]); return; }
     // let the player step into the door gap
     if (dir === 'n' && player.y < RY0 + player.r) { player.y = Math.max(player.y, RY0 - 2); continue; }
   }
   const inDoorGap = (dir) => {
-    if (!open || !room.n[dir]) return false;
+    if (!open || !room.n[dir] || doorHidden(dir)) return false;
     const d = doorPos(dir);
     return dir === 'n' || dir === 's' ? Math.abs(player.x - d.x) < DOOR - player.r * 0.3 : Math.abs(player.y - d.y) < DOOR - player.r * 0.3;
   };
@@ -739,6 +777,18 @@ function update(dt) {
   if (endTimer > 0) { endTimer -= dt; if (endTimer <= 0) { stats.end = performance.now(); stats.won = true; playCut('ending', () => { state = 'end'; }); return; } }
   updatePlayer(dt);
   if (state !== 'play') return;
+  if (room.thorns && room.thorns.some((k) => Math.hypot(player.x - k.x, player.y - k.y) < k.r + player.r - 8)) hurtPlayer(1);
+  if (room.candles && room.next <= 4) for (const c of room.candles) {
+    const on = Math.hypot(player.x - c.x, player.y - c.y) < 22 + player.r;
+    if (on && !c.touch && !c.lit) {
+      if (c.n === room.next) { c.lit = true; room.next++; audio.tone(440 + c.n * 110, 0.3, 'triangle', 0.08); burst(c.x, c.y - 20, 10, 0.6);
+        if (room.next > 4) { const p = freeSpot(RCX, RCY, 18); pickups.push(makeItemPickup(p.x, p.y)); banner = { text: L('puzzle'), sub: L('puzzleDone'), t: 2.6 }; sfx.item(); } }
+      else { for (const o of room.candles) o.lit = false; room.next = 1; floatText(L('puzzleWrong'), c.x, c.y - 40); audio.tone(110, 0.3, 'sine', 0.1); }
+    }
+    c.touch = on;
+  }
+  if (floor === 4 && !stats.won && Math.random() < 0.08) particles.push({ x: player.x + rand(-10, 10), y: player.y - 18, vx: 0, vy: 1.2, life: 0.5, max: 0.5, r: 2, c: '#888' });
+  if (floor >= 5 && !stats.won && Math.random() < 0.04) particles.push({ x: player.x + rand(-6, 6), y: player.y - 4, vx: rand(-0.2, 0.2), vy: 1.4, life: 0.6, max: 0.6, r: 2.5, c: '#ddd' });
   for (const e of enemies) {
     updateEnemy(e, dt);
     if (e.spawn <= 0 && !e.ghost && !e.air && dist(e, player) < e.r + player.r - 3) hurtPlayer(e.boss && floor > 2 ? 2 : 1);
@@ -770,6 +820,7 @@ function update(dt) {
         }
       }
     }
+    if (!t.enemy && !t.dead) for (const dir of Object.keys(room.n)) if (doorHidden(dir)) { const dp = doorPos(dir); if (Math.hypot(t.x - dp.x, t.y - dp.y) < 34) { t.dead = true; const nb = room.n[dir]; nb.crack++; shake = 3; sfx.hit(); burst(dp.x, dp.y, 8, 0.8); if (nb.crack >= 3) { nb.hidden = false; nb.seen = true; sfx.secret(); shake = 10; burst(dp.x, dp.y, 30, 1.4); } } }
     if (!t.enemy && t.bounces > 0 && !t.dead) {
       if (t.x < RX0 || t.x > RX1) { t.vx *= -1; t.x = clamp(t.x, RX0, RX1); t.bounces--; }
       if (t.y < RY0 || t.y > RY1) { t.vy *= -1; t.y = clamp(t.y, RY0, RY1); t.bounces--; }
@@ -794,7 +845,12 @@ function update(dt) {
     if (player.s.regen && Math.random() < player.s.regen && player.hp < player.maxHp) { player.hp++; floatText(L('half'), player.x, player.y - 24); }
   }
   for (const p of pickups) {
+    if (p.warn > 0) p.warn -= dt;
     if (dist(p, player) > p.r + player.r) continue;
+    if (p.kind === 'drop') { player.drops++; p.taken = true; audio.tone(1200, 0.06, 'sine', 0.05); continue; }
+    if (p.kind === 'heart' && player.hp >= player.maxHp) continue;
+    if (p.price) { if (player.drops < p.price) { if (!(p.warn > 0)) { p.warn = 1.5; floatText(L('need', p.price), p.x, p.y - 30); } continue; } player.drops -= p.price; p.price = 0; }
+    if (p.trade) { if (player.maxHp <= 2) { if (!(p.warn > 0)) { p.warn = 1.5; floatText(L('noHeart'), p.x, p.y - 30); } continue; } player.maxHp -= 2; player.hp = Math.min(player.hp, player.maxHp); sfx.hurt(); p.trade = false; }
     if (p.kind === 'heart' && player.hp < player.maxHp) { player.hp = Math.min(player.maxHp, player.hp + 2); p.taken = true; sfx.heart(); floatText(L('heart'), p.x, p.y); }
     else if (p.kind === 'item') {
       p.item.apply(player.s, player); player.items.push(p.item); stats.items++; p.taken = true; sfx.item(); burst(p.x, p.y, 30, 1.3);
@@ -1001,6 +1057,7 @@ function drawRoom() {
   // doors
   for (const [dir, nb] of Object.entries(room.n)) {
     const d = doorPos(dir), horiz = dir === 'n' || dir === 's';
+    if (doorHidden(dir)) { ctx.save(); ctx.translate(d.x, d.y); if (!horiz) ctx.rotate(Math.PI / 2); ctx.strokeStyle = `rgba(200,200,200,${0.35 + nb.crack * 0.15})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-18, -8); ctx.lineTo(-4, 2); ctx.lineTo(-10, 12); ctx.moveTo(-4, 2); ctx.lineTo(10, -4); ctx.lineTo(20, 6); if (nb.crack > 0) { ctx.moveTo(10, -4); ctx.lineTo(14, -14); ctx.moveTo(-10, 12); ctx.lineTo(2, 18); } ctx.stroke(); ctx.restore(); continue; }
     ctx.save(); ctx.translate(d.x, d.y); if (!horiz) ctx.rotate(Math.PI / 2);
     ctx.fillStyle = '#000'; ctx.fillRect(-DOOR, -22, DOOR * 2, 44);
     ctx.strokeStyle = nb.type === 'boss' ? '#fff' : '#bbb'; ctx.lineWidth = nb.type === 'boss' ? 5 : 3;
@@ -1012,6 +1069,10 @@ function drawRoom() {
     ctx.restore();
   }
   for (const k of room.rocks) { inkCircle(k.x, k.y + 4, k.r, '#000', null); inkCircle(k.x, k.y, k.r, '#4a4a4a', '#cfcfcf', 2, 0.12, k.x); ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(k.x - k.r * 0.4, k.y - k.r * 0.2); ctx.lineTo(k.x + k.r * 0.1, k.y + k.r * 0.3); ctx.stroke(); }
+  if (room.thorns) for (const k of room.thorns) { ctx.strokeStyle = '#8a8a8a'; ctx.lineWidth = 2; for (let i = 0; i < 9; i++) { const a = i * 0.7 + k.x; ctx.beginPath(); ctx.moveTo(k.x + Math.cos(a) * 6, k.y + Math.sin(a) * 6); ctx.lineTo(k.x + Math.cos(a) * k.r, k.y + Math.sin(a) * k.r * 0.7); ctx.stroke(); } inkCircle(k.x, k.y, 7, '#000', '#aaa', 1.5, 0.2, k.y); }
+  if (room.candles) for (const c of room.candles) { ctx.fillStyle = '#e8e8e8'; ctx.fillRect(c.x - 6, c.y - 18, 12, 30); ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.strokeRect(c.x - 6, c.y - 18, 12, 30); if (c.lit) { ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 16; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(c.x + Math.sin(time * 9 + c.n) * 1.5, c.y - 26, 4, 8, 0, 0, 7); ctx.fill(); ctx.restore(); } ctx.fillStyle = 'rgba(220,220,220,0.4)'; ctx.font = 'italic 18px "Comic Sans MS", "Segoe Print", cursive'; ctx.textAlign = 'center'; ctx.fillText(String(c.n), c.x + 18, c.y - 24); }
+  if (room.type === 'shop') { const x = RCX, y = RCY - 80, b = Math.sin(time * 2) * 2; inkCircle(x, y + 14 + b, 20, '#d0d0d0', '#000', 2.5, 0.05, 1); inkCircle(x, y - 12 + b, 16, '#e4e4e4', '#000', 2.5, 0.04, 2); for (const s of [-1, 1]) { ctx.save(); ctx.translate(x + s * 8, y - 36 + b); ctx.rotate(s * 0.25 + Math.sin(time * 1.5) * 0.05 * s); ctx.fillStyle = '#e4e4e4'; ctx.beginPath(); ctx.ellipse(0, 0, 5, 16, 0, 0, 7); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore(); ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(x + s * 6, y - 13 + b, 3.5, 0, 7); ctx.fill(); ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + s * 4, y - 13 + b); ctx.lineTo(x + s * 8, y - 13 + b); ctx.stroke(); } ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x - 5, y + 8 + b); ctx.lineTo(x + 5, y + 20 + b); ctx.stroke(); }
+  if (room.type === 'trade') { ctx.fillStyle = '#151515'; ctx.fillRect(RCX - 40, RCY + 30, 80, 26); ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.strokeRect(RCX - 40, RCY + 30, 80, 26); }
   if (room.type === 'start' && floor === 1) {
     ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.font = '20px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center';
     ctx.fillText(L('tut1'), RCX, RCY - 110); ctx.fillText(L('tut2'), RCX, RCY - 80); ctx.fillText(L('tut3'), RCX, RCY + 110);
@@ -1026,6 +1087,9 @@ function drawPickups() {
       ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 18; inkCircle(p.x, p.y - 10 + bob, 13, '#fff', '#000', 2, 0.15, 3); ctx.restore();
       ctx.fillStyle = '#000'; ctx.font = 'bold 15px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(itemName(p.item)[0], p.x, p.y - 5 + bob);
     } else if (p.kind === 'heart') drawHeart(p.x, p.y + bob, 12, 1);
+    else if (p.kind === 'drop') { ctx.save(); ctx.translate(p.x, p.y + bob * 0.5); ctx.beginPath(); ctx.moveTo(0, -8); ctx.quadraticCurveTo(7, 2, 0, 7); ctx.quadraticCurveTo(-7, 2, 0, -8); ctx.fillStyle = '#000'; ctx.fill(); ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore(); }
+    if (p.price) { ctx.fillStyle = '#ccc'; ctx.font = 'bold 13px Georgia, serif'; ctx.textAlign = 'center'; ctx.fillText('◆ ' + p.price, p.x, p.y + 42); }
+    if (p.trade) { drawHeart(p.x - 10, p.y + 44, 7, 0); ctx.fillStyle = '#ccc'; ctx.font = 'bold 13px Georgia, serif'; ctx.textAlign = 'left'; ctx.fillText('−1', p.x, p.y + 49); }
     else if (p.kind === 'trapdoor') {
       ctx.fillStyle = '#000'; ctx.fillRect(p.x - 26, p.y - 26, 52, 52); ctx.strokeStyle = '#eee'; ctx.lineWidth = 3; ctx.strokeRect(p.x - 26, p.y - 26, 52, 52);
       for (let i = 1; i < 4; i++) { ctx.strokeStyle = `rgba(255,255,255,${0.35 - i * 0.08})`; ctx.strokeRect(p.x - 26 + i * 6, p.y - 26 + i * 6, 52 - i * 12, 52 - i * 12); }
@@ -1138,18 +1202,25 @@ function drawPlayer() {
   if (player.inv > 0 && Math.floor(player.inv * 15) % 2) return;
   const p = player, bob = Math.abs(Math.sin(time * 10)) * (Math.hypot(p.vx, p.vy) > 0.5 ? 2 : 0);
   ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.beginPath(); ctx.ellipse(p.x, p.y + 15, 13, 4, 0, 0, 7); ctx.fill();
-  inkCircle(p.x, p.y + 6 - bob, 10, '#d9d9d9', '#000', 2.5, 0.04, 1); // body
-  inkCircle(p.x, p.y - 8 - bob, 15, '#f4f4f4', '#000', 2.5, 0.03, 2); // head
+  const f = stats.won ? 0 : Math.min(7, floor), soak = f >= 4, hunch = f >= 5 ? 3 : 0;
+  inkCircle(p.x, p.y + 6 - bob, 10, soak ? '#b4b4b4' : '#d9d9d9', '#000', 2.5, 0.04, 1); // body
+  inkCircle(p.x, p.y - 8 - bob + hunch, 15, soak ? '#dcdcdc' : '#f4f4f4', '#000', 2.5, 0.03, 2); // head
+  if (soak) { ctx.strokeStyle = '#5a5a5a'; ctx.lineWidth = 1.5; for (const s of [-1, 0, 1]) { ctx.beginPath(); ctx.moveTo(p.x + s * 9, p.y - 20 - bob + hunch); ctx.quadraticCurveTo(p.x + s * 13, p.y - 10 - bob + hunch, p.x + s * 12, p.y - 2 - bob + hunch); ctx.stroke(); } }
+  if (f >= 6) { ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.moveTo(p.x - 17, p.y + 4 - bob); ctx.quadraticCurveTo(p.x - 18, p.y - 26 - bob + hunch, p.x, p.y - 25 - bob + hunch); ctx.quadraticCurveTo(p.x + 18, p.y - 26 - bob + hunch, p.x + 17, p.y + 4 - bob); ctx.quadraticCurveTo(p.x, p.y - 12 - bob + hunch, p.x - 17, p.y + 4 - bob); ctx.fill(); }
+  if (f >= 7) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(p.x - 4, p.y - 23 - bob + hunch); ctx.lineTo(p.x - 1, p.y - 16 - bob + hunch); ctx.lineTo(p.x - 6, p.y - 11 - bob + hunch); ctx.moveTo(p.x + 9, p.y + 2 - bob); ctx.lineTo(p.x + 5, p.y + 8 - bob); ctx.lineTo(p.x + 8, p.y + 14 - bob); ctx.moveTo(p.x + 12, p.y - 14 - bob + hunch); ctx.lineTo(p.x + 7, p.y - 9 - bob + hunch); ctx.stroke(); }
+  if (stats.won) { ctx.strokeStyle = '#6fbf73'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(p.x - 8, p.y - 1 - bob); ctx.quadraticCurveTo(p.x, p.y + 3 - bob, p.x + 8, p.y - 1 - bob); ctx.lineTo(p.x + 11, p.y + 7 - bob); ctx.stroke(); }
   let ax = p.face, ay = 0;
   if (keys.has('arrowup')) { ax = 0; ay = -1; } else if (keys.has('arrowdown')) { ax = 0; ay = 1; }
-  if (ay >= 0) for (const s of [-1, 1]) { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(p.x + s * 5.5 + ax * 3, p.y - 8 - bob + ay * 2, 3, 4.5, 0, 0, 7); ctx.fill(); }
+  if (ay >= 0) for (const s of [-1, 1]) { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(p.x + s * 5.5 + ax * 3, p.y - 8 - bob + ay * 2 + hunch + (hunch ? 1 : 0), 3, hunch ? 3.5 : 4.5, 0, 0, 7); ctx.fill(); }
+  if (ay >= 0 && f >= 3) { ctx.strokeStyle = '#8a8a8a'; ctx.lineWidth = 1.6; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(p.x + s * 5.5 + ax * 3, p.y - 4 - bob + hunch); ctx.quadraticCurveTo(p.x + s * 6.5 + ax * 3, p.y + 2 - bob + hunch, p.x + s * 5.5 + ax * 3, p.y + 7 - bob + hunch); ctx.stroke(); } }
   if (ay >= 0) { ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(p.x + s * 5.5 + ax * 3, p.y - 3 - bob); ctx.lineTo(p.x + s * 5.5 + ax * 3, p.y + 1 - bob); ctx.stroke(); } }
 }
 
 function drawTears() {
+  const tf = stats.won ? 1 : Math.min(7, floor), sh = 240 - (tf - 1) * 17, tearShade = `rgb(${sh},${sh},${sh})`, tearScale = 1 + (tf - 1) * 0.04, tearLw = 1.5 + (tf - 1) * 0.35;
   for (const t of tears) {
     if (t.enemy) { inkCircle(t.x, t.y, t.r, '#000', '#fff', 2, 0.1, t.x); }
-    else { ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath(); ctx.arc(t.x, t.y + 10, t.r * 0.8, 0, 7); ctx.fill(); ctx.fillStyle = t.spectral ? 'rgba(255,255,255,0.55)' : '#f0f0f0'; ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, 7); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(t.x - t.r * 0.3, t.y - t.r * 0.3, t.r * 0.3, 0, 7); ctx.fill(); }
+    else { ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.beginPath(); ctx.arc(t.x, t.y + 10, t.r * 0.8, 0, 7); ctx.fill(); ctx.fillStyle = t.spectral ? 'rgba(255,255,255,0.55)' : tearShade; ctx.beginPath(); ctx.arc(t.x, t.y, t.r * tearScale, 0, 7); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = tearLw; ctx.stroke(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(t.x - t.r * 0.3, t.y - t.r * 0.3, t.r * 0.3, 0, 7); ctx.fill(); }
   }
 }
 
@@ -1161,6 +1232,7 @@ function drawHUD() {
   ctx.fillStyle = '#ddd'; ctx.font = 'bold 16px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(L('FLOOR', floor), W / 2, 26);
   ctx.font = '11px Georgia, "Times New Roman", serif'; ctx.fillStyle = '#777'; { const t = player.items.map(itemName).slice(-3).join(' · ') || L('noItems'); fitFont(t, 420, 11); ctx.fillText(t, W / 2, 46); }
   if (audio.muted) { ctx.fillStyle = '#666'; ctx.textAlign = 'left'; ctx.fillText(L('muted'), W / 2 + 80, 26); }
+  ctx.fillStyle = '#ccc'; ctx.font = 'bold 14px Georgia, serif'; ctx.textAlign = 'left'; ctx.fillText('◆ ' + player.drops, Math.max(24 + player.maxHp / 2 * 26, 120) + 10, 27);
   drawMinimap();
   const boss = enemies.find((e) => e.boss);
   if (boss) { const bw = 360; ctx.fillStyle = '#000'; ctx.fillRect(W / 2 - bw / 2, H - 34, bw, 12); ctx.fillStyle = '#eee'; ctx.fillRect(W / 2 - bw / 2, H - 34, bw * Math.max(0, boss.hp) / boss.maxHp, 12); ctx.strokeStyle = '#888'; ctx.strokeRect(W / 2 - bw / 2, H - 34, bw, 12); ctx.fillStyle = '#bbb'; ctx.font = '12px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(bossName(), W / 2, H - 40); }
@@ -1178,7 +1250,7 @@ function drawMinimap() {
     const x = bx + (r.gx - minX) * (c + g), y = oy + (r.gy - minY) * (c * 0.75 + g);
     ctx.fillStyle = r === room ? '#fff' : r.visited ? '#6a6a6a' : '#262626';
     ctx.fillRect(x, y, c, c * 0.75); ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, c - 1, c * 0.75 - 1);
-    if (r.type === 'boss' || r.type === 'treasure' || r.type === 'challenge') { ctx.fillStyle = r === room ? '#000' : '#fff'; ctx.font = '9px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(r.type === 'boss' ? '☠' : r.type === 'challenge' ? '✦' : '♛', x + c / 2, y + c * 0.62); }
+    if (r.type !== 'normal' && r.type !== 'start') { ctx.fillStyle = r === room ? '#000' : '#fff'; ctx.font = '9px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText({ boss: '☠', challenge: '✦', treasure: '♛', shop: '◆', memory: '○', puzzle: 'i', trade: '♥', secret: '?' }[r.type] || '', x + c / 2, y + c * 0.62); }
   }
   void ox;
 }
@@ -1208,6 +1280,8 @@ function render() {
   ctx.globalAlpha = 1;
   ctx.fillStyle = '#ddd'; ctx.font = '14px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center';
   for (const f of floatTexts) { ctx.globalAlpha = f.t; ctx.fillText(f.text, f.x, f.y); } ctx.globalAlpha = 1;
+  if (floor === 3 && !stats.won) { const fl = Math.sin(time * 13) * Math.sin(time * 3.1) > 0.7 ? 0.82 : room.type === 'boss' ? 0.3 : 0.5; const g = ctx.createRadialGradient(player.x, player.y, 90, player.x, player.y, 330); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${fl})`); ctx.fillStyle = g; ctx.fillRect(0, HUD, W, H - HUD); }
+  if (floor === 4 && !stats.won) { ctx.strokeStyle = 'rgba(200,200,200,0.12)'; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i < 40; i++) { const x = (i * 97 + time * 60) % W, y = HUD + (i * 131 + time * 520) % (H - HUD); ctx.moveTo(x, y); ctx.lineTo(x - 3, y + 14); } ctx.stroke(); }
   if (fade > 0) { ctx.fillStyle = `rgba(0,0,0,${fade})`; ctx.fillRect(0, HUD, W, H - HUD); }
   ctx.restore();
   drawHUD();
@@ -1237,5 +1311,5 @@ particles = [];
 requestAnimationFrame(frame);
 
 // Small hook for automated smoke tests
-window.__ink = { get state() { return state; }, get floor() { return floor; }, get room() { return room; }, get map() { return map; }, get enemies() { return enemies; }, get player() { return player; }, get pickups() { return pickups; }, get cut() { return cut; }, get lang() { return lang; }, setLang, col, get menuSel() { return menuSel; }, colKey, menuDo,
+window.__ink = { get state() { return state; }, get floor() { return floor; }, get room() { return room; }, get map() { return map; }, get enemies() { return enemies; }, get player() { return player; }, get pickups() { return pickups; }, get cut() { return cut; }, get lang() { return lang; }, get stats() { return stats; }, tears: () => tears, setLang, col, get menuSel() { return menuSel; }, colKey, menuDo,
   newRun, nextFloor, enterRoom, killEnemy, damage: (e) => damageEnemy(e, player.s.dmg, 0, 0), makeEnemy, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, killAll: () => enemies.forEach((e) => killEnemy(e)) };
