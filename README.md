@@ -18,12 +18,28 @@ Pure HTML5 Canvas and vanilla JavaScript: no build step, no dependencies.
 | M | Mute sound |
 |## Story
 
-Ada stopped drawing the day her little brother Theo did not come home. One night the
-ink in her old pen pools on the floor like an open door, and she follows his laughter down. Every floor
-is a memory: the nursery, the garden, the white hospital corridor, nine days of rain, an empty room, the last
-goodbye, and at the bottom, an unfinished page. Cutscenes play at the start, after every boss, before the final
-fight and at the ending. Item descriptions, enemy names and scribbled notes on the floor hold clues. Not every
-storyteller tells it the way it happened.
+Ada stopped drawing the day her little brother Theo did not come home. One night the ink in her old pen
+pools on the floor like an open door, and she follows his laughter down. Every floor is a memory of him:
+the nursery, the garden, the white hospital corridor, nine days of rain, his empty room, the last goodbye,
+and at the bottom, an unfinished page. Cutscenes play at the start, after every boss, before the final
+fight and at the ending. Item descriptions, enemy names and the notes scribbled on the floors hold clues
+to what was really waiting at the bottom.
+
+## Language
+
+The game is fully playable in English and Russian. Switch the language from the title menu or with L in
+the pause menu; the choice is saved in the browser.
+
+## Collection
+
+The title menu has a Collection with two sections, Enemies (including bosses) and Items. Entries unlock on
+your first kill or pickup and keep counting across runs; each shows its picture, name, story line and count.
+
+## Run structure
+
+Seven floors that grow from 7 to 14 rooms, plus a treasure room, a boss and, from floor 2, a challenge room
+with a mini-boss and three waves that rewards an item. Some rooms send a second wave. A full run takes
+about half an hour.
 
 ## Bosses
 

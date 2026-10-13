@@ -25,9 +25,9 @@ let mouse = { x: 0, y: 0, down: false };
 // key, so WASD works with any layout (Russian included) and with Caps Lock on.
 const CODE_MAP = { KeyW: 'w', KeyA: 'a', KeyS: 's', KeyD: 'd', KeyP: 'p', KeyR: 'r', KeyM: 'm',
   ArrowUp: 'arrowup', ArrowDown: 'arrowdown', ArrowLeft: 'arrowleft', ArrowRight: 'arrowright',
-  Escape: 'escape', Enter: 'enter', NumpadEnter: 'enter', Space: ' ', KeyC: 'c', KeyK: 'k',
+  Escape: 'escape', Enter: 'enter', NumpadEnter: 'enter', Space: ' ', KeyC: 'c', KeyK: 'k', KeyL: 'l', KeyQ: 'q', KeyE: 'e', Tab: 'tab', Backspace: 'backspace',
   Digit1: '1', Digit2: '2', Digit3: '3', Digit4: '4', Digit5: '5', Digit6: '6', Digit7: '7' };
-const CYR_MAP = { 'ц': 'w', 'ф': 'a', 'ы': 's', 'в': 'd', 'з': 'p', 'к': 'r', 'ь': 'm', 'с': 'c', 'л': 'k' };
+const CYR_MAP = { 'ц': 'w', 'ф': 'a', 'ы': 's', 'в': 'd', 'з': 'p', 'к': 'r', 'ь': 'm', 'с': 'c', 'л': 'k', 'д': 'l', 'й': 'q', 'у': 'e' };
 const DEBUG = /[?&]debug=1/.test(location.search);
 const SEQ = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
 const SEQ2 = ['KeyI', 'KeyN', 'KeyK', 'KeyK', 'KeyI', 'KeyL', 'KeyL'];
@@ -40,21 +40,82 @@ function keyToken(e) {
 }
 window.addEventListener('keydown', (e) => {
   const k = keyToken(e);
-  if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault();
+  if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'tab', 'backspace'].includes(k)) e.preventDefault();
   if (!e.repeat && state === 'play') { seqBuf.push(physCode(e)); if (seqBuf.length > SEQ.length) seqBuf.shift(); const j = seqBuf.join(); if (j.endsWith(SEQ.join())) { seqBuf = []; grantSecret(); } else if (j.endsWith(SEQ2.join())) { seqBuf = []; grantStroke(); } }
   if (!keys.has(k)) onPress(k);
   keys.add(k);
 });
 window.addEventListener('keyup', (e) => keys.delete(keyToken(e)));
 addEventListener('blur', () => { keys.clear(); mouse.down = false; if (state === 'play') state = 'pause'; });
+document.documentElement.lang = localStorage.getItem('ink-lang') || ((navigator.language || '').toLowerCase().startsWith('ru') ? 'ru' : 'en');
 function toCanvas(e) {
   const r = cv.getBoundingClientRect();
   return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height };
 }
 cv.addEventListener('mousemove', (e) => { const p = toCanvas(e); mouse.x = p.x; mouse.y = p.y; });
-cv.addEventListener('mousedown', (e) => { const p = toCanvas(e); mouse.x = p.x; mouse.y = p.y; mouse.down = true; cv.focus(); audio.init(); if (state === 'title' || state === 'dead' || state === 'end') newRun(); else if (state === 'cutscene') advanceCut(); });
+cv.addEventListener('mousedown', (e) => { const p = toCanvas(e); mouse.x = p.x; mouse.y = p.y; mouse.down = true; cv.focus(); audio.init(); if (state === 'title') menuClick(p); else if (state === 'collection') colClick(p); else if (state === 'dead' || state === 'end') newRun(); else if (state === 'cutscene') advanceCut(); });
 addEventListener('mouseup', () => (mouse.down = false));
 cv.addEventListener('contextmenu', (e) => e.preventDefault());
+
+
+// ---------- language ----------
+let lang = localStorage.getItem('ink-lang') || ((navigator.language || '').toLowerCase().startsWith('ru') ? 'ru' : 'en');
+function setLang(l) { lang = l; localStorage.setItem('ink-lang', l); document.documentElement.lang = l; }
+const UI = {
+  en: {
+    floor: (n) => `Floor ${n}`, FLOOR: (n) => `FLOOR ${n}`, bossDefeated: 'Boss defeated', takeItem: 'Take the item, then descend', inkStill: 'The ink grows still',
+    p1: 'The page tears open', p1s: '"You said tomorrow."', p2: 'The ink unravels', p2s: '"You could have said it. You never did."',
+    crowded: 'A crowded memory', wave: 'Another wave', challenge: 'A trial of ink', challengeSub: 'Survive every wave', trialDone: 'Trial complete',
+    synergy: (n) => 'Synergy: ' + n, half: '+half heart', heart: '+1 heart', blocked: 'blocked', crit: 'crit',
+    cutHint: 'Enter / Space / Click to continue   ·   Esc to skip',
+    tut1: 'WASD  move', tut2: 'ARROWS or MOUSE  shoot', tut3: 'ESC  pause     M  mute',
+    hud: (s) => `DMG ${s.dmg.toFixed(1)}  TEARS ${(60 / s.delay).toFixed(1)}/s  SPD ${s.speed.toFixed(1)}  RNG ${s.range}`,
+    noItems: 'no items yet', muted: 'muted', title: 'INK DEPTHS', subtitle: 'A roguelike drawn in ink',
+    mStart: 'Start', mCol: 'Collection', mLang: 'Language: English', menuHint: 'Arrows / WASD to choose  ·  Enter or click to confirm  ·  M mute',
+    paused: 'PAUSED', pauseHint: 'Esc resume  ·  R restart  ·  L language  ·  M mute', items: 'Items: ', none: 'none',
+    theEnd: 'THE END', endLine: 'Ada climbed back up and drew the sky.',
+    stats: (k, r, i) => `Enemies slain: ${k}   Rooms explored: ${r}   Items: ${i}`, time: (t) => `Time: ${t}`,
+    credits: 'Ink Depths  ·  made by Shirenos  ·  thank you for playing', endHint: 'ENTER  play again     ·     C  keep descending',
+    dead: 'YOU DISSOLVED', reached: (n) => `Reached floor ${n}`, deadHint: 'Press ENTER or click to try again',
+    colTitle: 'COLLECTION', colEnemies: 'Enemies', colItems: 'Items', killed: (n) => `Slain: ${n}`, picked: (n) => `Picked up: ${n}`,
+    locked: '???', lockedHint: 'Not found yet', complete: (p) => `${p}% complete`, colHint: 'Arrows / WASD move  ·  Tab, Q / E switch section  ·  Esc back', boss: 'Boss',
+  },
+  ru: {
+    floor: (n) => `Этаж ${n}`, FLOOR: (n) => `ЭТАЖ ${n}`, bossDefeated: 'Босс повержен', takeItem: 'Возьми предмет и спускайся', inkStill: 'Чернила затихают',
+    p1: 'Страница рвётся', p1s: '«Ты сказала: завтра».', p2: 'Чернила распускаются', p2s: '«Ты могла сказать. Но так и не сказала».',
+    crowded: 'Тесное воспоминание', wave: 'Ещё волна', challenge: 'Испытание тушью', challengeSub: 'Переживи все волны', trialDone: 'Испытание пройдено',
+    synergy: (n) => 'Синергия: ' + n, half: '+пол-сердца', heart: '+1 сердце', blocked: 'блок', crit: 'крит',
+    cutHint: 'Enter / Пробел / клик — дальше   ·   Esc — пропустить',
+    tut1: 'WASD — ходить', tut2: 'СТРЕЛКИ или МЫШЬ — стрелять', tut3: 'ESC — пауза     M — звук',
+    hud: (s) => `УРОН ${s.dmg.toFixed(1)}  СЛЁЗЫ ${(60 / s.delay).toFixed(1)}/с  СКОР ${s.speed.toFixed(1)}  ДАЛЬН ${s.range}`,
+    noItems: 'предметов пока нет', muted: 'без звука', title: 'ЧЕРНИЛЬНЫЕ ГЛУБИНЫ', subtitle: 'Рогалик, нарисованный тушью',
+    mStart: 'Начать', mCol: 'Коллекция', mLang: 'Язык: русский', menuHint: 'Стрелки / WASD — выбор  ·  Enter или клик — подтвердить  ·  M — звук',
+    paused: 'ПАУЗА', pauseHint: 'Esc — продолжить  ·  R — заново  ·  L — язык  ·  M — звук', items: 'Предметы: ', none: 'нет',
+    theEnd: 'КОНЕЦ', endLine: 'Ада поднялась наверх и нарисовала небо.',
+    stats: (k, r, i) => `Врагов повержено: ${k}   Комнат пройдено: ${r}   Предметов: ${i}`, time: (t) => `Время: ${t}`,
+    credits: 'Чернильные глубины  ·  автор Shirenos  ·  спасибо, что сыграли', endHint: 'ENTER — сыграть снова     ·     C — спускаться дальше',
+    dead: 'ТЫ РАСТВОРИЛАСЬ', reached: (n) => `Дошла до этажа ${n}`, deadHint: 'Нажми ENTER или кликни, чтобы попробовать снова',
+    colTitle: 'КОЛЛЕКЦИЯ', colEnemies: 'Враги', colItems: 'Предметы', killed: (n) => `Повержено: ${n}`, picked: (n) => `Подобрано: ${n}`,
+    locked: '???', lockedHint: 'Ещё не найдено', complete: (p) => `Собрано ${p}%`, colHint: 'Стрелки / WASD — выбор  ·  Tab, Q / E — раздел  ·  Esc — назад', boss: 'Босс',
+  },
+};
+const L = (k, ...a) => { const v = UI[lang][k] !== undefined ? UI[lang][k] : UI.en[k]; return typeof v === 'function' ? v(...a) : v; };
+const CUT_M = {"intro": "pool", "f1": "cradle", "f2": "jar", "f3": "corridor", "f4": "window", "f5": "chair", "f6": "candle", "final": "mask", "ending": {"0": "dragon", "5": "theo", "10": "sky"}};
+const CUTS_TXT = { en: {"intro": ["Ada stopped drawing the day her little brother did not come home.", "Tonight the ink in her old pen began to move on its own.", "It pooled on the bedroom floor, black and deep, like a door left open.", "Somewhere far below, Theo was laughing. So she went down."], "f1": ["The nursery. She remembers the night he was born.", "She was jealous. She asked Mother to send him back.", "He grabbed her finger anyway, and would not let go."], "f2": ["The garden. He picked every flower, roots and all, and gave them to her.", "She told him they were ugly.", "She kept them in a jar on her shelf until they turned to dust."], "f3": ["The white corridor. Machines that hummed like tired bees.", "He asked her to draw him a dragon.", "She said: tomorrow.", "There was no tomorrow. She has hated that word ever since."], "f4": ["The window. It rained for nine days.", "She counted the drops so she would not have to count anything else.", "He was always drawing something under the blanket. He never let her look."], "f5": ["His room. Everything is still where he left it.", "Except his green crayon. Nobody can find it.", "Mother still sets the table for four. Nobody says anything."], "f6": ["The last goodbye. She did not cry. She did not speak.", "She was sure he had left angry with her.", "Still waiting for a dragon that never came."], "final": ["At the very bottom, something waits on an empty page.", "She thought it would be him. Angry. Still waiting.", "But when it lifts its head, it wears her face.", "\"It was never him,\" it says. \"It was always you, Ada.\""], "ending": ["The ink grows still. Where it stood lies his notebook. The one from under the blanket.", "On the last page there is a dragon. Crooked. Green. The green crayon worn down to nothing.", "Under it, in big uneven letters:", "\"Ada, you always said tomorrow. So I made it today. Now you don't have to.\"", "\"Don't be sad, ok? Draw me a sky.\"", "The laughter was him. He was waiting to give it to her.", "A small ink shadow holds out the page.", "\"I'm sorry,\" Ada says. \"I love you.\"", "\"I know,\" says Theo. \"I was just waiting for you to stop being sad.\"", "And then he is gone.", "Ada climbs back up. She takes out her old pen.", "And for the first time in a long time, she draws the sky."]}, ru: {"intro": ["Ада перестала рисовать в тот день, когда её младший брат не вернулся домой.", "Этой ночью чернила в её старой ручке ожили сами.", "Они растеклись по полу спальни, чёрные и глубокие, как приоткрытая дверь.", "Где-то далеко внизу смеялся Тео. И она спустилась."], "f1": ["Детская. Она помнит ночь, когда он родился.", "Она ревновала. Просила маму отдать его обратно.", "А он всё равно схватил её за палец и не отпускал."], "f2": ["Сад. Он рвал для неё все цветы подряд, прямо с корнями.", "Она сказала, что они некрасивые.", "И хранила их в банке на полке, пока они не рассыпались в пыль."], "f3": ["Белый коридор. Машины гудели, как уставшие пчёлы.", "Он попросил нарисовать ему дракона.", "Она ответила: завтра.", "Завтра не наступило. С тех пор она ненавидит это слово."], "f4": ["Окно. Девять дней шёл дождь.", "Она считала капли, чтобы не считать ничего другого.", "Он всё время что-то рисовал под одеялом. И никогда не давал ей посмотреть."], "f5": ["Его комната. Всё лежит там, где он оставил.", "Кроме зелёного карандаша. Его никто не может найти.", "Мама до сих пор накрывает стол на четверых. Все молчат."], "f6": ["Последнее прощание. Она не плакала. Не сказала ни слова.", "Она была уверена, что он ушёл, обидевшись на неё.", "Так и не дождавшись дракона."], "final": ["На самом дне, на пустой странице, что-то ждёт.", "Она думала, что это будет он. Обиженный. Всё ещё ждущий.", "Но когда оно поднимает голову, у него её лицо.", "«Это никогда не был он, — говорит оно. — Это всегда была ты, Ада»."], "ending": ["Чернила затихают. Там, где стояло оно, лежит его тетрадка. Та самая, из-под одеяла.", "На последней странице дракон. Кривой. Зелёный. Зелёный карандаш стёрт почти до конца.", "Под ним большими неровными буквами:", "«Ада, ты всегда говорила „завтра“. Поэтому я нарисовал сегодня. Теперь тебе не надо».", "«Не грусти, ладно? Нарисуй мне небо».", "Смех внизу был его. Он ждал, чтобы отдать ей рисунок.", "Маленькая чернильная тень протягивает ей страницу.", "«Прости меня, — говорит Ада. — Я тебя люблю».", "«Я знаю, — говорит Тео. — Я просто ждал, когда ты перестанешь грустить».", "И его больше нет.", "Ада поднимается наверх. Достаёт свою старую ручку.", "И впервые за долгое время рисует небо."]} };
+const NOTES_TXT = {"en": ["ada is the best sister (dont tell her)", "flowers for ada. she will like them nex time", "secret project. DO NOT LOOK ADA", "green is her favrit. i need more green", "hid the crayon under my pilow", "im not angry. i was never angry", "today. not tomorrow. today."], "ru": ["ада лучшая сестра (только ей не говорите)", "цветы для ады. в следущий раз панравятся", "секретный проект. АДА НЕ СМОТРИ", "зелёный её любимый. нужно больше зелёного", "спрятал карандаш под подушку", "я не злюсь. я никогда не злился", "сегодня. не завтра. сегодня."]};
+const FLOOR_TXT = {"en": ["The Nursery", "The Garden", "The White Corridor", "The Window", "The Empty Room", "The Last Goodbye", "The Unwritten Page"], "ru": ["Детская", "Сад", "Белый коридор", "Окно", "Пустая комната", "Последнее прощание", "Ненаписанная страница"]};
+const DEEP_TXT = {"en": ["The ink runs deeper", "Shadows remember you", "Quiet pages, loud teeth", "Every blot is hungry"], "ru": ["Чернила уходят глубже", "Тени тебя помнят", "Тихие страницы, громкие зубы", "Каждая клякса голодна"]};
+const BOSS_TXT = {"en": [["The Cradle Moth", "It still hums the lullaby"], ["The Thorn Gardener", "Every flower, roots and all"], ["The Night Nurse", "She only comes when the lights go out"], ["The Rain Choir", "Nine days of rain"], ["The Hollow Toybox", "Nobody plays with it now"], ["The Mourning Bell", "It rings for one"], ["The Unwritten", "Everything you never said"]], "ru": [["Колыбельный мотылёк", "Он всё ещё напевает колыбельную"], ["Терновый садовник", "Все цветы подряд, прямо с корнями"], ["Ночная медсестра", "Приходит, только когда гаснет свет"], ["Дождевой хор", "Девять дней дождя"], ["Пустой ящик с игрушками", "С ним больше никто не играет"], ["Траурный колокол", "Он звонит по одному"], ["Ненаписанное", "Всё, чего ты так и не сказала"]]};
+const BOSS_FL = {"en": ["A moth that never left the nursery lamp.", "He gave her every flower. She called them ugly.", "She whispered \"tomorrow\" back at every door.", "Nine days of counting drops.", "His toys, waiting for someone to play.", "It rang once, and she said nothing.", "It was never him. It was always her."], "ru": ["Мотылёк, который так и не улетел от лампы в детской.", "Он дарил ей все цветы. Она называла их некрасивыми.", "У каждой двери она шёпотом повторяла «завтра».", "Девять дней она считала капли.", "Его игрушки ждут, когда с ними поиграют.", "Он прозвонил один раз, а она промолчала.", "Это никогда не был он. Это всегда была она."]};
+const ENEMY_TXT = {"chaser": [["Crayon Scribble", "Someone pressed so hard the paper tore. Angry?"], ["Каракуля", "Кто-то давил так сильно, что порвал бумагу. Со злости?"]], "fly": [["Hum", "Machines that hummed like tired bees."], ["Гул", "Машины гудели, как уставшие пчёлы."]], "splitter": [["Ink Blot", "Spilled, and spilled again."], ["Клякса", "Пролилась, и снова, и снова."]], "bouncer": [["Rubber Ball", "He threw it at the wall for hours. Waiting."], ["Резиновый мячик", "Он часами бросал его в стену. Ждал."]], "shooter": [["Watching Eye", "Visiting hours are over."], ["Глаз", "Часы посещений окончены."]], "spider": [["Night-light Spider", "It jumps whenever the hallway light flickers."], ["Паук-ночник", "Прыгает каждый раз, когда мигает свет в коридоре."]], "ghost": [["Drip Wraith", "It drips where his bed used to be."], ["Капельный призрак", "Капает там, где раньше стояла его кровать."]], "turret": [["Pill Wheel", "Twice a day, with water. He hated the big one."], ["Таблетница", "Два раза в день, запивая водой. Большую он ненавидел."]], "dasher": [["Paper Dart", "Folded from a get-well card she never signed."], ["Бумажный самолётик", "Сложен из открытки «Выздоравливай», которую она так и не подписала."]], "bomber": [["Raincloud", "It leaves puddles nobody wipes up."], ["Тучка", "Оставляет лужи, которые никто не вытирает."]], "sniper": [["Night Lamp", "He kept it on late, drawing something under the blanket."], ["Ночник", "Он не выключал его допоздна. Что-то рисовал под одеялом."]], "summoner": [["Hush", "\"Shh. Your brother is sleeping.\""], ["Тише", "«Тсс. Твой брат спит»."]]};
+const ITEM_TXT = {"ink": ["The pen she stopped using. It still remembers her hand.", ["Пузырёк чернил", "Урон выше", "Ручка, которую она забросила. Она всё ещё помнит её руку."]], "quill": ["He learned to write her name before his own.", ["Острое перо", "Скорострельность выше", "Её имя он научился писать раньше своего."]], "feather": ["Found on his hospital windowsill.", ["Воронье перо", "Скорость выше", "Нашлось на подоконнике его больничной палаты."]], "needle": ["The nurse said it would only sting a little. He didn't cry.", ["Железная игла", "Пробивающие слёзы", "Медсестра сказала, будет чуть-чуть больно. Он не плакал."]], "eye": ["He always knew when she was sad.", ["Третий глаз", "Самонаводящиеся слёзы", "Он всегда знал, когда ей грустно."]], "fork": ["She said tomorrow. Tomorrow. Tomorrow.", ["Раздвоенный язык", "Тройной выстрел", "Она говорила: завтра. Завтра. Завтра."]], "lens": ["His glasses. Taped in the middle, twice.", ["Треснувшая линза", "Дальность и скорость слёз выше", "Его очки. Дважды заклеенные посередине."]], "heart": ["A heart he drew on her cast. Lopsided.", ["Угольное сердце", "Здоровье выше", "Сердечко, которое он нарисовал ей на гипсе. Кривое."]], "stone": ["He gave it to her for luck. She threw it away.", ["Тяжёлый камень", "Огромные слёзы, урон выше, скорострельность ниже", "Он подарил его ей на удачу. Она его выбросила."]], "moon": ["Stuck to his ceiling. It glowed for ten minutes every night.", ["Бумажная луна", "Все характеристики выше", "Наклеена у него на потолке. Светилась десять минут каждую ночь."]], "smoke": ["Seven candles on his last cake.", ["Струйка дыма", "Призрачные слёзы проходят сквозь камни", "Семь свечей на его последнем торте."]], "twin": ["Two shadows on the hospital wall at night. Hers and his.", ["Тень-близнец", "Стреляет и назад", "Две тени на больничной стене ночью. Её и его."]], "salt": ["Some tears were never cried.", ["Солёная слеза", "Слёзы замедляют врагов", "Некоторые слёзы так и не были выплаканы."]], "nightshade": ["His medicine tasted like this. He made faces to make her laugh.", ["Чернила белладонны", "Ядовитые слёзы", "Такой на вкус была его микстура. Он корчил рожи, чтобы она смеялась."]], "die": ["He always let her win. She never noticed.", ["Шулерский кубик", "15% шанс критической слезы", "Он всегда ей поддавался. Она так и не заметила."]], "prism": ["He made rainbows on the wall for her.", ["Стеклянная призма", "Слёзы раскалываются при попадании", "Он пускал для неё радуги на стену."]], "eraser": ["Worn thin. He kept starting the same drawing over.", ["Ластик", "Слёзы отскакивают от стен", "Стёрт почти до конца. Он раз за разом начинал один и тот же рисунок."]], "ribbon": ["From her hair. He borrowed it to tie his notebook shut.", ["Шёлковая лента", "Волнистые слёзы, урон выше", "Из её косы. Он взял её, чтобы перевязать свою тетрадку."]], "moth": ["It circled his night lamp. He named it Ada.", ["Бумажный мотылёк", "Мотылёк кружит рядом и защищает", "Кружил вокруг его ночника. Он назвал его Адой."]], "locket": ["Inside: a girl, and a smaller boy holding her finger.", ["Серебряный медальон", "Спутник, здоровье выше", "Внутри девочка и мальчик поменьше, держащий её за палец."]], "pup": ["The dog they were going to get when he came home.", ["Теневой щенок", "Маленькая тень стреляет за тебя", "Собака, которую они собирались завести, когда он вернётся домой."]], "kite": ["It flew once. He watched from the window and waved.", ["Чернильный змей", "Спутник-стрелок, дальность выше", "Взлетел всего раз. Он смотрел из окна и махал рукой."]], "tooth": ["He lost it in the hospital. He saved it for her.", ["Молочный зуб", "Отбрасывание и урон выше", "Выпал у него в больнице. Он сберёг его для неё."]], "leech": ["The machines took a little of him every day.", ["Бледная пиявка", "Убийства понемногу лечат", "Машины каждый день забирали у него чуть-чуть."]], "umbrella": ["Nine days of rain. She never opened it.", ["Чёрный зонт", "Блокирует первый удар в каждой комнате", "Девять дней дождя. Она так ни разу его и не раскрыла."]], "match": ["Seven candles. He made a wish and wouldn't say what.", ["Обгоревшая спичка", "Враги взрываются после смерти", "Семь свечей. Он загадал желание и никому не сказал какое."]], "candle": ["Still burning in the window of his room.", ["Восковая свеча", "Тёплая аура жжёт врагов рядом", "До сих пор горит в окне его комнаты."]], "musicbox": ["It played his lullaby. She can't bring herself to wind it.", ["Музыкальная шкатулка", "Зачищенные комнаты иногда лечат", "Играла его колыбельную. У неё не хватает сил её завести."]], "photo": ["Two children. He is hiding a notebook behind his back.", ["Старая фотография", "Урон ×1,5 при полном здоровье", "Двое детей. Он прячет за спиной тетрадку."]], "crayon": ["A green crayon, worn down to a stub. Where did it go?", ["Зелёный карандаш", "Скорострельность, скорость слёз и здоровье выше", "Зелёный карандаш, стёртый до огрызка. Куда же он делся?"]], "inkheart": ["He drew it for her. It never stopped beating.", ["Чернильное сердце", "Что-то тебя помнит. Всё выше", "Он нарисовал его для неё. Оно так и не перестало биться."]], "laststroke": ["One line. That's all it ever needed.", ["Последний штрих", "Каждый удар решает всё", "Одна линия. Больше никогда и не было нужно."]]};
+const SYN_RU = {"Seeking Needle": "Ищущая игла", "Mirror Tongue": "Зеркальный язык", "Frostbite": "Обморожение", "Keepsakes": "Памятные вещицы", "Playmates": "Друзья по играм", "Wildfire": "Лесной пожар"};
+const itemName = (it) => lang === 'ru' && ITEM_TXT[it.id] ? ITEM_TXT[it.id][1][0] : it.name;
+const itemDesc = (it) => lang === 'ru' && ITEM_TXT[it.id] ? ITEM_TXT[it.id][1][1] : it.desc;
+const itemFl = (it) => ITEM_TXT[it.id] ? (lang === 'ru' ? ITEM_TXT[it.id][1][2] : ITEM_TXT[it.id][0]) : it.fl;
+const enemyName = (t) => ENEMY_TXT[t][lang === 'ru' ? 1 : 0][0];
+const enemyFl = (t) => ENEMY_TXT[t][lang === 'ru' ? 1 : 0][1];
+const synName = (n) => lang === 'ru' && SYN_RU[n] ? SYN_RU[n] : n;
 
 // ---------- procedural audio ----------
 const audio = {
@@ -135,7 +196,7 @@ const SYNERGIES = [
 ];
 function checkSynergies() {
   const own = new Set(player.items.map((i) => i.id));
-  for (const sy of SYNERGIES) if (!player.syn.has(sy.name) && own.has(sy.a) && own.has(sy.b)) { player.syn.add(sy.name); sy.apply(player.s); floatText('Synergy: ' + sy.name, player.x, player.y - 40); }
+  for (const sy of SYNERGIES) if (!player.syn.has(sy.name) && own.has(sy.a) && own.has(sy.b)) { player.syn.add(sy.name); sy.apply(player.s); floatText(L('synergy', synName(sy.name)), player.x, player.y - 40); }
 }
 const STROKE = { id: 'laststroke', fl: "One line. That's all it ever needed.", name: 'Last Stroke', desc: 'Every hit ends it', apply: (s) => (s.oneShot = true) };
 function grantStroke() {
@@ -178,12 +239,12 @@ function nextFloor() {
   floor++; stats.floor = floor;
   map = genFloor(floor);
   enterRoom(map.start, null);
-  banner = { text: `Floor ${floor}`, sub: floor <= 7 ? FLOOR_NAMES[floor - 1] : pick(['The ink runs deeper', 'Shadows remember you', 'Quiet pages, loud teeth', 'Every blot is hungry']), t: 2.5 };
+  banner = { text: L('floor', floor), sub: floor <= 7 ? FLOOR_TXT[lang][floor - 1] : pick(DEEP_TXT[lang]), t: 2.5 };
 }
 
 // Grid-based floor generator: grows rooms outwards from the centre.
 function genFloor(f) {
-  const N = 9, target = Math.min(18, 6 + f * 2 + randi(0, 2));
+  const N = 9, target = Math.min(14, Math.floor(6 + f * 1.3) + randi(0, 1));
   for (let attempt = 0; attempt < 200; attempt++) {
     const grid = new Map(), key = (x, y) => x + ',' + y;
     const start = { gx: 4, gy: 4 };
@@ -207,10 +268,10 @@ function genFloor(f) {
     while (q.length) { const c = q.shift(); for (const o of Object.values(c.n)) if (!dmap.has(o)) { dmap.set(o, dmap.get(c) + 1); q.push(o); } }
     const ends = list.filter((r) => r !== start && Object.keys(r.n).length === 1).sort((a, b) => dmap.get(b) - dmap.get(a));
     if (ends.length < 2) continue;
-    ends[0].type = 'boss'; ends[1].type = 'treasure';
+    ends[0].type = 'boss'; ends[1].type = 'treasure'; if (f >= 2 && ends[2]) ends[2].type = 'challenge';
     start.type = 'start'; start.cleared = true;
-    for (const r of list) { r.rocks = r.type === 'normal' ? genRocks() : []; r.puddles = []; }
-    { const cand = list.filter((r) => r.type === 'normal'); if (cand.length) pick(cand).note = NOTES[(f - 1) % NOTES.length]; }
+    for (const r of list) { r.rocks = r.type === 'normal' || r.type === 'challenge' ? genRocks() : []; r.puddles = []; r.wavesLeft = r.type === 'challenge' ? 2 : r.type === 'normal' && f >= 2 && Math.random() < 0.3 ? 1 : 0; }
+    { const cand = list.filter((r) => r.type === 'normal'); if (cand.length) pick(cand).note = (f - 1) % 7; }
     return { rooms: list, start, N };
   }
   throw new Error('floor generation failed');
@@ -256,7 +317,7 @@ function enterRoom(r, fromDir) {
   room = r; tears = []; particles = particles || []; pickups = r.pickups || (r.pickups = []); floatTexts = [];
   enemies = [];
   if (!r.visited) { stats.rooms++; r.visited = true; }
-  r.seen = true; for (const o of Object.values(r.n)) o.seen = o.seen || o.type !== 'normal' ? true : o.seen || 'adj';
+  r.seen = true; for (const o of Object.values(r.n)) o.seen = true;
   if (fromDir) {
     // fromDir is the side of the NEW room we walked in through: appear just inside that door
     const d = doorPos(fromDir), off = 52;
@@ -270,8 +331,9 @@ function enterRoom(r, fromDir) {
   player.shieldUp = player.s.shield; player.fams.forEach((f) => { f.x = player.x; f.y = player.y; });
   if (!r.cleared) {
     if (r.type === 'normal') spawnWave(r);
+    else if (r.type === 'challenge') { spawnWave(r, { challenge: true }); banner = { text: L('challenge'), sub: L('challengeSub'), t: 2.2 }; }
     else if (r.type === 'boss') {
-      spawnBoss(); sfx.boss(); banner = { text: bossName(), sub: BOSSES[bossIdx()].sub, t: 2.5 };
+      spawnBoss(); sfx.boss(); banner = { text: bossName(), sub: BOSS_TXT[lang][bossIdx()][1], t: 2.5 };
       if (floor === 7 && !r.preCut) { r.preCut = true; playCut('final'); }
     }
     else r.cleared = true;
@@ -326,14 +388,14 @@ function makeEnemy(type, x, y, scale = 1, elite = false) {
 }
 function meetEnemy(type) {
   if (stats.met.has(type) || !ENEMY_INFO[type]) return;
-  stats.met.add(type); meets.push({ name: ENEMY_INFO[type][0], fl: ENEMY_INFO[type][1], t: 3.2 });
+  stats.met.add(type); meets.push({ type, t: 3.2 });
 }
-function spawnWave(r) {
-  const horde = Math.random() < 0.15 + floor * 0.02;
+function spawnWave(r, opt = {}) {
+  const horde = !opt.challenge && Math.random() < 0.15 + floor * 0.02;
   const n = Math.min(14, randi(3, 4) + Math.floor(floor * 1.3) + (horde ? 4 : 0));
   const types = POOL.slice(0, POOL_N[Math.min(floor, 6) - 1]);
   const fresh = types.slice(-2); // the newest types for this floor show up more often
-  const eliteP = Math.min(0.35, 0.06 * floor);
+  const eliteP = opt.challenge ? 0.5 : Math.min(0.35, 0.06 * floor);
   for (let i = 0; i < n; i++) {
     let x, y, tries = 0, p;
     do { x = rand(RX0 + 40, RX1 - 40); y = rand(RY0 + 40, RY1 - 40); p = freeSpot(x, y, 24, { noPick: true }); tries++; }
@@ -343,7 +405,8 @@ function spawnWave(r) {
     const e = makeEnemy(type, p.x, p.y, 1, Math.random() < eliteP);
     enemies.push(e); meetEnemy(type);
   }
-  if (horde) banner = banner || { text: 'A crowded memory', sub: '', t: 1.5 };
+  if (opt.challenge && !opt.wave) { const p = freeSpot(RCX + rand(-200, 200), RY0 + 90, 30, { noPick: true }); const mb = makeEnemy(pick(types.filter((t) => t !== 'fly')), p.x, p.y, 1.7, true); mb.mini = true; enemies.push(mb); }
+  if (horde) banner = banner || { text: L('crowded'), sub: '', t: 1.5 };
 }
 const BOSSES = [
   { name: 'The Cradle Moth', sub: 'It still hums the lullaby', hp: 280, r: 38 },
@@ -355,7 +418,7 @@ const BOSSES = [
   { name: 'The Unwritten', sub: 'The dragon you never drew', hp: 1600, r: 50 },
 ];
 function bossIdx() { return floor <= 7 ? floor - 1 : (floor - 1) % 6; }
-function bossName() { return BOSSES[bossIdx()].name; }
+function bossName() { return BOSS_TXT[lang][bossIdx()][0]; }
 function spawnBoss() {
   const k = bossIdx(), B = BOSSES[k], hp = B.hp * 1.5 * (floor > 7 ? 1 + (floor - 7) * 0.5 : 1);
   enemies.push({ type: 'boss', boss: true, kind: k, x: RCX, y: RCY - 70, r: B.r, hp, maxHp: hp, speed: 1.1 + Math.min(floor, 9) * 0.08, vx: 0, vy: 0, t: 0, a: 0, b: 0, c: 0, spin: 0, flash: 0, state: 0, phase: 0, spawn: 1.0, alpha: 1, shots: 0 });
@@ -378,7 +441,7 @@ function updateEnemy(e, dt) {
   if (e.spawn > 0) { e.spawn -= dt; return; }
   if (e.slow > 0) e.slow -= dt;
   if (e.poison > 0) { e.poison -= dt; e.hp -= e.poisonDmg * dt * (player.s.frostbite && e.slow > 0 ? 2 : 1); if (Math.random() < 0.1) particles.push({ x: e.x + rand(-e.r, e.r), y: e.y, vx: 0, vy: -1, life: 0.5, max: 0.5, r: 2.5, c: '#888' }); }
-  const ang = Math.atan2(player.y - e.y, player.x - e.x), d = dist(e, player);
+  const ang = Math.atan2((player && state !== 'collection' ? player.y : e.y + 10) - e.y, (player && state !== 'collection' ? player.x : e.x) - e.x), d = dist(e, player);
   const steer = (tx, ty, sp, k = 0.08) => { e.vx += (tx * sp - e.vx) * k; e.vy += (ty * sp - e.vy) * k; };
   switch (e.type) {
     case 'fly': steer(Math.cos(ang + Math.sin(e.t * 6) * 0.9), Math.sin(ang + Math.sin(e.t * 6) * 0.9), e.speed); break;
@@ -406,7 +469,7 @@ function updateEnemy(e, dt) {
       e.alpha = 0.35 + 0.45 * (Math.sin(e.t * 2.2) * 0.5 + 0.5); break;
     }
     case 'bomber': {
-      if (!e.dir || e.t > 2) { e.t = 0; e.dir = Math.atan2(player.y - e.y, player.x - e.x) + rand(-1.2, 1.2); e.drops = (e.drops || 0) + 1; if (e.drops % 2 === 0) dropPuddle(e.x, e.y, 34); }
+      if (!e.dir || e.t > 2) { e.t = 0; e.dir = Math.atan2((player && state !== 'collection' ? player.y : e.y + 10) - e.y, (player && state !== 'collection' ? player.x : e.x) - e.x) + rand(-1.2, 1.2); e.drops = (e.drops || 0) + 1; if (e.drops % 2 === 0) dropPuddle(e.x, e.y, 34); }
       steer(Math.cos(e.dir), Math.sin(e.dir), e.speed, 0.05); break;
     }
     case 'spider': {
@@ -498,7 +561,7 @@ function finalBoss(e, ang, steer) {
   if (want > e.phase) {
     e.phase = want; e.spawn = 1.2; shake = 18; sfx.boss(); burst(e.x, e.y, 60, 1.5); flash = 0.4;
     tears = tears.filter((t) => !t.enemy);
-    banner = want === 1 ? { text: 'The page tears open', sub: '"You never said goodbye."', t: 2.5 } : { text: 'The ink unravels', sub: '"Then say it now."', t: 2.5 };
+    banner = want === 1 ? { text: L('p1'), sub: L('p1s'), t: 2.5 } : { text: L('p2'), sub: L('p2s'), t: 2.5 };
     return;
   }
   if (e.phase === 0) { // the mirror: copies you from the other side of the room
@@ -546,21 +609,21 @@ function damageEnemy(e, dmg, kx, ky) {
 }
 function killEnemy(e) {
   if (e.dead) return;
-  e.dead = true; stats.kills++; sfx.kill(); shake = Math.max(shake, e.boss ? 20 : 4);
+  e.dead = true; stats.kills++; colAdd(e.boss ? 'b' : 'e', e.boss ? String(e.kind) : e.type); sfx.kill(); shake = Math.max(shake, e.boss ? 20 : 4);
   burst(e.x, e.y, e.boss ? 80 : 16, e.boss ? 2 : 1);
   splats.push({ x: e.x, y: e.y, r: e.r * rand(1.2, 1.8), room, rot: rand(0, 6) });
   if (e.type === 'bomber') dropPuddle(e.x, e.y, 46);
   if (e.type === 'splitter' && e.scale > 0.55) for (let i = 0; i < 2; i++) { const c = makeEnemy('splitter', e.x + rand(-10, 10), e.y + rand(-10, 10), e.scale * 0.6); c.spawn = 0; c.vx = rand(-4, 4); c.vy = rand(-4, 4); enemies.push(c); }
   const s = player.s;
-  if (s.leech && !e.boss && ++player.leechN >= Math.ceil(14 / s.leech)) { player.leechN = 0; if (player.hp < player.maxHp) { player.hp++; floatText('+half heart', player.x, player.y - 24); } }
+  if (s.leech && !e.boss && ++player.leechN >= Math.ceil(14 / s.leech)) { player.leechN = 0; if (player.hp < player.maxHp) { player.hp++; floatText(L('half'), player.x, player.y - 24); } }
   if (s.explode && !e.boss) { burst(e.x, e.y, 14, 1.4); for (const o of enemies) if (!o.dead && o !== e && Math.hypot(o.x - e.x, o.y - e.y) < 80 + o.r) damageEnemy(o, s.dmg * 1.5, 0, 0); }
   if (e.boss) {
     enemies.forEach((o) => { if (!o.dead && o !== e) { o.dead = true; burst(o.x, o.y, 10, 1); } });
     tears = tears.filter((t) => !t.enemy);
-    if (e.kind === 6 && floor === 7) { endTimer = 2.2; banner = { text: 'The ink grows still', sub: '', t: 2.2 }; return; }
+    if (e.kind === 6 && floor === 7) { endTimer = 2.2; banner = { text: L('inkStill'), sub: '', t: 2.2 }; return; }
     const ip = freeSpot(RCX - 90, RCY, 18); pickups.push(makeItemPickup(ip.x, ip.y));
     const tp = freeSpot(RCX + 90, RCY, 26); pickups.push({ kind: 'trapdoor', x: tp.x, y: tp.y, r: 26 });
-    banner = { text: 'Boss defeated', sub: 'Take the item, then descend', t: 2.5 };
+    banner = { text: L('bossDefeated'), sub: L('takeItem'), t: 2.5 };
   }
 }
 
@@ -592,7 +655,7 @@ function shoot() {
 
 function hurtPlayer(amount = 1) {
   if (player.inv > 0) return;
-  if (player.shieldUp) { player.shieldUp = false; player.inv = 1; burst(player.x, player.y, 20, 1); sfx.hit(); floatText('blocked', player.x, player.y - 30); return; }
+  if (player.shieldUp) { player.shieldUp = false; player.inv = 1; burst(player.x, player.y, 20, 1); sfx.hit(); floatText(L('blocked'), player.x, player.y - 30); return; }
   player.hp -= amount; player.inv = 1.1; shake = 10; sfx.hurt(); burst(player.x, player.y, 14, 1);
   if (player.hp <= 0) { player.hp = 0; state = 'dead'; stats.end = performance.now(); sfx.boss(); }
 }
@@ -700,7 +763,7 @@ function update(dt) {
           const l = Math.hypot(t.vx, t.vy) || 1, s = player.s;
           if (s.slow) e.slow = Math.max(e.slow || 0, s.slow);
           if (s.poison) { e.poison = 3; e.poisonDmg = s.poison; }
-          if (t.crit) floatText('crit', e.x, e.y - e.r - 6);
+          if (t.crit) floatText(L('crit'), e.x, e.y - e.r - 6);
           damageEnemy(e, t.dmg, t.vx / l, t.vy / l); t.hit.add(e);
           if (t.split) { const a = Math.atan2(t.vy, t.vx); for (const da of [-0.7, 0.7]) splitTears.push({ x: t.x, y: t.y, vx: Math.cos(a + da) * l, vy: Math.sin(a + da) * l, r: t.r * 0.6, dmg: t.dmg * 0.5, travel: 0, range: 160, hit: new Set(t.hit), bounces: 0 }); }
           if (!t.pierce) { t.dead = true; break; }
@@ -721,17 +784,21 @@ function update(dt) {
   tears = tears.filter((t) => !t.dead);
   enemies = enemies.filter((e) => !e.dead);
 
+  if (!room.cleared && enemies.length === 0 && room.wavesLeft > 0) {
+    room.wavesLeft--; spawnWave(room, { challenge: room.type === 'challenge', wave: true }); banner = { text: L('wave'), sub: '', t: 1.3 }; sfx.boss();
+  }
   if (!room.cleared && enemies.length === 0) {
     room.cleared = true; sfx.door(); shake = 3;
+    if (room.type === 'challenge') { const p = freeSpot(RCX, RCY, 18); pickups.push(makeItemPickup(p.x, p.y)); banner = { text: L('trialDone'), sub: '', t: 1.8 }; }
     if (room.type === 'normal' && Math.random() < 0.3 + (player.hp < player.maxHp / 2 ? 0.2 : 0)) { const p = freeSpot(RCX, RCY, 12); pickups.push({ kind: 'heart', x: p.x, y: p.y, r: 12, bob: 0 }); }
-    if (player.s.regen && Math.random() < player.s.regen && player.hp < player.maxHp) { player.hp++; floatText('+half heart', player.x, player.y - 24); }
+    if (player.s.regen && Math.random() < player.s.regen && player.hp < player.maxHp) { player.hp++; floatText(L('half'), player.x, player.y - 24); }
   }
   for (const p of pickups) {
     if (dist(p, player) > p.r + player.r) continue;
-    if (p.kind === 'heart' && player.hp < player.maxHp) { player.hp = Math.min(player.maxHp, player.hp + 2); p.taken = true; sfx.heart(); floatText('+1 heart', p.x, p.y); }
+    if (p.kind === 'heart' && player.hp < player.maxHp) { player.hp = Math.min(player.maxHp, player.hp + 2); p.taken = true; sfx.heart(); floatText(L('heart'), p.x, p.y); }
     else if (p.kind === 'item') {
       p.item.apply(player.s, player); player.items.push(p.item); stats.items++; p.taken = true; sfx.item(); burst(p.x, p.y, 30, 1.3);
-      banner = { text: p.item.name, sub: p.item.desc, fl: p.item.fl, t: 3 }; checkSynergies();
+      banner = { text: itemName(p.item), sub: itemDesc(p.item), fl: itemFl(p.item), t: 3 }; colAdd('i', p.item.id); checkSynergies();
     } else if (p.kind === 'trapdoor') { sfx.door(); const f = floor; pickups = room.pickups = pickups.filter((o) => !o.taken); if (f <= 6) playCut('f' + f, nextFloor); else nextFloor(); return; }
   }
   pickups = room.pickups = pickups.filter((p) => !p.taken);
@@ -748,18 +815,9 @@ function debugBoss(n) {
 }
 
 // ---------- story ----------
-const CUTS = {
-  intro: { m: 'pool', lines: ['Ada stopped drawing the day her little brother did not come home.', 'Tonight the ink in her old pen began to move on its own.', 'It pooled on the bedroom floor, black and deep, like a door left open.', 'Somewhere far below, Theo was laughing. So she went down.'] },
-  f1: { m: 'cradle', lines: ['The nursery. A new baby, and a jealous older sister.', 'Someone asked Mother to send the baby back.', 'The baby grabbed her finger anyway, and would not let go.'] },
-  f2: { m: 'jar', lines: ['The garden. Every flower, roots and all, given away.', '"They\'re ugly," someone said.', 'They were kept in a jar on a shelf until they turned to dust.'] },
-  f3: { m: 'corridor', lines: ['The white corridor. Machines that hummed like tired bees.', 'From the bed, a small voice asked for a dragon.', 'The answer was: tomorrow.'] },
-  f4: { m: 'window', lines: ['The window. It rained for nine days.', 'Someone counted the drops, so as not to count anything else.', 'From down in the yard, the window of room 12 looked very small.'] },
-  f5: { m: 'chair', lines: ['Her room. Everything is still where she left it.', 'Mother still sets the table for four. Nobody says anything.'] },
-  f6: { m: 'candle', lines: ['The last goodbye. Everyone was dressed in black.', 'The little brother did not cry. He did not speak.', 'In his pocket was the dragon, finished one day too late.'] },
-  final: { m: 'mask', lines: ['At the very bottom there are no more memories. Only an unfinished page.', 'There is no Ada down here. There never was a brother who did not come home.', 'Ada was the one in the white bed. Ada was the one who asked for a dragon.', 'For years Theo told it as Ada\'s story: Ada left behind, Ada going down after him.', 'Anything, so that he would be the one who left. Not her.', 'The page wears his face now. "You said tomorrow," it whispers.'] },
-  ending: { m: 'dragon', lines: ['The ink grows still. Theo unfolds the dragon, crooked and green and late.', '"I made it for you," he says. "I\'m sorry I said tomorrow."', 'No one answers. The laughter is gone. That is how he knows it was real.', 'He climbs back up, holding the drawing. He will be sad for a long time.', 'But he will draw again. Not tomorrow. Today.'] },
-};
-function playCut(id, after) { cut = { id, m: CUTS[id].m, lines: CUTS[id].lines, i: 0, chars: 0, t: 0, after }; state = 'cutscene'; keys.clear(); mouse.down = false; }
+
+function cutMotif(id, i) { const m = CUT_M[id]; if (typeof m === 'string') return m; let r = m['0']; for (const k of Object.keys(m)) if (i >= +k) r = m[k]; return r; }
+function playCut(id, after) { cut = { id, m: cutMotif(id, 0), i: 0, chars: 0, t: 0, after, get lines() { return CUTS_TXT[lang][id]; } }; state = 'cutscene'; keys.clear(); mouse.down = false; }
 function updateCut(dt) {
   cut.t += dt; const L = cut.lines[cut.i], before = Math.floor(cut.chars);
   cut.chars = Math.min(L.length, cut.chars + dt * 38);
@@ -768,14 +826,14 @@ function updateCut(dt) {
 function advanceCut() {
   if (!cut) return;
   if (cut.chars < cut.lines[cut.i].length) { cut.chars = cut.lines[cut.i].length; return; }
-  if (++cut.i >= cut.lines.length) endCut(); else cut.chars = 0;
+  if (++cut.i >= cut.lines.length) endCut(); else { cut.chars = 0; const m = cutMotif(cut.id, cut.i); if (m !== cut.m) { cut.m = m; cut.t = 0; } }
 }
 function endCut() { const f = cut && cut.after; cut = null; state = 'play'; keys.clear(); if (f) f(); }
 
-function child(x, y, s = 1) {
+function child(x, y, s = 1, dark = false) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  ctx.fillStyle = '#e8e8e8'; ctx.beginPath(); ctx.moveTo(-16, 40); ctx.lineTo(-10, 0); ctx.lineTo(10, 0); ctx.lineTo(16, 40); ctx.closePath(); ctx.fill();
-  ctx.beginPath(); ctx.arc(0, -14, 15, 0, 7); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = dark ? '#000' : '#e8e8e8'; if (dark) { ctx.shadowColor = '#fff'; ctx.shadowBlur = 12; } ctx.beginPath(); ctx.moveTo(-16, 40); ctx.lineTo(-10, 0); ctx.lineTo(10, 0); ctx.lineTo(16, 40); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.arc(0, -14, 15, 0, 7); ctx.fill(); ctx.strokeStyle = dark ? '#ccc' : '#000'; ctx.lineWidth = 2; ctx.stroke();
   ctx.restore();
 }
 function drawMotif(m, t) {
@@ -791,34 +849,120 @@ function drawMotif(m, t) {
     case 'chair': ctx.beginPath(); ctx.moveTo(-140, 30); ctx.lineTo(140, 30); ctx.moveTo(-120, 30); ctx.lineTo(-120, 100); ctx.moveTo(120, 30); ctx.lineTo(120, 100); ctx.stroke(); for (const x of [-90, -30, 30, 90]) { ctx.beginPath(); ctx.ellipse(x, 22, 16, 5, 0, 0, 7); ctx.stroke(); } ctx.strokeRect(170, -30, 40, 60); ctx.beginPath(); ctx.moveTo(170, 30); ctx.lineTo(170, 100); ctx.moveTo(210, 30); ctx.lineTo(210, 100); ctx.stroke(); break;
     case 'candle': ctx.strokeRect(-14, 0, 28, 90); ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 20; ctx.fillStyle = '#f4f4f4'; ctx.beginPath(); ctx.ellipse(sw * 2, -14, 7, 16 + sw * 2, 0, 0, 7); ctx.fill(); ctx.restore(); break;
     case 'mask': inkCircle(0, 20, 80, '#000', '#eee', 3, 0.15, t); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(s * 28, 5, 9, 14, 0, 0, 7); ctx.fill(); } ctx.beginPath(); ctx.moveTo(-25, 60); ctx.quadraticCurveTo(0, 45, 25, 60); ctx.stroke(); break;
+    case 'theo': { const fadeOut = cut && cut.i >= 9 ? Math.max(0, 1 - cut.t / 2) : 1; child(-70, 20, 1); ctx.save(); ctx.globalAlpha *= fadeOut; child(60, 42, 0.65, true); ctx.fillStyle = '#e8e8e8'; ctx.save(); ctx.translate(18, 40); ctx.rotate(-0.15 + sw * 0.03); ctx.fillRect(-16, -12, 32, 24); ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-10, 6); ctx.quadraticCurveTo(-2, -8, 4, 2); ctx.lineTo(10, -6); ctx.stroke(); ctx.restore(); ctx.restore(); break; }
+    case 'sky': { ctx.beginPath(); ctx.moveTo(-260, 90); ctx.lineTo(260, 90); ctx.stroke(); const k = Math.min(1, t / 6); ctx.lineWidth = 2; for (let i = 0; i < 4; i++) { if (k < i / 4) break; const x = -180 + i * 120, y = -40 + (i % 2) * 30; ctx.beginPath(); ctx.arc(x, y, 22, Math.PI, 0); ctx.arc(x + 30, y, 16, Math.PI, 0); ctx.stroke(); } ctx.beginPath(); ctx.arc(170, -70, 26, 0, Math.PI * 2 * k); ctx.stroke(); child(-200, 50, 0.8); ctx.beginPath(); ctx.moveTo(-185, 52); ctx.lineTo(-150, 20 - sw * 6); ctx.stroke(); break; }
     case 'dragon': ctx.fillStyle = '#e8e8e8'; ctx.save(); ctx.rotate(-0.05); ctx.fillRect(-120, -60, 240, 160); ctx.strokeStyle = '#111'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-80, 50); ctx.quadraticCurveTo(-40, -10, 0, 30); ctx.quadraticCurveTo(40, 70, 70, 0); ctx.lineTo(90, -20); ctx.lineTo(75, 10); ctx.stroke(); for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(-60 + i * 25, 20 - Math.sin(i) * 10); ctx.lineTo(-52 + i * 25, 5 - Math.sin(i) * 10); ctx.lineTo(-44 + i * 25, 22 - Math.sin(i) * 10); ctx.stroke(); } ctx.beginPath(); ctx.arc(78, -6, 3, 0, 7); ctx.fillStyle = '#111'; ctx.fill(); ctx.restore(); break;
   }
   ctx.restore();
 }
+function wrapText(text, maxW) {
+  const words = text.split(' '), out = []; let cur = '';
+  for (const w of words) { const t = cur ? cur + ' ' + w : w; if (ctx.measureText(t).width > maxW && cur) { out.push(cur); cur = w; } else cur = t; }
+  if (cur) out.push(cur); return out;
+}
+function fitFont(text, maxW, size, style = '', family = 'Georgia') { let s = size; ctx.font = `${style} ${s}px ${family}, "Times New Roman", serif`; while (s > 10 && ctx.measureText(text).width > maxW) { s--; ctx.font = `${style} ${s}px ${family}, "Times New Roman", serif`; } }
 function drawCut() {
   ctx.drawImage(grain, 0, 0); ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, W, H);
   drawMotif(cut.m, cut.t);
-  ctx.textAlign = 'center'; ctx.font = 'italic 21px Georgia';
-  const y0 = 400;
-  for (let i = Math.max(0, cut.i - 2); i <= cut.i; i++) {
-    const txt = i < cut.i ? cut.lines[i] : cut.lines[i].slice(0, Math.floor(cut.chars));
-    ctx.fillStyle = i < cut.i ? '#6a6a6a' : '#f0f0f0';
-    ctx.fillText(txt, W / 2, y0 + (i - Math.max(0, cut.i - 2)) * 36);
+  ctx.textAlign = 'center'; ctx.font = 'italic 21px Georgia, "Times New Roman", serif';
+  let y = 392; const rows = [];
+  for (let i = Math.max(0, cut.i - 1); i <= cut.i; i++) {
+    const full = cut.lines[i], shown = i < cut.i ? full : full.slice(0, Math.floor(cut.chars));
+    let used = 0; for (const ln of wrapText(full, 860)) { rows.push({ t: shown.slice(used, used + ln.length), c: i < cut.i ? '#6a6a6a' : '#f0f0f0' }); used += ln.length + 1; }
   }
-  ctx.font = '13px Georgia'; ctx.fillStyle = '#666';
-  ctx.fillText('Enter / Space / Click to continue   ·   Esc to skip', W / 2, H - 28);
+  for (const r of rows.slice(-5)) { ctx.fillStyle = r.c; ctx.fillText(r.t, W / 2, y); y += 32; }
+  ctx.font = '13px Georgia, "Times New Roman", serif'; ctx.fillStyle = '#666';
+  ctx.fillText(L('cutHint'), W / 2, H - 28);
+}
+
+
+// ---------- title menu and collection ----------
+let menuSel = 0, colSec = 0, colSel = 0;
+const col = (() => { try { return Object.assign({ e: {}, b: {}, i: {} }, JSON.parse(localStorage.getItem('ink-col') || '{}')); } catch (err) { return { e: {}, b: {}, i: {} }; } })();
+let colDirty = 0;
+function colAdd(sec, key) { col[sec][key] = (col[sec][key] || 0) + 1; colDirty = 1; }
+setInterval(() => { if (colDirty) { colDirty = 0; try { localStorage.setItem('ink-col', JSON.stringify(col)); } catch (err) {} } }, 1000);
+addEventListener('beforeunload', () => { try { localStorage.setItem('ink-col', JSON.stringify(col)); } catch (err) {} });
+const MENU = ['mStart', 'mCol', 'mLang'];
+function menuDo(i) {
+  if (i === 0) newRun();
+  else if (i === 1) { state = 'collection'; colSel = 0; }
+  else setLang(lang === 'en' ? 'ru' : 'en');
+}
+function menuRowY(i) { return H / 2 + 20 + i * 44; }
+function drawTitle() {
+  ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillRect(0, 0, W, H); ctx.textAlign = 'center';
+  ctx.fillStyle = '#f2f2f2'; fitFont(L('title'), W - 60, 56, 'bold'); ctx.fillText(L('title'), W / 2, H / 2 - 110);
+  ctx.fillStyle = '#9a9a9a'; ctx.font = 'italic 18px Georgia, "Times New Roman", serif'; ctx.fillText(L('subtitle'), W / 2, H / 2 - 70);
+  MENU.forEach((k, i) => { const y = menuRowY(i), on = i === menuSel; ctx.font = (on ? 'bold ' : '') + '24px Georgia, "Times New Roman", serif'; ctx.fillStyle = on ? '#fff' : '#777'; ctx.fillText((on ? '›  ' : '') + L(k) + (on ? '  ‹' : ''), W / 2, y); });
+  ctx.fillStyle = '#5a5a5a'; fitFont(L('menuHint'), W - 60, 13); ctx.fillText(L('menuHint'), W / 2, H - 40);
+}
+function menuClick(p) { for (let i = 0; i < MENU.length; i++) if (Math.abs(p.y - (menuRowY(i) - 8)) < 20 && Math.abs(p.x - W / 2) < 220) { menuSel = i; menuDo(i); return; } }
+function colEntries() {
+  if (colSec === 0) return POOL.map((t) => ({ kind: 'e', key: t, n: col.e[t] || 0 })).concat(BOSSES.map((b, i) => ({ kind: 'b', key: String(i), n: col.b[i] || 0 })));
+  const list = ITEMS.map((it) => ({ kind: 'i', key: it.id, it, n: col.i[it.id] || 0 }));
+  for (const it of [SECRET, STROKE]) if (col.i[it.id]) list.push({ kind: 'i', key: it.id, it, n: col.i[it.id] });
+  return list;
+}
+const COLS = 7, CELL = 62, GX = 40, GY = 150;
+function colPct(sec) { const s = colSec; colSec = sec; const l = colEntries().filter((x) => !(x.it && (x.it === SECRET || x.it === STROKE))); colSec = s; return Math.round(100 * l.filter((x) => x.n > 0).length / l.length); }
+function drawIcon(en, x, y, sz) {
+  ctx.save(); ctx.translate(x, y);
+  if (!en.n) { inkCircle(0, 0, sz * 0.36, '#0a0a0a', '#3a3a3a', 2, 0.12, 1); ctx.fillStyle = '#555'; ctx.font = `bold ${Math.round(sz * 0.4)}px Georgia`; ctx.textAlign = 'center'; ctx.fillText('?', 0, sz * 0.14); ctx.restore(); return; }
+  if (en.kind === 'i') { ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 10; inkCircle(0, 0, sz * 0.3, '#fff', '#000', 2, 0.15, 3); ctx.restore(); ctx.fillStyle = '#000'; ctx.font = `bold ${Math.round(sz * 0.32)}px Georgia`; ctx.textAlign = 'center'; ctx.fillText(itemName(en.it)[0], 0, sz * 0.11); ctx.restore(); return; }
+  const isB = en.kind === 'b', d = isB ? { r: BOSSES[+en.key].r } : ENEMY[en.key], e = { type: isB ? 'boss' : en.key, boss: isB, kind: isB ? +en.key : 0, x: 0, y: 0, r: d.r, t: time, flash: 0, spawn: 0, state: 0, alpha: 1, phase: 0, scale: 1, hp: 1, maxHp: 1, h: 0 };
+  const sc = Math.min(1, sz * 0.3 / (d.r * (isB ? 1.5 : 1.2))); ctx.scale(sc, sc); drawEnemy(e); ctx.restore(); ctx.globalAlpha = 1;
+}
+function drawCollection() {
+  ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(0, 0, W, H); ctx.textAlign = 'center';
+  ctx.fillStyle = '#f2f2f2'; ctx.font = 'bold 34px Georgia, "Times New Roman", serif'; ctx.fillText(L('colTitle'), W / 2, 56);
+  [L('colEnemies'), L('colItems')].forEach((t, i) => { const x = W / 2 + (i ? 130 : -130); ctx.font = (i === colSec ? 'bold ' : '') + '19px Georgia, "Times New Roman", serif'; ctx.fillStyle = i === colSec ? '#fff' : '#666'; ctx.fillText(`${t}  ·  ${L('complete', colPct(i))}`, x, 100); if (i === colSec) { ctx.fillRect(x - 110, 108, 220, 2); } });
+  const list = colEntries(); colSel = clamp(colSel, 0, list.length - 1);
+  list.forEach((en, i) => { const cx = GX + (i % COLS) * CELL + CELL / 2, cy = GY + Math.floor(i / COLS) * CELL + CELL / 2; ctx.strokeStyle = i === colSel ? '#fff' : '#2a2a2a'; ctx.lineWidth = i === colSel ? 2 : 1; ctx.strokeRect(cx - CELL / 2 + 3, cy - CELL / 2 + 3, CELL - 6, CELL - 6); drawIcon(en, cx, cy, CELL); });
+  const en = list[colSel], px = GX + COLS * CELL + 30, pw = W - px - 30; ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.strokeRect(px, GY, pw, 380);
+  drawIcon(en, px + pw / 2, GY + 70, 110);
+  ctx.textAlign = 'center'; let y = GY + 160;
+  const put = (t, size, style, color) => { ctx.fillStyle = color; ctx.font = `${style} ${size}px Georgia`; for (const ln of wrapText(t, pw - 30)) { ctx.fillText(ln, px + pw / 2, y); y += size + 8; } y += 6; };
+  if (!en.n) { put(L('locked'), 22, 'bold', '#777'); put(L('lockedHint'), 15, 'italic', '#555'); }
+  else if (en.kind === 'i') { put(itemName(en.it), 22, 'bold', '#fff'); put(itemDesc(en.it), 15, '', '#bbb'); put(itemFl(en.it), 15, 'italic', '#888'); put(L('picked', en.n), 14, '', '#666'); }
+  else if (en.kind === 'b') { put(BOSS_TXT[lang][+en.key][0], 22, 'bold', '#fff'); put(L('boss') + ' · ' + BOSS_TXT[lang][+en.key][1], 15, '', '#bbb'); put(BOSS_FL[lang][+en.key], 15, 'italic', '#888'); put(L('killed', en.n), 14, '', '#666'); }
+  else { put(enemyName(en.key), 22, 'bold', '#fff'); put(enemyFl(en.key), 15, 'italic', '#888'); put(L('killed', en.n), 14, '', '#666'); }
+  ctx.fillStyle = '#5a5a5a'; fitFont(L('colHint'), W - 60, 13); ctx.textAlign = 'center'; ctx.fillText(L('colHint'), W / 2, H - 24);
+}
+function colKey(k) {
+  const n = colEntries().length;
+  if (k === 'escape' || k === 'backspace') { state = 'title'; return; }
+  if (k === 'tab' || k === 'q' || k === 'e') { colSec = 1 - colSec; colSel = 0; return; }
+  if (k === 'arrowleft' || k === 'a') colSel = Math.max(0, colSel - 1);
+  if (k === 'arrowright' || k === 'd') colSel = Math.min(n - 1, colSel + 1);
+  if (k === 'arrowup' || k === 'w') colSel = Math.max(0, colSel - COLS);
+  if (k === 'arrowdown' || k === 's') colSel = Math.min(n - 1, colSel + COLS);
+}
+function colClick(p) {
+  if (p.y > 80 && p.y < 115) { const s = p.x < W / 2 ? 0 : 1; if (s !== colSec) { colSec = s; colSel = 0; } return; }
+  const i = Math.floor((p.x - GX) / CELL), j = Math.floor((p.y - GY) / CELL);
+  if (i >= 0 && i < COLS && j >= 0) { const idx = j * COLS + i; if (idx < colEntries().length) colSel = idx; }
 }
 
 function onPress(k) {
   audio.init();
   if (k === 'm') { audio.muted = !audio.muted; localStorage.setItem('ink-muted', audio.muted ? '1' : '0'); return; }
-  if (state === 'title') { cv.focus(); return newRun(); }
+  if (state === 'title') {
+    cv.focus();
+    if (k === 'arrowup' || k === 'w') menuSel = (menuSel + MENU.length - 1) % MENU.length;
+    else if (k === 'arrowdown' || k === 's') menuSel = (menuSel + 1) % MENU.length;
+    else if (k === 'enter' || k === ' ') menuDo(menuSel);
+    else if (k === 'l') setLang(lang === 'en' ? 'ru' : 'en');
+    return;
+  }
+  if (state === 'collection') return colKey(k);
   if (state === 'cutscene') { if (k === 'escape') endCut(); else if (k === 'enter' || k === ' ') advanceCut(); return; }
   if (state === 'end') { if (k === 'c') { state = 'play'; nextFloor(); } else if (k === 'enter' || k === ' ' || k === 'r') newRun(); return; }
   if (state === 'dead' && (k === 'enter' || k === ' ' || k === 'r')) return newRun();
   if (DEBUG && state === 'play') { if (k >= '1' && k <= '7') return debugBoss(+k); if (k === 'k') return enemies.forEach((e) => killEnemy(e)); }
   if (k === 'escape' || k === 'p') { if (state === 'play') state = 'pause'; else if (state === 'pause') state = 'play'; return; }
   if (state === 'pause' && k === 'r') return newRun();
+  if (state === 'pause' && k === 'l') setLang(lang === 'en' ? 'ru' : 'en');
 }
 
 // ---------- rendering ----------
@@ -843,7 +987,7 @@ function inkCircle(x, y, r, fill, stroke = '#000', lw = 2.5, wobble = 0.08, seed
 function drawRoom() {
   ctx.drawImage(grain, 0, 0);
   // splats from killed enemies stay on the floor
-  if (room.note) { ctx.save(); ctx.translate(RCX + 150, RY1 - 40); ctx.rotate(-0.04); ctx.font = 'italic 15px Georgia'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(230,230,230,0.22)'; ctx.fillText(room.note, 0, 0); ctx.restore(); }
+  if (room.note) { ctx.save(); ctx.translate(RCX + 150, RY1 - 40); ctx.rotate(-0.04); ctx.font = 'italic 15px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(230,230,230,0.22)'; ctx.font = 'italic 16px "Comic Sans MS", "Segoe Print", cursive'; ctx.fillText(NOTES_TXT[lang][room.note], 0, 0); ctx.restore(); }
   for (const q of room.puddles) { ctx.globalAlpha = Math.min(1, q.life / 1.5) * 0.85; inkCircle(q.x, q.y, q.r, '#000', '#3a3a3a', 1.5, 0.12, q.x); ctx.globalAlpha = 1; }
   for (const s of splats) if (s.room === room) { ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rot); ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.beginPath(); ctx.ellipse(0, 0, s.r, s.r * 0.7, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
   // walls
@@ -862,14 +1006,15 @@ function drawRoom() {
     ctx.strokeStyle = nb.type === 'boss' ? '#fff' : '#bbb'; ctx.lineWidth = nb.type === 'boss' ? 5 : 3;
     ctx.strokeRect(-DOOR, -22, DOOR * 2, 44);
     if (!room.cleared) { ctx.fillStyle = '#3a3a3a'; ctx.fillRect(-DOOR + 4, -18, DOOR * 2 - 8, 36); ctx.strokeStyle = '#888'; ctx.lineWidth = 2; for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(i * 14, -18); ctx.lineTo(i * 14, 18); ctx.stroke(); } }
-    if (nb.type === 'boss') { ctx.fillStyle = '#fff'; ctx.font = 'bold 18px Georgia'; ctx.textAlign = 'center'; ctx.fillText('☠', 0, 6); }
-    if (nb.type === 'treasure') { ctx.fillStyle = '#fff'; ctx.font = 'bold 18px Georgia'; ctx.textAlign = 'center'; ctx.fillText('♛', 0, 6); }
+    if (nb.type === 'boss') { ctx.fillStyle = '#fff'; ctx.font = 'bold 18px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText('☠', 0, 6); }
+    if (nb.type === 'challenge') { ctx.fillStyle = '#fff'; ctx.font = 'bold 18px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText('✦', 0, 6); }
+    if (nb.type === 'treasure') { ctx.fillStyle = '#fff'; ctx.font = 'bold 18px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText('♛', 0, 6); }
     ctx.restore();
   }
   for (const k of room.rocks) { inkCircle(k.x, k.y + 4, k.r, '#000', null); inkCircle(k.x, k.y, k.r, '#4a4a4a', '#cfcfcf', 2, 0.12, k.x); ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(k.x - k.r * 0.4, k.y - k.r * 0.2); ctx.lineTo(k.x + k.r * 0.1, k.y + k.r * 0.3); ctx.stroke(); }
   if (room.type === 'start' && floor === 1) {
-    ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.font = '20px Georgia'; ctx.textAlign = 'center';
-    ctx.fillText('WASD  move', RCX, RCY - 110); ctx.fillText('ARROWS or MOUSE  shoot', RCX, RCY - 80); ctx.fillText('ESC  pause     M  mute', RCX, RCY + 110);
+    ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.font = '20px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center';
+    ctx.fillText(L('tut1'), RCX, RCY - 110); ctx.fillText(L('tut2'), RCX, RCY - 80); ctx.fillText(L('tut3'), RCX, RCY + 110);
   }
 }
 
@@ -879,7 +1024,7 @@ function drawPickups() {
     if (p.kind === 'item') {
       ctx.fillStyle = '#2a2a2a'; ctx.fillRect(p.x - 22, p.y + 8, 44, 18); ctx.strokeStyle = '#999'; ctx.lineWidth = 2; ctx.strokeRect(p.x - 22, p.y + 8, 44, 18);
       ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 18; inkCircle(p.x, p.y - 10 + bob, 13, '#fff', '#000', 2, 0.15, 3); ctx.restore();
-      ctx.fillStyle = '#000'; ctx.font = 'bold 15px Georgia'; ctx.textAlign = 'center'; ctx.fillText(p.item.name[0], p.x, p.y - 5 + bob);
+      ctx.fillStyle = '#000'; ctx.font = 'bold 15px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(itemName(p.item)[0], p.x, p.y - 5 + bob);
     } else if (p.kind === 'heart') drawHeart(p.x, p.y + bob, 12, 1);
     else if (p.kind === 'trapdoor') {
       ctx.fillStyle = '#000'; ctx.fillRect(p.x - 26, p.y - 26, 52, 52); ctx.strokeStyle = '#eee'; ctx.lineWidth = 3; ctx.strokeRect(p.x - 26, p.y - 26, 52, 52);
@@ -901,7 +1046,7 @@ function drawEnemy(e) {
   ctx.globalAlpha = clamp(a, 0.15, 1) * (e.alpha === undefined ? 1 : Math.max(0.05, e.alpha));
   const body = e.flash > 0 ? '#fff' : '#0a0a0a', line = '#e6e6e6';
   ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.beginPath(); ctx.ellipse(e.x, e.y + e.r * 0.9, e.r * 0.9, e.r * 0.3, 0, 0, Math.PI * 2); ctx.fill();
-  const eyes = (sp = 0.35, er = 0.18) => { const ang = Math.atan2(player.y - e.y, player.x - e.x); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x + s * e.r * sp + Math.cos(ang) * 2, e.y - e.r * 0.15 + Math.sin(ang) * 2, e.r * er, 0, 7); ctx.fill(); } };
+  const eyes = (sp = 0.35, er = 0.18) => { const tg = player && state !== 'collection' ? player : { x: e.x, y: e.y + 10 }, ang = Math.atan2(tg.y - e.y, tg.x - e.x); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x + s * e.r * sp + Math.cos(ang) * 2, e.y - e.r * 0.15 + Math.sin(ang) * 2, e.r * er, 0, 7); ctx.fill(); } };
   switch (e.type) {
     case 'fly': {
       const w = Math.sin(time * 40) * 6; ctx.strokeStyle = '#999'; ctx.lineWidth = 1.5;
@@ -909,10 +1054,10 @@ function drawEnemy(e) {
       inkCircle(e.x, e.y, e.r, body, line, 2, 0.1, e.t); eyes(0.35, 0.2); break;
     }
     case 'chaser': inkCircle(e.x, e.y, e.r, body, line, 2.5, 0.12, e.t); eyes(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(e.x, e.y + e.r * 0.35, e.r * 0.35, 0.2, Math.PI - 0.2); ctx.stroke(); break;
-    case 'shooter': inkCircle(e.x, e.y, e.r, body, line, 2.5, 0.05, e.t); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 0.5, 0, 7); ctx.fill(); ctx.fillStyle = '#000'; { const ang = Math.atan2(player.y - e.y, player.x - e.x); ctx.beginPath(); ctx.arc(e.x + Math.cos(ang) * 4, e.y + Math.sin(ang) * 4, e.r * 0.25, 0, 7); ctx.fill(); } break;
+    case 'shooter': inkCircle(e.x, e.y, e.r, body, line, 2.5, 0.05, e.t); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 0.5, 0, 7); ctx.fill(); ctx.fillStyle = '#000'; { const ang = Math.atan2((player && state !== 'collection' ? player.y : e.y + 10) - e.y, (player && state !== 'collection' ? player.x : e.x) - e.x); ctx.beginPath(); ctx.arc(e.x + Math.cos(ang) * 4, e.y + Math.sin(ang) * 4, e.r * 0.25, 0, 7); ctx.fill(); } break;
     case 'splitter': inkCircle(e.x, e.y, e.r, body, line, 2.5, 0.22, e.t * 3); eyes(0.3, 0.14); break;
     case 'dasher': {
-      ctx.save(); ctx.translate(e.x, e.y); ctx.rotate(e.state ? e.aim : Math.atan2(player.y - e.y, player.x - e.x));
+      ctx.save(); ctx.translate(e.x, e.y); ctx.rotate(e.state ? e.aim : Math.atan2((player && state !== 'collection' ? player.y : e.y + 10) - e.y, (player && state !== 'collection' ? player.x : e.x) - e.x));
       ctx.beginPath(); ctx.moveTo(e.r * 1.3, 0); ctx.lineTo(-e.r, -e.r); ctx.lineTo(-e.r * 0.5, 0); ctx.lineTo(-e.r, e.r); ctx.closePath();
       ctx.fillStyle = e.state === 1 ? (Math.floor(time * 20) % 2 ? '#fff' : '#000') : body; ctx.fill(); ctx.strokeStyle = line; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore(); break;
     }
@@ -954,7 +1099,7 @@ function drawEnemy(e) {
     }
     case 'boss': {
       drawBoss(e, body);
-      if (e.kind === 4) { const ang = Math.atan2(player.y - e.y, player.x - e.x); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x + s * 14 + Math.cos(ang) * 3, e.y + Math.sin(ang) * 3, 6, 0, 7); ctx.fill(); } }
+      if (e.kind === 4) { const ang = Math.atan2((player && state !== 'collection' ? player.y : e.y + 10) - e.y, (player && state !== 'collection' ? player.x : e.x) - e.x); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x + s * 14 + Math.cos(ang) * 3, e.y + Math.sin(ang) * 3, 6, 0, 7); ctx.fill(); } }
       else { eyes(0.33, 0.15); if (e.kind === 6 && e.phase) for (let i = 0; i < e.phase * 2; i++) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(e.x + Math.cos(i * 2.4 + time) * e.r * 0.55, e.y + Math.sin(i * 2.4 + time) * e.r * 0.55, 4, 0, 7); ctx.fill(); } }
       break;
     }
@@ -1012,13 +1157,13 @@ function drawHUD() {
   ctx.fillStyle = '#060606'; ctx.fillRect(0, 0, W, HUD); ctx.strokeStyle = '#333'; ctx.beginPath(); ctx.moveTo(0, HUD - 0.5); ctx.lineTo(W, HUD - 0.5); ctx.stroke();
   for (let i = 0; i < player.maxHp / 2; i++) { const v = player.hp - i * 2; drawHeart(24 + i * 26, 22, 10, v >= 2 ? 1 : v === 1 ? 0.5 : 0); }
   const s = player.s; ctx.fillStyle = '#9a9a9a'; ctx.font = '12px monospace'; ctx.textAlign = 'left';
-  ctx.fillText(`DMG ${s.dmg.toFixed(1)}  TEARS ${(60 / s.delay).toFixed(1)}/s  SPD ${s.speed.toFixed(1)}  RNG ${s.range}`, 16, 50);
-  ctx.fillStyle = '#ddd'; ctx.font = 'bold 16px Georgia'; ctx.textAlign = 'center'; ctx.fillText(`FLOOR ${floor}`, W / 2, 26);
-  ctx.font = '11px Georgia'; ctx.fillStyle = '#777'; ctx.fillText(player.items.map((i) => i.name).slice(-4).join(' · ') || 'no items yet', W / 2, 46);
-  if (audio.muted) { ctx.fillStyle = '#666'; ctx.textAlign = 'left'; ctx.fillText('muted', W / 2 + 70, 26); }
+  ctx.fillText(L('hud', s), 16, 50);
+  ctx.fillStyle = '#ddd'; ctx.font = 'bold 16px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(L('FLOOR', floor), W / 2, 26);
+  ctx.font = '11px Georgia, "Times New Roman", serif'; ctx.fillStyle = '#777'; { const t = player.items.map(itemName).slice(-3).join(' · ') || L('noItems'); fitFont(t, 420, 11); ctx.fillText(t, W / 2, 46); }
+  if (audio.muted) { ctx.fillStyle = '#666'; ctx.textAlign = 'left'; ctx.fillText(L('muted'), W / 2 + 80, 26); }
   drawMinimap();
   const boss = enemies.find((e) => e.boss);
-  if (boss) { const bw = 360; ctx.fillStyle = '#000'; ctx.fillRect(W / 2 - bw / 2, H - 34, bw, 12); ctx.fillStyle = '#eee'; ctx.fillRect(W / 2 - bw / 2, H - 34, bw * Math.max(0, boss.hp) / boss.maxHp, 12); ctx.strokeStyle = '#888'; ctx.strokeRect(W / 2 - bw / 2, H - 34, bw, 12); ctx.fillStyle = '#bbb'; ctx.font = '12px Georgia'; ctx.textAlign = 'center'; ctx.fillText(bossName(), W / 2, H - 40); }
+  if (boss) { const bw = 360; ctx.fillStyle = '#000'; ctx.fillRect(W / 2 - bw / 2, H - 34, bw, 12); ctx.fillStyle = '#eee'; ctx.fillRect(W / 2 - bw / 2, H - 34, bw * Math.max(0, boss.hp) / boss.maxHp, 12); ctx.strokeStyle = '#888'; ctx.strokeRect(W / 2 - bw / 2, H - 34, bw, 12); ctx.fillStyle = '#bbb'; ctx.font = '12px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(bossName(), W / 2, H - 40); }
 }
 
 function drawMinimap() {
@@ -1033,26 +1178,26 @@ function drawMinimap() {
     const x = bx + (r.gx - minX) * (c + g), y = oy + (r.gy - minY) * (c * 0.75 + g);
     ctx.fillStyle = r === room ? '#fff' : r.visited ? '#6a6a6a' : '#262626';
     ctx.fillRect(x, y, c, c * 0.75); ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, c - 1, c * 0.75 - 1);
-    if (r.type === 'boss' || r.type === 'treasure') { ctx.fillStyle = r === room ? '#000' : '#fff'; ctx.font = '9px Georgia'; ctx.textAlign = 'center'; ctx.fillText(r.type === 'boss' ? '☠' : '♛', x + c / 2, y + c * 0.62); }
+    if (r.type === 'boss' || r.type === 'treasure' || r.type === 'challenge') { ctx.fillStyle = r === room ? '#000' : '#fff'; ctx.font = '9px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillText(r.type === 'boss' ? '☠' : r.type === 'challenge' ? '✦' : '♛', x + c / 2, y + c * 0.62); }
   }
   void ox;
 }
 
 function drawCenterText(title, lines, alpha = 0.78) {
   ctx.fillStyle = `rgba(0,0,0,${alpha})`; ctx.fillRect(0, 0, W, H);
-  ctx.textAlign = 'center'; ctx.fillStyle = '#f2f2f2'; ctx.font = 'bold 56px Georgia'; ctx.fillText(title, W / 2, H / 2 - 70);
-  ctx.font = '18px Georgia'; ctx.fillStyle = '#aaa';
-  lines.forEach((l, i) => ctx.fillText(l, W / 2, H / 2 - 10 + i * 30));
+  ctx.textAlign = 'center'; ctx.fillStyle = '#f2f2f2'; fitFont(title, W - 60, 56, 'bold'); ctx.fillText(title, W / 2, H / 2 - 70);
+  ctx.font = '18px Georgia, "Times New Roman", serif'; ctx.fillStyle = '#aaa';
+  lines.forEach((l, i) => { fitFont(l, W - 60, 18); ctx.fillStyle = '#aaa'; ctx.fillText(l, W / 2, H / 2 - 10 + i * 30); });
 }
 
 function render() {
   ctx.save();
   if (shake > 0) ctx.translate(rand(-shake, shake) * 0.5, rand(-shake, shake) * 0.5);
-  if (state === 'title') {
+  if (state === 'title' || state === 'collection') {
     ctx.drawImage(grain, 0, 0);
     for (let i = 0; i < 6; i++) inkCircle(W / 2 + Math.cos(time * 0.3 + i) * 300, H / 2 + Math.sin(time * 0.4 + i * 2) * 180, 30 + i * 6, 'rgba(0,0,0,0.6)', '#333', 2, 0.2, i);
     ctx.restore();
-    drawCenterText('INK DEPTHS', ['A roguelike drawn in ink', '', 'WASD move  ·  Arrows or mouse shoot  ·  Esc pause  ·  M mute', '', Math.floor(time * 2) % 2 ? 'Press any key or click to start' : ''], 0.35);
+    if (state === 'title') drawTitle(); else drawCollection();
     return;
   }
   if (state === 'cutscene') { ctx.restore(); drawCut(); return; }
@@ -1061,22 +1206,22 @@ function render() {
   drawPlayer(); drawHelpers(); drawTears();
   for (const p of particles) { ctx.globalAlpha = clamp(p.life / p.max, 0, 1); ctx.fillStyle = p.c; ctx.fillRect(p.x - p.r / 2, p.y - p.r / 2, p.r, p.r); }
   ctx.globalAlpha = 1;
-  ctx.fillStyle = '#ddd'; ctx.font = '14px Georgia'; ctx.textAlign = 'center';
+  ctx.fillStyle = '#ddd'; ctx.font = '14px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center';
   for (const f of floatTexts) { ctx.globalAlpha = f.t; ctx.fillText(f.text, f.x, f.y); } ctx.globalAlpha = 1;
   if (fade > 0) { ctx.fillStyle = `rgba(0,0,0,${fade})`; ctx.fillRect(0, HUD, W, H - HUD); }
   ctx.restore();
   drawHUD();
-  if (banner) { ctx.globalAlpha = Math.min(1, banner.t); ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, H / 2 - 150, W, banner.fl ? 100 : 74); if (banner.fl) { ctx.font = 'italic 14px Georgia'; ctx.fillStyle = '#7a7a7a'; ctx.textAlign = 'center'; ctx.fillText(banner.fl, W / 2, H / 2 - 62); } ctx.fillStyle = '#fff'; ctx.font = 'bold 30px Georgia'; ctx.textAlign = 'center'; ctx.fillText(banner.text, W / 2, H / 2 - 112); ctx.font = 'italic 16px Georgia'; ctx.fillStyle = '#aaa'; ctx.fillText(banner.sub, W / 2, H / 2 - 88); ctx.globalAlpha = 1; }
-  if (meets.length) { const m = meets[0]; ctx.globalAlpha = Math.min(1, m.t * 2); ctx.textAlign = 'left'; ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fillRect(RX0 + 6, RY1 - 54, 360, 46); ctx.fillStyle = '#eee'; ctx.font = 'bold 15px Georgia'; ctx.fillText(m.name, RX0 + 16, RY1 - 34); ctx.fillStyle = '#8a8a8a'; ctx.font = 'italic 13px Georgia'; ctx.fillText(m.fl, RX0 + 16, RY1 - 16); ctx.globalAlpha = 1; }
-  if (state === 'pause') drawCenterText('PAUSED', ['Esc to resume  ·  R to restart  ·  M to mute', '', 'Items: ' + (player.items.map((i) => i.name).join(', ') || 'none')]);
+  if (banner) { ctx.globalAlpha = Math.min(1, banner.t); ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, H / 2 - 150, W, banner.fl ? 100 : 74); if (banner.fl) { fitFont(banner.fl, W - 40, 14, 'italic'); ctx.fillStyle = '#7a7a7a'; ctx.textAlign = 'center'; ctx.fillText(banner.fl, W / 2, H / 2 - 62); } ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; fitFont(banner.text, W - 40, 30, 'bold'); ctx.fillText(banner.text, W / 2, H / 2 - 112); fitFont(banner.sub, W - 40, 16, 'italic'); ctx.fillStyle = '#aaa'; ctx.fillText(banner.sub, W / 2, H / 2 - 88); ctx.globalAlpha = 1; }
+  if (meets.length) { const m = meets[0], nm = enemyName(m.type), fl = enemyFl(m.type); ctx.globalAlpha = Math.min(1, m.t * 2); ctx.textAlign = 'left'; ctx.font = 'italic 13px Georgia, "Times New Roman", serif'; const bw = Math.min(W - 2 * RX0 - 12, Math.max(260, ctx.measureText(fl).width + 24)); ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fillRect(RX0 + 6, RY1 - 54, bw, 46); ctx.fillStyle = '#eee'; ctx.font = 'bold 15px Georgia, "Times New Roman", serif'; ctx.fillText(nm, RX0 + 16, RY1 - 34); ctx.fillStyle = '#8a8a8a'; fitFont(fl, bw - 20, 13, 'italic'); ctx.fillText(fl, RX0 + 16, RY1 - 16); ctx.globalAlpha = 1; }
+  if (state === 'pause') drawCenterText(L('paused'), [L('pauseHint'), '', L('items') + (player.items.map(itemName).join(', ') || L('none'))]);
   if (flash > 0) { ctx.fillStyle = `rgba(255,255,255,${flash * 0.5})`; ctx.fillRect(0, 0, W, H); }
   if (state === 'end') {
     const secs = Math.round(((stats.end || performance.now()) - stats.start) / 1000);
-    drawCenterText('THE END', ['Theo climbed back up, holding the drawing.', `Enemies slain: ${stats.kills}   Rooms explored: ${stats.rooms}   Items: ${stats.items}   Time: ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`, '', 'Ink Depths  ·  made by Shirenos  ·  thank you for playing', '', 'ENTER  play again     ·     C  keep descending'], 0.88);
+    drawCenterText(L('theEnd'), [L('endLine'), L('stats', stats.kills, stats.rooms, stats.items) + '   ' + L('time', `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`), '', L('credits'), '', L('endHint')], 0.88);
   }
   if (state === 'dead') {
     const secs = Math.round(((stats.end || performance.now()) - stats.start) / 1000);
-    drawCenterText('YOU DISSOLVED', [`Reached floor ${stats.floor}`, `Enemies slain: ${stats.kills}   Rooms explored: ${stats.rooms}   Items: ${stats.items}`, `Time: ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`, '', 'Press ENTER or click to try again']);
+    drawCenterText(L('dead'), [L('reached', stats.floor), L('stats', stats.kills, stats.rooms, stats.items), L('time', `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`), '', L('deadHint')]);
   }
 }
 
@@ -1092,5 +1237,5 @@ particles = [];
 requestAnimationFrame(frame);
 
 // Small hook for automated smoke tests
-window.__ink = { get state() { return state; }, get floor() { return floor; }, get room() { return room; }, get map() { return map; }, get enemies() { return enemies; }, get player() { return player; }, get pickups() { return pickups; }, get cut() { return cut; },
+window.__ink = { get state() { return state; }, get floor() { return floor; }, get room() { return room; }, get map() { return map; }, get enemies() { return enemies; }, get player() { return player; }, get pickups() { return pickups; }, get cut() { return cut; }, get lang() { return lang; }, setLang, col, get menuSel() { return menuSel; }, colKey, menuDo,
   newRun, nextFloor, enterRoom, killEnemy, damage: (e) => damageEnemy(e, player.s.dmg, 0, 0), makeEnemy, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, killAll: () => enemies.forEach((e) => killEnemy(e)) };
