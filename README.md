@@ -22,16 +22,23 @@ Ada stopped drawing the day her little brother Theo did not come home. One night
 pools on the floor like an open door, and she follows his laughter down. Every floor is a memory of him:
 the nursery, the garden, the white hospital corridor, nine days of rain, his empty room, the last goodbye,
 and at the bottom, an unfinished page. Cutscenes play at the start, after every boss, before the final
-fight and at the ending. Item descriptions, enemy names and the notes scribbled on the floors hold clues
-to what was really waiting at the bottom.
+fight and at the ending. The walls look scribbled, the monsters have labels in a child's handwriting, and
+the notes on the floors read like level instructions: item lines, enemy names and memory pages all hint at
+what this place really is, and who was laughing.
 
 ## Rooms and floors
 
 Besides fights, treasure, challenge and boss rooms, every floor hides story rooms: a memory room with a short
-scene, Mr. Buttons' shop (Theo's old bunny, paid in ink drops that enemies leave behind), a birthday-candle
-puzzle, a heart-for-item trade and a secret room behind a cracked wall (shoot it open). Floors have their own
+scene, Mr. Buttons' shop (Theo's old bunny, paid in ink drops that enemies leave behind), a heart-for-item
+trade and a secret room behind a cracked wall (shoot it open). Floors have their own
 hazards: thorns in the garden, flickering darkness in the hospital corridor, rain and puddles by the window.
-Ada changes as she descends, and so do her tears.
+Ada changes as she descends, and so do her tears: dry eyes, then tear streaks, soaked hair, a hunched slow
+walk, a black veil and finally glowing cracks. A panel after every boss shows her new look.
+
+Every floor also has its own puzzle page, each with a unique reward: a music-box lullaby to repeat, flower
+pots to push onto their marks, a chalk path to follow in the dark, falling rain letters to catch in order
+while dodging the rain, a flashlight to find five hidden things, a flame to carry through gusts of wind, and
+a torn drawing to put back together (stand on two pieces to swap them, shoot a piece to rotate it).
 
 ## Language
 
@@ -65,7 +72,9 @@ Beating the final boss plays the ending and a credits screen with run stats; you
 
 ## Items
 
-Thirty items: stat ups, piercing, homing, multishot, spectral, backward, slowing, poison, critical, splitting,
+Forty-nine items, each with its own line of story. No item appears twice in a run, from any source
+(treasure, shop, trade, secret, challenge or boss); once the pool runs dry you get hearts and ink instead.
+Effects include stat ups, piercing, homing, multishot, spectral, backward, slowing, poison, critical, splitting,
 bouncing and wavy tears, orbiting moths, shadow familiars, knockback, life-steal, a shield that blocks the
 first hit per room, exploding enemies, a damaging aura, healing on room clear and more. Some pairs form
 synergies (for example Third Eye + Iron Needle, Forked Tongue + Twin Shadow, Salt Tear + Nightshade Ink).

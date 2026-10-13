@@ -61,64 +61,9 @@ cv.addEventListener('contextmenu', (e) => e.preventDefault());
 // ---------- language ----------
 let lang = localStorage.getItem('ink-lang') || ((navigator.language || '').toLowerCase().startsWith('ru') ? 'ru' : 'en');
 function setLang(l) { lang = l; localStorage.setItem('ink-lang', l); document.documentElement.lang = l; }
-const UI = {
-  en: {
-    floor: (n) => `Floor ${n}`, FLOOR: (n) => `FLOOR ${n}`, bossDefeated: 'Boss defeated', takeItem: 'Take the item, then descend', inkStill: 'The ink grows still',
-    p1: 'The page tears open', p1s: '"You said tomorrow."', p2: 'The ink unravels', p2s: '"You could have said it. You never did."',
-    crowded: 'A crowded memory', wave: 'Another wave', challenge: 'A trial of ink', challengeSub: 'Survive every wave', trialDone: 'Trial complete',
-    synergy: (n) => 'Synergy: ' + n, half: '+half heart', heart: '+1 heart', blocked: 'blocked', crit: 'crit',
-    cutHint: 'Enter / Space / Click to continue   ·   Esc to skip',
-    tut1: 'WASD  move', tut2: 'ARROWS or MOUSE  shoot', tut3: 'ESC  pause     M  mute',
-    hud: (s) => `DMG ${s.dmg.toFixed(1)}  TEARS ${(60 / s.delay).toFixed(1)}/s  SPD ${s.speed.toFixed(1)}  RNG ${s.range}`,
-    noItems: 'no items yet', muted: 'muted', title: 'INK DEPTHS', subtitle: 'A roguelike drawn in ink',
-    mStart: 'Start', mCol: 'Collection', mLang: 'Language: English', menuHint: 'Arrows / WASD to choose  ·  Enter or click to confirm  ·  M mute',
-    paused: 'PAUSED', pauseHint: 'Esc resume  ·  R restart  ·  L language  ·  M mute', items: 'Items: ', none: 'none',
-    theEnd: 'THE END', endLine: 'Ada climbed back up and drew the sky.',
-    stats: (k, r, i) => `Enemies slain: ${k}   Rooms explored: ${r}   Items: ${i}`, time: (t) => `Time: ${t}`,
-    credits: 'Ink Depths  ·  made by Shirenos  ·  thank you for playing', endHint: 'ENTER  play again     ·     C  keep descending',
-    dead: 'YOU DISSOLVED', reached: (n) => `Reached floor ${n}`, deadHint: 'Press ENTER or click to try again',
-    colTitle: 'COLLECTION', colEnemies: 'Enemies', colItems: 'Items', killed: (n) => `Slain: ${n}`, picked: (n) => `Picked up: ${n}`,
-    locked: '???', lockedHint: 'Not found yet', complete: (p) => `${p}% complete`, colHint: 'Arrows / WASD move  ·  Tab, Q / E switch section  ·  Esc back', boss: 'Boss',
-    shop: 'Mr. Buttons', shopSub: "Theo's old bunny. He still keeps shop for him.", trade: 'A fair trade', tradeSub: 'One of your hearts for one of his things.',
-    puzzle: 'Birthday candles', puzzleSub: 'Light them the way he counted: one, two, three, four.', puzzleDone: 'He always blew them out in one breath.', puzzleWrong: 'not like that',
-    secret: 'A hidden room', secretSub: 'He hid things where she never looked.', need: (n) => `need ${n} ink drops`, noHeart: 'not enough hearts',
-  },
-  ru: {
-    floor: (n) => `Этаж ${n}`, FLOOR: (n) => `ЭТАЖ ${n}`, bossDefeated: 'Босс повержен', takeItem: 'Возьми предмет и спускайся', inkStill: 'Чернила затихают',
-    p1: 'Страница рвётся', p1s: '«Ты сказала: завтра».', p2: 'Чернила распускаются', p2s: '«Ты могла сказать. Но так и не сказала».',
-    crowded: 'Тесное воспоминание', wave: 'Ещё волна', challenge: 'Испытание тушью', challengeSub: 'Переживи все волны', trialDone: 'Испытание пройдено',
-    synergy: (n) => 'Синергия: ' + n, half: '+пол-сердца', heart: '+1 сердце', blocked: 'блок', crit: 'крит',
-    cutHint: 'Enter / Пробел / клик — дальше   ·   Esc — пропустить',
-    tut1: 'WASD — ходить', tut2: 'СТРЕЛКИ или МЫШЬ — стрелять', tut3: 'ESC — пауза     M — звук',
-    hud: (s) => `УРОН ${s.dmg.toFixed(1)}  СЛЁЗЫ ${(60 / s.delay).toFixed(1)}/с  СКОР ${s.speed.toFixed(1)}  ДАЛЬН ${s.range}`,
-    noItems: 'предметов пока нет', muted: 'без звука', title: 'ЧЕРНИЛЬНЫЕ ГЛУБИНЫ', subtitle: 'Рогалик, нарисованный тушью',
-    mStart: 'Начать', mCol: 'Коллекция', mLang: 'Язык: русский', menuHint: 'Стрелки / WASD — выбор  ·  Enter или клик — подтвердить  ·  M — звук',
-    paused: 'ПАУЗА', pauseHint: 'Esc — продолжить  ·  R — заново  ·  L — язык  ·  M — звук', items: 'Предметы: ', none: 'нет',
-    theEnd: 'КОНЕЦ', endLine: 'Ада поднялась наверх и нарисовала небо.',
-    stats: (k, r, i) => `Врагов повержено: ${k}   Комнат пройдено: ${r}   Предметов: ${i}`, time: (t) => `Время: ${t}`,
-    credits: 'Чернильные глубины  ·  автор Shirenos  ·  спасибо, что сыграли', endHint: 'ENTER — сыграть снова     ·     C — спускаться дальше',
-    dead: 'ТЫ РАСТВОРИЛАСЬ', reached: (n) => `Дошла до этажа ${n}`, deadHint: 'Нажми ENTER или кликни, чтобы попробовать снова',
-    colTitle: 'КОЛЛЕКЦИЯ', colEnemies: 'Враги', colItems: 'Предметы', killed: (n) => `Повержено: ${n}`, picked: (n) => `Подобрано: ${n}`,
-    locked: '???', lockedHint: 'Ещё не найдено', complete: (p) => `Собрано ${p}%`, colHint: 'Стрелки / WASD — выбор  ·  Tab, Q / E — раздел  ·  Esc — назад', boss: 'Босс',
-    shop: 'Господин Пуговка', shopSub: 'Старый заяц Тео. Он до сих пор торгует за него.', trade: 'Честный обмен', tradeSub: 'Одно твоё сердце за одну его вещь.',
-    puzzle: 'Свечи на торте', puzzleSub: 'Зажги их так, как считал он: раз, два, три, четыре.', puzzleDone: 'Он всегда задувал их на одном дыхании.', puzzleWrong: 'не так',
-    secret: 'Тайная комната', secretSub: 'Он прятал вещи там, куда она никогда не смотрела.', need: (n) => `нужно капель: ${n}`, noHeart: 'не хватает сердец',
-  },
-};
 const L = (k, ...a) => { const v = UI[lang][k] !== undefined ? UI[lang][k] : UI.en[k]; return typeof v === 'function' ? v(...a) : v; };
-const CUT_M = {"intro": "pool", "f1": "cradle", "f2": "jar", "f3": "corridor", "f4": "window", "f5": "chair", "f6": "candle", "final": "mask", "ending": {"0": "dragon", "5": "theo", "10": "sky"}};
-const CUTS_TXT = { en: {"intro": ["Ada stopped drawing the day her little brother did not come home.", "Tonight the ink in her old pen began to move on its own.", "It pooled on the bedroom floor, black and deep, like a door left open.", "Somewhere far below, Theo was laughing. So she went down."], "f1": ["The nursery. She remembers the night he was born.", "She was jealous. She asked Mother to send him back.", "He grabbed her finger anyway, and would not let go."], "f2": ["The garden. He picked every flower, roots and all, and gave them to her.", "She told him they were ugly.", "She kept them in a jar on her shelf until they turned to dust."], "f3": ["The white corridor. Machines that hummed like tired bees.", "He asked her to draw him a dragon.", "She said: tomorrow.", "There was no tomorrow. She has hated that word ever since."], "f4": ["The window. It rained for nine days.", "She counted the drops so she would not have to count anything else.", "He was always drawing something under the blanket. He never let her look."], "f5": ["His room. Everything is still where he left it.", "Except his green crayon. Nobody can find it.", "Mother still sets the table for four. Nobody says anything."], "f6": ["The last goodbye. She did not cry. She did not speak.", "She was sure he had left angry with her.", "Still waiting for a dragon that never came."], "final": ["At the very bottom, something waits on an empty page.", "She thought it would be him. Angry. Still waiting.", "But when it lifts its head, it wears her face.", "\"It was never him,\" it says. \"It was always you, Ada.\""], "ending": ["The ink grows still. Where it stood lies his notebook. The one from under the blanket.", "On the last page there is a dragon. Crooked. Green. The green crayon worn down to nothing.", "Under it, in big uneven letters:", "\"Ada, you always said tomorrow. So I made it today. Now you don't have to.\"", "\"Don't be sad, ok? Draw me a sky.\"", "The laughter was him. He was waiting to give it to her.", "A small ink shadow holds out the page.", "\"I'm sorry,\" Ada says. \"I love you.\"", "\"I know,\" says Theo. \"I was just waiting for you to stop being sad.\"", "And then he is gone.", "Ada climbs back up. She takes out her old pen.", "And for the first time in a long time, she draws the sky."]}, ru: {"intro": ["Ада перестала рисовать в тот день, когда её младший брат не вернулся домой.", "Этой ночью чернила в её старой ручке ожили сами.", "Они растеклись по полу спальни, чёрные и глубокие, как приоткрытая дверь.", "Где-то далеко внизу смеялся Тео. И она спустилась."], "f1": ["Детская. Она помнит ночь, когда он родился.", "Она ревновала. Просила маму отдать его обратно.", "А он всё равно схватил её за палец и не отпускал."], "f2": ["Сад. Он рвал для неё все цветы подряд, прямо с корнями.", "Она сказала, что они некрасивые.", "И хранила их в банке на полке, пока они не рассыпались в пыль."], "f3": ["Белый коридор. Машины гудели, как уставшие пчёлы.", "Он попросил нарисовать ему дракона.", "Она ответила: завтра.", "Завтра не наступило. С тех пор она ненавидит это слово."], "f4": ["Окно. Девять дней шёл дождь.", "Она считала капли, чтобы не считать ничего другого.", "Он всё время что-то рисовал под одеялом. И никогда не давал ей посмотреть."], "f5": ["Его комната. Всё лежит там, где он оставил.", "Кроме зелёного карандаша. Его никто не может найти.", "Мама до сих пор накрывает стол на четверых. Все молчат."], "f6": ["Последнее прощание. Она не плакала. Не сказала ни слова.", "Она была уверена, что он ушёл, обидевшись на неё.", "Так и не дождавшись дракона."], "final": ["На самом дне, на пустой странице, что-то ждёт.", "Она думала, что это будет он. Обиженный. Всё ещё ждущий.", "Но когда оно поднимает голову, у него её лицо.", "«Это никогда не был он, — говорит оно. — Это всегда была ты, Ада»."], "ending": ["Чернила затихают. Там, где стояло оно, лежит его тетрадка. Та самая, из-под одеяла.", "На последней странице дракон. Кривой. Зелёный. Зелёный карандаш стёрт почти до конца.", "Под ним большими неровными буквами:", "«Ада, ты всегда говорила „завтра“. Поэтому я нарисовал сегодня. Теперь тебе не надо».", "«Не грусти, ладно? Нарисуй мне небо».", "Смех внизу был его. Он ждал, чтобы отдать ей рисунок.", "Маленькая чернильная тень протягивает ей страницу.", "«Прости меня, — говорит Ада. — Я тебя люблю».", "«Я знаю, — говорит Тео. — Я просто ждал, когда ты перестанешь грустить».", "И его больше нет.", "Ада поднимается наверх. Достаёт свою старую ручку.", "И впервые за долгое время рисует небо."]} };
-const NOTES_TXT = {"en": ["ada is the best sister (dont tell her)", "flowers for ada. she will like them nex time", "secret project. DO NOT LOOK ADA", "green is her favrit. i need more green", "hid the crayon under my pilow", "im not angry. i was never angry", "today. not tomorrow. today."], "ru": ["ада лучшая сестра (только ей не говорите)", "цветы для ады. в следущий раз панравятся", "секретный проект. АДА НЕ СМОТРИ", "зелёный её любимый. нужно больше зелёного", "спрятал карандаш под подушку", "я не злюсь. я никогда не злился", "сегодня. не завтра. сегодня."]};
-const FLOOR_TXT = {"en": ["The Nursery", "The Garden", "The White Corridor", "The Window", "The Empty Room", "The Last Goodbye", "The Unwritten Page"], "ru": ["Детская", "Сад", "Белый коридор", "Окно", "Пустая комната", "Последнее прощание", "Ненаписанная страница"]};
-const DEEP_TXT = {"en": ["The ink runs deeper", "Shadows remember you", "Quiet pages, loud teeth", "Every blot is hungry"], "ru": ["Чернила уходят глубже", "Тени тебя помнят", "Тихие страницы, громкие зубы", "Каждая клякса голодна"]};
-const BOSS_TXT = {"en": [["The Cradle Moth", "It still hums the lullaby"], ["The Thorn Gardener", "Every flower, roots and all"], ["The Night Nurse", "She only comes when the lights go out"], ["The Rain Choir", "Nine days of rain"], ["The Hollow Toybox", "Nobody plays with it now"], ["The Mourning Bell", "It rings for one"], ["The Unwritten", "Everything you never said"]], "ru": [["Колыбельный мотылёк", "Он всё ещё напевает колыбельную"], ["Терновый садовник", "Все цветы подряд, прямо с корнями"], ["Ночная медсестра", "Приходит, только когда гаснет свет"], ["Дождевой хор", "Девять дней дождя"], ["Пустой ящик с игрушками", "С ним больше никто не играет"], ["Траурный колокол", "Он звонит по одному"], ["Ненаписанное", "Всё, чего ты так и не сказала"]]};
-const BOSS_FL = {"en": ["A moth that never left the nursery lamp.", "He gave her every flower. She called them ugly.", "She whispered \"tomorrow\" back at every door.", "Nine days of counting drops.", "His toys, waiting for someone to play.", "It rang once, and she said nothing.", "It was never him. It was always her."], "ru": ["Мотылёк, который так и не улетел от лампы в детской.", "Он дарил ей все цветы. Она называла их некрасивыми.", "У каждой двери она шёпотом повторяла «завтра».", "Девять дней она считала капли.", "Его игрушки ждут, когда с ними поиграют.", "Он прозвонил один раз, а она промолчала.", "Это никогда не был он. Это всегда была она."]};
-const ENEMY_TXT = {"chaser": [["Crayon Scribble", "Someone pressed so hard the paper tore. Angry?"], ["Каракуля", "Кто-то давил так сильно, что порвал бумагу. Со злости?"]], "fly": [["Hum", "Machines that hummed like tired bees."], ["Гул", "Машины гудели, как уставшие пчёлы."]], "splitter": [["Ink Blot", "Spilled, and spilled again."], ["Клякса", "Пролилась, и снова, и снова."]], "bouncer": [["Rubber Ball", "He threw it at the wall for hours. Waiting."], ["Резиновый мячик", "Он часами бросал его в стену. Ждал."]], "shooter": [["Watching Eye", "Visiting hours are over."], ["Глаз", "Часы посещений окончены."]], "spider": [["Night-light Spider", "It jumps whenever the hallway light flickers."], ["Паук-ночник", "Прыгает каждый раз, когда мигает свет в коридоре."]], "ghost": [["Drip Wraith", "It drips where his bed used to be."], ["Капельный призрак", "Капает там, где раньше стояла его кровать."]], "turret": [["Pill Wheel", "Twice a day, with water. He hated the big one."], ["Таблетница", "Два раза в день, запивая водой. Большую он ненавидел."]], "dasher": [["Paper Dart", "Folded from a get-well card she never signed."], ["Бумажный самолётик", "Сложен из открытки «Выздоравливай», которую она так и не подписала."]], "bomber": [["Raincloud", "It leaves puddles nobody wipes up."], ["Тучка", "Оставляет лужи, которые никто не вытирает."]], "sniper": [["Night Lamp", "He kept it on late, drawing something under the blanket."], ["Ночник", "Он не выключал его допоздна. Что-то рисовал под одеялом."]], "summoner": [["Hush", "\"Shh. Your brother is sleeping.\""], ["Тише", "«Тсс. Твой брат спит»."]]};
-const ITEM_TXT = {"ink": ["The pen she stopped using. It still remembers her hand.", ["Пузырёк чернил", "Урон выше", "Ручка, которую она забросила. Она всё ещё помнит её руку."]], "quill": ["He learned to write her name before his own.", ["Острое перо", "Скорострельность выше", "Её имя он научился писать раньше своего."]], "feather": ["Found on his hospital windowsill.", ["Воронье перо", "Скорость выше", "Нашлось на подоконнике его больничной палаты."]], "needle": ["The nurse said it would only sting a little. He didn't cry.", ["Железная игла", "Пробивающие слёзы", "Медсестра сказала, будет чуть-чуть больно. Он не плакал."]], "eye": ["He always knew when she was sad.", ["Третий глаз", "Самонаводящиеся слёзы", "Он всегда знал, когда ей грустно."]], "fork": ["She said tomorrow. Tomorrow. Tomorrow.", ["Раздвоенный язык", "Тройной выстрел", "Она говорила: завтра. Завтра. Завтра."]], "lens": ["His glasses. Taped in the middle, twice.", ["Треснувшая линза", "Дальность и скорость слёз выше", "Его очки. Дважды заклеенные посередине."]], "heart": ["A heart he drew on her cast. Lopsided.", ["Угольное сердце", "Здоровье выше", "Сердечко, которое он нарисовал ей на гипсе. Кривое."]], "stone": ["He gave it to her for luck. She threw it away.", ["Тяжёлый камень", "Огромные слёзы, урон выше, скорострельность ниже", "Он подарил его ей на удачу. Она его выбросила."]], "moon": ["Stuck to his ceiling. It glowed for ten minutes every night.", ["Бумажная луна", "Все характеристики выше", "Наклеена у него на потолке. Светилась десять минут каждую ночь."]], "smoke": ["Seven candles on his last cake.", ["Струйка дыма", "Призрачные слёзы проходят сквозь камни", "Семь свечей на его последнем торте."]], "twin": ["Two shadows on the hospital wall at night. Hers and his.", ["Тень-близнец", "Стреляет и назад", "Две тени на больничной стене ночью. Её и его."]], "salt": ["Some tears were never cried.", ["Солёная слеза", "Слёзы замедляют врагов", "Некоторые слёзы так и не были выплаканы."]], "nightshade": ["His medicine tasted like this. He made faces to make her laugh.", ["Чернила белладонны", "Ядовитые слёзы", "Такой на вкус была его микстура. Он корчил рожи, чтобы она смеялась."]], "die": ["He always let her win. She never noticed.", ["Шулерский кубик", "15% шанс критической слезы", "Он всегда ей поддавался. Она так и не заметила."]], "prism": ["He made rainbows on the wall for her.", ["Стеклянная призма", "Слёзы раскалываются при попадании", "Он пускал для неё радуги на стену."]], "eraser": ["Worn thin. He kept starting the same drawing over.", ["Ластик", "Слёзы отскакивают от стен", "Стёрт почти до конца. Он раз за разом начинал один и тот же рисунок."]], "ribbon": ["From her hair. He borrowed it to tie his notebook shut.", ["Шёлковая лента", "Волнистые слёзы, урон выше", "Из её косы. Он взял её, чтобы перевязать свою тетрадку."]], "moth": ["It circled his night lamp. He named it Ada.", ["Бумажный мотылёк", "Мотылёк кружит рядом и защищает", "Кружил вокруг его ночника. Он назвал его Адой."]], "locket": ["Inside: a girl, and a smaller boy holding her finger.", ["Серебряный медальон", "Спутник, здоровье выше", "Внутри девочка и мальчик поменьше, держащий её за палец."]], "pup": ["The dog they were going to get when he came home.", ["Теневой щенок", "Маленькая тень стреляет за тебя", "Собака, которую они собирались завести, когда он вернётся домой."]], "kite": ["It flew once. He watched from the window and waved.", ["Чернильный змей", "Спутник-стрелок, дальность выше", "Взлетел всего раз. Он смотрел из окна и махал рукой."]], "tooth": ["He lost it in the hospital. He saved it for her.", ["Молочный зуб", "Отбрасывание и урон выше", "Выпал у него в больнице. Он сберёг его для неё."]], "leech": ["The machines took a little of him every day.", ["Бледная пиявка", "Убийства понемногу лечат", "Машины каждый день забирали у него чуть-чуть."]], "umbrella": ["Nine days of rain. She never opened it.", ["Чёрный зонт", "Блокирует первый удар в каждой комнате", "Девять дней дождя. Она так ни разу его и не раскрыла."]], "match": ["Seven candles. He made a wish and wouldn't say what.", ["Обгоревшая спичка", "Враги взрываются после смерти", "Семь свечей. Он загадал желание и никому не сказал какое."]], "candle": ["Still burning in the window of his room.", ["Восковая свеча", "Тёплая аура жжёт врагов рядом", "До сих пор горит в окне его комнаты."]], "musicbox": ["It played his lullaby. She can't bring herself to wind it.", ["Музыкальная шкатулка", "Зачищенные комнаты иногда лечат", "Играла его колыбельную. У неё не хватает сил её завести."]], "photo": ["Two children. He is hiding a notebook behind his back.", ["Старая фотография", "Урон ×1,5 при полном здоровье", "Двое детей. Он прячет за спиной тетрадку."]], "crayon": ["A green crayon, worn down to a stub. Where did it go?", ["Зелёный карандаш", "Скорострельность, скорость слёз и здоровье выше", "Зелёный карандаш, стёртый до огрызка. Куда же он делся?"]], "inkheart": ["He drew it for her. It never stopped beating.", ["Чернильное сердце", "Что-то тебя помнит. Всё выше", "Он нарисовал его для неё. Оно так и не перестало биться."]], "laststroke": ["One line. That's all it ever needed.", ["Последний штрих", "Каждый удар решает всё", "Одна линия. Больше никогда и не было нужно."]]};
-for (let i = 0; i < 7; i++) { CUT_M['mem' + (i + 1)] = ["cradle", "jar", "corridor", "window", "chair", "candle", "mask"][i]; CUTS_TXT.en['mem' + (i + 1)] = [["A memory. Theo, two years old, asleep on her drawing.", "She was angry about the smudge. She kept the drawing anyway."], ["A memory. He buried a crayon in the garden.", "\"So more green grows,\" he said. She laughed at him."], ["A memory. A nurse asked him what he was drawing.", "\"A secret,\" he whispered. \"For my sister.\""], ["A memory. He drew on the fogged window with his finger.", "A wing. Then the rain washed it away."], ["A memory. Mother found green wax under his pillow.", "She did not understand. Nobody asked."], ["A memory. On the day of the goodbye, his notebook was not in his room.", "Ada thought he had thrown it away. Because of her."], ["A memory. She is the one who said tomorrow.", "She has been saying it to herself ever since."]][i]; CUTS_TXT.ru['mem' + (i + 1)] = [["Воспоминание. Тео, два года, уснул прямо на её рисунке.", "Она злилась из-за пятна. Но рисунок всё равно сохранила."], ["Воспоминание. Он закопал карандаш в саду.", "«Чтобы выросло больше зелёного», — сказал он. Она над ним посмеялась."], ["Воспоминание. Медсестра спросила, что он рисует.", "«Секрет, — прошептал он. — Для сестры»."], ["Воспоминание. Он рисовал пальцем на запотевшем окне.", "Крыло. Потом дождь его смыл."], ["Воспоминание. Мама нашла под его подушкой зелёный воск.", "Она не поняла. А никто и не спросил."], ["Воспоминание. В день прощания его тетрадки не было в комнате.", "Ада решила, что он её выбросил. Из-за неё."], ["Воспоминание. Это она сказала «завтра».", "И с тех пор повторяет это себе."]][i]; }
-const SYN_RU = {"Seeking Needle": "Ищущая игла", "Mirror Tongue": "Зеркальный язык", "Frostbite": "Обморожение", "Keepsakes": "Памятные вещицы", "Playmates": "Друзья по играм", "Wildfire": "Лесной пожар"};
-const itemName = (it) => lang === 'ru' && ITEM_TXT[it.id] ? ITEM_TXT[it.id][1][0] : it.name;
-const itemDesc = (it) => lang === 'ru' && ITEM_TXT[it.id] ? ITEM_TXT[it.id][1][1] : it.desc;
+const itemName = (it) => { const t = ITEM_TXT[it.id]; return t ? (lang === 'ru' ? t[1][0] : t[2] || it.name) : it.name; };
+const itemDesc = (it) => { const t = ITEM_TXT[it.id]; return t ? (lang === 'ru' ? t[1][1] : t[3] || it.desc) : it.desc; };
 const itemFl = (it) => ITEM_TXT[it.id] ? (lang === 'ru' ? ITEM_TXT[it.id][1][2] : ITEM_TXT[it.id][0]) : it.fl;
 const enemyName = (t) => ENEMY_TXT[t][lang === 'ru' ? 1 : 0][0];
 const enemyFl = (t) => ENEMY_TXT[t][lang === 'ru' ? 1 : 0][1];
@@ -191,6 +136,25 @@ const ITEMS = [
   { id: 'musicbox', fl: "It played her lullaby. Now it plays his.", name: 'Music Box', desc: 'Cleared rooms may heal you', apply: (s) => (s.regen += 0.35) },
   { id: 'photo', fl: "Two children. One of them is fading.", name: 'Old Photograph', desc: 'Damage x1.5 at full health', apply: (s) => (s.fullHp = true) },
   { id: 'crayon', fl: "The dragon, half finished. Green, because green was her favourite.", name: 'Crayon Drawing', desc: 'Tears up, shot speed up, health up', apply: (s, p) => (s.delay = Math.max(5, s.delay * 0.88), s.shotSpeed += 1, p.maxHp += 2, p.hp += 2) },
+  { id: 'compass', name: 'Paper Compass', desc: 'Range and shot speed up', apply: (s) => (s.range += 100, s.shotSpeed += 1.5) },
+  { id: 'bandage', name: 'Plaster', desc: 'Health up, full heal', apply: (s, p) => (p.maxHp += 2, p.hp = p.maxHp) },
+  { id: 'sticker', name: 'Gold Star', desc: 'Damage and tears up', apply: (s) => (s.dmg += 0.6, s.delay = Math.max(5, s.delay * 0.9)) },
+  { id: 'yoyo', name: 'Yo-yo', desc: 'An orbiting yo-yo guards you', apply: (s) => (s.orbitals = Math.min(4, s.orbitals + 1)) },
+  { id: 'marble', name: 'Glass Marble', desc: 'Tears bounce and pierce', apply: (s) => (s.bounce = true, s.pierce = true) },
+  { id: 'sock', name: 'Odd Sock', desc: 'Speed and knockback up', apply: (s) => (s.speed += 0.4, s.knock *= 1.5) },
+  { id: 'cape', name: 'Blanket Cape', desc: 'Speed up, blocks a hit per room', apply: (s) => (s.speed += 0.3, s.shield = true) },
+  { id: 'chalk', name: 'Chalk Stick', desc: 'Spectral tears, range up', apply: (s) => (s.spectral = true, s.range += 60) },
+  { id: 'bicycle', name: 'Bicycle Bell', desc: 'Crits and tears up', apply: (s) => (s.crit += 0.1, s.delay = Math.max(5, s.delay * 0.9)) },
+  { id: 'dino', name: 'Toy Dinosaur', desc: 'Familiar, damage up', apply: (s) => (s.familiars = Math.min(3, s.familiars + 1), s.dmg += 0.3) },
+  { id: 'jam', name: 'Jam Sandwich', desc: 'Full heal, rooms may heal', apply: (s, p) => (p.hp = p.maxHp, s.regen += 0.2) },
+  { id: 'glasses', name: 'Toy Glasses', desc: 'Homing, slowing tears', apply: (s) => (s.homing = true, s.slow = Math.max(s.slow, 1.2)) },
+  { id: 'pz1', pz: 1, name: 'Music Sheet', desc: 'Tears up a lot', apply: (s) => (s.delay = Math.max(5, s.delay * 0.7)) },
+  { id: 'pz2', pz: 1, name: 'Watering Can', desc: 'Familiar, rooms may heal', apply: (s) => (s.familiars = Math.min(3, s.familiars + 1), s.regen += 0.25) },
+  { id: 'pz3', pz: 1, name: 'Chalk Arrow', desc: 'Homing, range up', apply: (s) => (s.homing = true, s.range += 120) },
+  { id: 'pz4', pz: 1, name: 'Raincoat', desc: 'Shield, puddles no longer slow', apply: (s) => (s.shield = true, s.noPuddle = true) },
+  { id: 'pz5', pz: 1, name: 'Flashlight', desc: 'Aura, crits up', apply: (s) => (s.aura += 3, s.crit += 0.1) },
+  { id: 'pz6', pz: 1, name: 'Little Flame', desc: 'Big damage up, enemies burst', apply: (s) => (s.dmg += 1.5, s.explode = true) },
+  { id: 'pz7', pz: 1, name: 'Mended Page', desc: 'All stats up, health up', apply: (s, p) => (s.dmg += 0.8, s.delay = Math.max(5, s.delay * 0.85), s.speed += 0.3, s.range += 80, p.maxHp += 2, p.hp += 2) },
 ];
 const SECRET = { id: 'inkheart', fl: "Her heart was never the broken one.", name: 'Ink Heart', desc: 'Something remembers you. Everything up', apply: (s, p) => (s.dmg += 4, s.homing = true, s.pierce = true, s.size += 2, s.delay = Math.max(5, s.delay * 0.8), p.maxHp += 2, p.hp = p.maxHp) };
 const SYNERGIES = [
@@ -236,11 +200,10 @@ function newRun() {
       aura: 0, regen: 0, fullHp: false, backMulti: false, frostbite: false, orbDmg: 1, famDmg: 0 },
     items: [], drops: 0, syn: new Set(), fams: [], orbs: [], shieldUp: false, secret: false, leechN: 0,
   };
-  stats = { kills: 0, rooms: 0, items: 0, start: performance.now(), floor: 1, met: new Set() }; meets = [];
+  stats = { kills: 0, rooms: 0, items: 0, start: performance.now(), floor: 1, met: new Set(), offered: new Set() }; meets = [];
   floor = 0; seqBuf = []; endTimer = 0; splats = []; nextFloor(); state = 'play';
   playCut('intro');
 }
-const FLOOR_NAMES = ['The Nursery', 'The Garden', 'The White Corridor', 'The Window', 'The Empty Room', 'The Last Goodbye', 'The Unwritten Page'];
 
 function nextFloor() {
   floor++; stats.floor = floor;
@@ -279,8 +242,8 @@ function genFloor(f) {
     start.type = 'start'; start.cleared = true;
     for (const r of list) { r.rocks = r.type === 'normal' || r.type === 'challenge' ? genRocks() : []; r.puddles = []; r.wavesLeft = r.type === 'challenge' ? 2 : r.type === 'normal' && f >= 2 && Math.random() < 0.3 ? 1 : 0; }
     { const norm = shuffle(list.filter((r) => r.type === 'normal'));
-      const want = ['memory', 'shop'].concat(f >= 2 ? ['puzzle'] : [], f >= 3 && Math.random() < 0.7 ? ['trade'] : []);
-      for (const t of want) if (norm.length > 2) { const r = norm.pop(); r.type = t; r.rocks = []; r.wavesLeft = 0; }
+      const want = ['puzzle', 'memory', 'shop'].concat(f >= 3 && Math.random() < 0.7 ? ['trade'] : []);
+      for (const t of want) if (norm.length > (t === 'puzzle' ? 0 : 2)) { const r = norm.pop(); r.type = t; r.rocks = []; r.wavesLeft = 0; }
       const cand = list.filter((r) => r.type === 'normal'); if (cand.length) pick(cand).note = (f - 1) % 7;
       for (const par of shuffle(cand.slice())) {
         const opts = [['n', 0, -1], ['s', 0, 1], ['w', -1, 0], ['e', 1, 0]].filter(([d, dx, dy]) => { const x = par.gx + dx, y = par.gy + dy; return x >= 0 && y >= 0 && x < N && y < N && !grid.has(key(x, y)); });
@@ -308,7 +271,6 @@ function blockedAt(x, y, r, noPick) {
   for (const k of room.rocks) if (Math.hypot(x - k.x, y - k.y) < k.r + r + 10) return true;
   for (const d of Object.keys(room.n)) { const p = doorPos(d); if (Math.hypot(x - p.x, y - p.y) < 90) return true; }
   if (room.thorns) for (const k of room.thorns) if (Math.hypot(x - k.x, y - k.y) < k.r + r + 6) return true;
-  if (room.candles) for (const k of room.candles) if (Math.hypot(x - k.x, y - k.y) < 30 + r) return true;
   if (!noPick && pickups) for (const p of pickups) if (!p.taken && Math.hypot(x - p.x, y - p.y) < p.r + r + 10) return true;
   return false;
 }
@@ -342,11 +304,8 @@ function initRoom(r) {
     put(Object.assign(makeItemPickup(0, 0), { price: 6 + floor }), RCX - 130, RCY + 40);
     put(Object.assign(makeItemPickup(0, 0), { price: 8 + floor }), RCX + 130, RCY + 40);
     put({ kind: 'heart', r: 12, bob: 0, price: 3 }, RCX, RCY + 70);
-  } else if (r.type === 'trade') { banner = { text: L('trade'), sub: L('tradeSub'), t: 2.6 }; put(Object.assign(makeItemPickup(0, 0), { trade: true }), RCX, RCY + 20); }
-  else if (r.type === 'puzzle') {
-    banner = { text: L('puzzle'), sub: L('puzzleSub'), t: 3 };
-    const ord = shuffle([1, 2, 3, 4]); r.next = 1;
-    r.candles = [[-200, -90], [200, -90], [-200, 90], [200, 90]].map(([dx, dy], i) => ({ x: RCX + dx, y: RCY + dy, n: ord[i], lit: false, touch: false }));
+  } else if (r.type === 'trade') { banner = { text: L('trade'), sub: L('tradeSub'), t: 2.6 }; { const o = makeItemPickup(0, 0); if (o.kind === 'item') o.trade = true; put(o, RCX, RCY + 20); } }
+  else if (r.type === 'puzzle') { pzInit(r);
   } else if (r.type === 'secret') { banner = { text: L('secret'), sub: L('secretSub'), t: 2.6 }; put(makeItemPickup(0, 0), RCX, RCY); for (let i = 0; i < 4; i++) put({ kind: 'drop', r: 8 }, RCX + rand(-90, 90), RCY + rand(50, 100)); }
 }
 function enterRoom(r, fromDir) {
@@ -379,10 +338,159 @@ function enterRoom(r, fromDir) {
   fade = 1;
 }
 
-function makeItemPickup(x, y) {
-  const owned = new Set(player.items.map((i) => i.id));
-  const pool = ITEMS.filter((i) => !owned.has(i.id) || i.id === 'ink' || i.id === 'heart');
-  return { kind: 'item', item: pick(pool.length ? pool : ITEMS), x, y, r: 18, bob: rand(0, 6) };
+function makeItemPickup(x, y, id) {
+  // every item can show up at most once per run, from any source; when the pool runs dry, hearts and ink instead
+  const pool = id ? ITEMS.filter((i) => i.id === id && !stats.offered.has(i.id)) : ITEMS.filter((i) => !i.pz && !stats.offered.has(i.id));
+  if (!pool.length) return Math.random() < 0.5 ? { kind: 'heart', x, y, r: 12, bob: 0 } : { kind: 'drop', x, y, r: 8 };
+  const it = pick(pool); stats.offered.add(it.id);
+  return { kind: 'item', item: it, x, y, r: 18, bob: rand(0, 6) };
+}
+
+// ---------- story puzzles: one per floor, each a page Theo drew for Ada ----------
+const PZ_PADS = [-210, -70, 70, 210];
+function pzInit(r) {
+  const k = ((floor - 1) % 7) + 1, P = r.pz = { k, done: false, t: 0 };
+  banner = { text: L('pz')[k - 1][0], sub: L('pz')[k - 1][1], t: 4 };
+  if (k === 1) { P.seq = Array.from({ length: 6 }, () => Math.floor(rand(0, 4))); P.round = 0; P.phase = 'show'; P.i = 0; P.lit = -1; P.on = -1; P.t = -1; }
+  else if (k === 2) { P.marks = [[RCX - 170, RCY - 70], [RCX + 10, RCY + 100], [RCX + 190, RCY - 40]].map(([x, y]) => ({ x, y })); P.start = [[RCX - 90, RCY + 20], [RCX + 60, RCY - 40], [RCX + 110, RCY + 60]]; P.pots = P.start.map(([x, y]) => ({ x, y })); P.can = { x: RX0 + 60, y: RY0 + 50 }; }
+  else if (k === 3) {
+    const cols = 9, x0 = RX0 + 60, dx = (RX1 - RX0 - 120) / (cols - 1), y0 = RY0 + 70, dy = (RY1 - RY0 - 140) / 4;
+    let c = 0, row = 2; const pts = [[c, row]];
+    while (c < cols - 1) { const opts = []; if (row > 0 && pts.length > 1 && pts[pts.length - 2][1] <= row) opts.push(-1); if (row < 4 && pts.length > 1 && pts[pts.length - 2][1] >= row) opts.push(1); if (Math.random() < 0.5 && opts.length) row += pick(opts); else c++; pts.push([c, row]); }
+    P.path = pts.map(([c, r]) => ({ x: x0 + c * dx, y: y0 + r * dy })); P.light = 4; P.walk = false;
+  } else if (k === 4) { P.word = L('pzWord'); P.got = 0; P.letters = []; P.spawn = 0; P.rain = 0; }
+  else if (k === 5) { P.objs = []; for (let i = 0; i < 5; i++) { const p = freeSpot(rand(RX0 + 80, RX1 - 80), rand(RY0 + 60, RY1 - 60), 20, { noPick: true }); P.objs.push({ x: p.x, y: p.y, look: 0, found: false }); } P.dir = 0; P.n = 0; }
+  else if (k === 6) { P.ped = { x: RX0 + 90, y: RCY - 130 }; P.lamp = { x: RX1 - 90, y: RCY + 130 }; P.carry = false; P.flame = 0; P.lanes = [-180, 0, 180].map((dx, i) => ({ x: RCX + dx, off: i * 1.1 })); }
+  else if (k === 7) {
+    P.sz = 80; P.x0 = RCX - P.sz * 1.5; P.y0 = RCY - P.sz * 1.5 + 10;
+    do { P.slot = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8]); P.rot = P.slot.map(() => Math.floor(rand(0, 4))); } while (pzSolved7(P));
+    P.sel = -1; P.stand = -1; P.st = 0; P.img = pzPicture(P.sz * 3);
+  }
+}
+function pzSolved7(P) { return P.slot.every((v, i) => v === i && P.rot[i] % 4 === 0); }
+function pzPicture(n) {
+  const c = document.createElement('canvas'); c.width = c.height = n; const g = c.getContext('2d');
+  g.fillStyle = '#e9e9e4'; g.fillRect(0, 0, n, n); g.lineCap = 'round';
+  g.strokeStyle = '#6fbf73'; g.lineWidth = 7; g.beginPath(); g.moveTo(n * 0.1, n * 0.6); g.quadraticCurveTo(n * 0.4, n * 0.8, n * 0.6, n * 0.55); g.quadraticCurveTo(n * 0.75, n * 0.4, n * 0.8, n * 0.2); g.stroke();
+  g.beginPath(); g.arc(n * 0.84, n * 0.15, n * 0.06, 0, 7); g.stroke(); g.beginPath(); g.moveTo(n * 0.4, n * 0.66); g.lineTo(n * 0.3, n * 0.25); g.lineTo(n * 0.55, n * 0.58); g.stroke();
+  g.fillStyle = '#111'; for (const [x, y, r] of [[0.42, 0.5, 0.05], [0.53, 0.46, 0.04]]) { g.beginPath(); g.arc(n * x, n * y, n * r, 0, 7); g.fill(); g.fillRect(n * x - n * r * 0.7, n * y + n * r, n * r * 1.4, n * r * 2); }
+  g.strokeStyle = '#999'; g.lineWidth = 2; for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(n * (0.15 + i * 0.25), n * 0.9, n * 0.07, Math.PI, 0); g.stroke(); }
+  g.fillStyle = '#333'; g.font = `${Math.round(n * 0.07)}px "Comic Sans MS", cursive`; g.fillText('ADA + THEO', n * 0.05, n * 0.12);
+  g.strokeStyle = '#000'; g.lineWidth = 4; g.strokeRect(2, 2, n - 4, n - 4); return c;
+}
+function pzSolve() {
+  const P = room.pz; P.done = true; const k = P.k;
+  const p = freeSpot(RCX, RCY + 10, 18); pickups.push(makeItemPickup(p.x, p.y, 'pz' + k));
+  banner = { text: L('pz')[k - 1][0], sub: L('pz')[k - 1][2], t: 3 }; sfx.item(); burst(p.x, p.y, 40, 1.4);
+}
+function pzTear(t) {
+  const P = room.pz; if (P.k !== 7) return false;
+  const c = Math.floor((t.x - P.x0) / P.sz), r = Math.floor((t.y - P.y0) / P.sz);
+  if (c < 0 || c > 2 || r < 0 || r > 2) return false;
+  const i = r * 3 + c; P.rot[i] = (P.rot[i] + 1) % 4; audio.tone(500, 0.08, 'triangle', 0.05); if (pzSolved7(P)) pzSolve(); return true;
+}
+function pzUpdate(dt) {
+  const P = room.pz, pl = player; P.t += dt;
+  if (P.k === 1) {
+    const len = 3 + P.round, padAt = PZ_PADS.findIndex((dx) => Math.hypot(pl.x - (RCX + dx), pl.y - (RCY + 60)) < 40);
+    if (P.phase === 'show') {
+      const idx = Math.floor(P.t / 0.75); P.lit = P.t >= 0 && idx < len && P.t - idx * 0.75 < 0.5 ? P.seq[idx] : -1;
+      if (P.lit >= 0 && P.lit !== P.prevLit) audio.tone(330 * Math.pow(1.26, P.lit), 0.4, 'triangle', 0.08);
+      P.prevLit = P.lit; if (idx >= len) { P.phase = 'input'; P.i = 0; P.lit = -1; P.on = padAt; }
+    } else {
+      if (padAt >= 0 && padAt !== P.on) {
+        if (padAt === P.seq[P.i]) { P.i++; P.lit = padAt; audio.tone(330 * Math.pow(1.26, padAt), 0.3, 'triangle', 0.08); if (P.i >= len) { P.round++; if (P.round >= 3) { pzSolve(); } else { P.phase = 'show'; P.t = -1; } } }
+        else { floatText(L('pzWrong'), pl.x, pl.y - 40); audio.tone(110, 0.4, 'sine', 0.1); P.phase = 'show'; P.t = -1.2; }
+      }
+      if (padAt < 0) P.lit = -1;
+    }
+    P.on = padAt;
+  } else if (P.k === 2) {
+    const hs = 18, R = pl.r;
+    for (const pot of P.pots) {
+      const dx = pl.x - pot.x, dy = pl.y - pot.y; if (Math.abs(dx) >= hs + R || Math.abs(dy) >= hs + R) continue;
+      const ox = pot.x, oy = pot.y;
+      if (Math.abs(dx) > Math.abs(dy)) pot.x = pl.x - Math.sign(dx) * (hs + R); else pot.y = pl.y - Math.sign(dy) * (hs + R);
+      const stuck = pot.x < RX0 + hs + 4 || pot.x > RX1 - hs - 4 || pot.y < RY0 + hs + 4 || pot.y > RY1 - hs - 4 || P.pots.some((q) => q !== pot && Math.abs(q.x - pot.x) < hs * 2 && Math.abs(q.y - pot.y) < hs * 2);
+      if (stuck) { pot.x = ox; pot.y = oy; if (Math.abs(dx) > Math.abs(dy)) pl.x = pot.x + Math.sign(dx) * (hs + R); else pl.y = pot.y + Math.sign(dy) * (hs + R); }
+    }
+    if (Math.hypot(pl.x - P.can.x, pl.y - P.can.y) < 30) { if (!P.canOn) { P.pots.forEach((q, i) => { q.x = P.start[i][0]; q.y = P.start[i][1]; }); floatText(L('pzReset'), pl.x, pl.y - 40); } P.canOn = true; } else P.canOn = false;
+    if (P.marks.every((m) => P.pots.some((q) => Math.hypot(q.x - m.x, q.y - m.y) < 16))) pzSolve();
+  } else if (P.k === 3) {
+    P.light -= dt; if (P.light < -6) P.light = 1.2;
+    const a = P.path[0], z = P.path[P.path.length - 1];
+    if (!P.walk) { if (Math.hypot(pl.x - a.x, pl.y - a.y) < 30) P.walk = true; }
+    else {
+      let d = 1e9; for (let i = 1; i < P.path.length; i++) d = Math.min(d, segDist(pl, P.path[i - 1], P.path[i]));
+      if (d > 30) { P.walk = false; pl.x = a.x; pl.y = a.y; pl.vx = pl.vy = 0; P.light = 2; floatText(L('pzOff'), pl.x, pl.y - 40); audio.tone(110, 0.3, 'sine', 0.1); }
+      else if (Math.hypot(pl.x - z.x, pl.y - z.y) < 26) pzSolve();
+    }
+  } else if (P.k === 4) {
+    P.spawn -= dt; P.rain -= dt;
+    if (P.spawn <= 0) { P.spawn = 0.55; const w = P.word, ch = Math.random() < 0.45 ? w[P.got] : w[Math.floor(rand(0, w.length))]; P.letters.push({ x: rand(RX0 + 40, RX1 - 40), y: RY0 + 10, ch, vy: rand(1.2, 1.9) }); }
+    if (P.rain <= 0) { P.rain = 0.32; enemyShot({ x: rand(RX0 + 20, RX1 - 20), y: RY0 + 6 }, Math.PI / 2 + rand(-0.15, 0.15), 3.4, 5); }
+    for (const l of P.letters) { l.y += l.vy * dt * 60; if (Math.hypot(pl.x - l.x, pl.y - l.y) < 26) { l.dead = true; if (l.ch === P.word[P.got]) { P.got++; audio.tone(500 + P.got * 60, 0.15, 'triangle', 0.07); if (P.got >= P.word.length) { pzSolve(); tears = tears.filter((t) => !t.enemy); } } else { P.got = Math.max(0, P.got - 1); floatText(L('pzWrong'), l.x, l.y - 20); audio.tone(120, 0.2, 'sine', 0.08); } } if (l.y > RY1) l.dead = true; }
+    P.letters = P.letters.filter((l) => !l.dead);
+  } else if (P.k === 5) {
+    let a = Math.hypot(pl.vx, pl.vy) > 0.4 ? Math.atan2(pl.vy, pl.vx) : P.dir;
+    if (pl.aimT !== undefined && time - pl.aimT < 0.4) a = pl.aim;
+    let da = a - P.dir; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2; P.dir += da * Math.min(1, dt * 10);
+    P.objs.forEach((o, i) => {
+      if (o.found) return; let d = Math.atan2(o.y - pl.y, o.x - pl.x) - P.dir; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
+      if (Math.abs(d) < 0.45 && Math.hypot(o.x - pl.x, o.y - pl.y) < 270) o.look += dt; else o.look = Math.max(0, o.look - dt);
+      if (o.look > 0.5) { o.found = true; P.n++; banner = { text: L('pzFound', P.n), sub: L('finds')[i], t: 2.4 }; audio.tone(600, 0.3, 'triangle', 0.08); if (P.n >= 5) pzSolve(); }
+    });
+  } else if (P.k === 6) {
+    if (!P.carry && Math.hypot(pl.x - P.ped.x, pl.y - P.ped.y) < 34) { P.carry = true; P.flame = 100; audio.tone(700, 0.2, 'triangle', 0.06); }
+    if (P.carry) {
+      const gust = P.lanes.some((l) => Math.abs(pl.x - l.x) < 45 && pzGust(l, P.t) === 2);
+      if (gust) { P.flame -= 75 * dt; pl.y += 1.1 * dt * 60; } else P.flame = Math.min(100, P.flame + 18 * dt);
+      if (P.flame <= 0) { P.carry = false; floatText(L('pzOut'), pl.x, pl.y - 40); audio.tone(100, 0.4, 'sine', 0.1); }
+      else if (Math.hypot(pl.x - P.lamp.x, pl.y - P.lamp.y) < 34) pzSolve();
+    }
+  } else if (P.k === 7) {
+    const c = Math.floor((pl.x - P.x0) / P.sz), r = Math.floor((pl.y - P.y0) / P.sz), at = c >= 0 && c < 3 && r >= 0 && r < 3 ? r * 3 + c : -1;
+    if (at !== P.stand) { P.stand = at; P.st = 0; P.used = false; } else P.st += dt;
+    if (at >= 0 && P.st > 0.45 && !P.used) {
+      P.used = true;
+      if (P.sel < 0) { P.sel = at; audio.tone(440, 0.1, 'triangle', 0.05); }
+      else if (P.sel === at) P.sel = -1;
+      else { const a = P.sel; [P.slot[a], P.slot[at]] = [P.slot[at], P.slot[a]]; [P.rot[a], P.rot[at]] = [P.rot[at], P.rot[a]]; P.sel = -1; audio.tone(660, 0.15, 'triangle', 0.06); if (pzSolved7(P)) pzSolve(); }
+    }
+  }
+}
+function pzGust(l, t) { const c = (t + l.off) % 3.4; return c > 1.6 ? 2 : c > 1.0 ? 1 : 0; } // 0 calm, 1 warning, 2 gust
+function segDist(p, a, b) { const dx = b.x - a.x, dy = b.y - a.y, l = dx * dx + dy * dy || 1, u = clamp(((p.x - a.x) * dx + (p.y - a.y) * dy) / l, 0, 1); return Math.hypot(p.x - a.x - u * dx, p.y - a.y - u * dy); }
+function pzDraw() {
+  const P = room.pz; ctx.save(); ctx.textAlign = 'center';
+  if (P.k === 1) PZ_PADS.forEach((dx, i) => { const x = RCX + dx, y = RCY + 60, on = P.lit === i || P.done; ctx.fillStyle = on ? '#f4f4f4' : '#1a1a1a'; ctx.strokeStyle = '#ccc'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(x, y, 40, 24, 0, 0, 7); ctx.fill(); ctx.stroke(); ctx.fillStyle = on ? '#000' : '#888'; ctx.font = '22px Georgia'; ctx.fillText(['♩', '♪', '♫', '♬'][i], x, y + 8); });
+  if (P.k === 1 && !P.done) { ctx.fillStyle = '#999'; ctx.font = '14px Georgia'; ctx.fillText(`${P.round + 1}/3`, RCX, RCY - 30); }
+  if (P.k === 2) { for (const m of P.marks) { ctx.strokeStyle = '#6fbf73'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]); ctx.strokeRect(m.x - 20, m.y - 20, 40, 40); ctx.setLineDash([]); } for (const q of P.pots) { ctx.fillStyle = '#d0d0d0'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(q.x - 18, q.y - 12); ctx.lineTo(q.x + 18, q.y - 12); ctx.lineTo(q.x + 12, q.y + 18); ctx.lineTo(q.x - 12, q.y + 18); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.strokeStyle = '#6fbf73'; ctx.beginPath(); ctx.moveTo(q.x, q.y - 12); ctx.lineTo(q.x, q.y - 26); ctx.stroke(); ctx.fillStyle = '#eee'; ctx.beginPath(); ctx.arc(q.x, q.y - 29, 5, 0, 7); ctx.fill(); } ctx.fillStyle = '#bbb'; ctx.font = '24px Georgia'; ctx.fillText('⟲', P.can.x, P.can.y + 8); }
+  if (P.k === 3) { const a = P.path[0], z = P.path[P.path.length - 1]; ctx.strokeStyle = '#eee'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(a.x, a.y, 16, 0, 7); ctx.stroke(); ctx.fillStyle = '#6fbf73'; ctx.beginPath(); ctx.arc(z.x, z.y, 12, 0, 7); ctx.fill(); }
+  if (P.k === 4) { ctx.font = 'bold 26px Georgia'; for (const l of P.letters) { ctx.fillStyle = '#f0f0f0'; ctx.strokeStyle = '#000'; ctx.lineWidth = 4; ctx.strokeText(l.ch, l.x, l.y); ctx.fillText(l.ch, l.x, l.y); } }
+  if (P.k === 5) for (const o of P.objs) { ctx.strokeStyle = o.found ? '#6fbf73' : '#ddd'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(o.x, o.y, 14, 0, 7); ctx.stroke(); ctx.fillStyle = o.found ? '#6fbf73' : '#ddd'; ctx.font = '16px Georgia'; ctx.fillText(o.found ? '✓' : '?', o.x, o.y + 6); }
+  if (P.k === 6) {
+    for (const l of P.lanes) { const g = pzGust(l, P.t); if (!g) continue; ctx.strokeStyle = g === 2 ? 'rgba(230,230,230,0.35)' : 'rgba(200,200,200,0.12)'; ctx.lineWidth = 2; for (let i = 0; i < 10; i++) { const y = RY0 + ((i * 53 + P.t * (g === 2 ? 700 : 200)) % (RY1 - RY0)); ctx.beginPath(); ctx.moveTo(l.x - 40 + (i * 17) % 80, y); ctx.lineTo(l.x - 40 + (i * 17) % 80, y + 22); ctx.stroke(); } }
+    for (const [o, lit] of [[P.ped, !P.carry && !P.done], [P.lamp, P.done]]) { ctx.strokeStyle = '#ccc'; ctx.lineWidth = 3; ctx.strokeRect(o.x - 12, o.y - 4, 24, 26); if (lit) { ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 18; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(o.x, o.y - 14, 6, 12, 0, 0, 7); ctx.fill(); ctx.restore(); } }
+  }
+  if (P.k === 7) for (let i = 0; i < 9; i++) {
+    const x = P.x0 + (i % 3) * P.sz, y = P.y0 + Math.floor(i / 3) * P.sz, src = P.slot[i], s = P.sz;
+    ctx.save(); ctx.translate(x + s / 2, y + s / 2); ctx.rotate(P.rot[i] * Math.PI / 2); ctx.drawImage(P.img, (src % 3) * s, Math.floor(src / 3) * s, s, s, -s / 2, -s / 2, s, s); ctx.restore();
+    ctx.strokeStyle = P.sel === i ? '#6fbf73' : '#111'; ctx.lineWidth = P.sel === i ? 4 : 1.5; ctx.strokeRect(x + 1, y + 1, s - 2, s - 2);
+  }
+  ctx.restore();
+}
+function pzDrawOver() {
+  const P = room.pz; ctx.save(); ctx.textAlign = 'center';
+  if (P.k === 3 && !P.done) {
+    ctx.fillStyle = 'rgba(0,0,0,0.93)'; ctx.beginPath(); ctx.rect(RX0, RY0, RX1 - RX0, RY1 - RY0); ctx.arc(player.x, player.y, 55, 0, 7, true); ctx.fill();
+    if (P.light > 0) { ctx.strokeStyle = `rgba(240,240,240,${Math.min(1, P.light)})`; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.setLineDash([10, 8]); ctx.beginPath(); P.path.forEach((q, i) => (i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y))); ctx.stroke(); ctx.setLineDash([]); }
+    const a = P.path[0], z = P.path[P.path.length - 1]; ctx.strokeStyle = '#eee'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(a.x, a.y, 16, 0, 7); ctx.stroke(); ctx.fillStyle = '#6fbf73'; ctx.beginPath(); ctx.arc(z.x, z.y, 12, 0, 7); ctx.fill();
+  }
+  if (P.k === 5 && !P.done) { ctx.fillStyle = 'rgba(0,0,0,0.95)'; ctx.beginPath(); ctx.rect(RX0, RY0, RX1 - RX0, RY1 - RY0); ctx.moveTo(player.x, player.y); ctx.arc(player.x, player.y, 270, P.dir + 0.45, P.dir - 0.45, true); ctx.closePath(); ctx.fill('evenodd'); ctx.fillStyle = '#aaa'; ctx.font = '14px Georgia'; ctx.fillText(L('pzFound', P.n), RCX, RY0 + 22); }
+  if (P.k === 4 && !P.done) { ctx.font = 'bold 28px Georgia'; for (let i = 0; i < P.word.length; i++) { ctx.fillStyle = i < P.got ? '#6fbf73' : '#444'; ctx.fillText(P.word[i], RCX + (i - (P.word.length - 1) / 2) * 30, RY0 + 30); } }
+  if (P.k === 6 && P.carry) { ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 16; ctx.fillStyle = '#fff'; const h = 4 + P.flame / 9; ctx.beginPath(); ctx.ellipse(player.x + Math.sin(time * 20) * 1.5, player.y - 52 - h / 2, 4 + P.flame / 40, h, 0, 0, 7); ctx.fill(); ctx.restore(); }
+  ctx.restore();
 }
 
 // ---------- enemies ----------
@@ -418,7 +526,6 @@ const ENEMY_INFO = {
 const POOL = ['chaser', 'fly', 'splitter', 'bouncer', 'shooter', 'spider', 'ghost', 'turret', 'dasher', 'bomber', 'sniper', 'summoner'];
 const POOL_N = [4, 6, 9, 10, 11, 12];
 // Faint scribbled notes on room floors, one line per floor
-const NOTES = ['i wanted to be the big one', 'dear dragon, please make her better', 'room 12. her name is on the door', 'she can see the yard from up there', 'the fourth chair is hers', 'it should have been me', 'tomorrow. tomorrow. tomorrow.'];
 function makeEnemy(type, x, y, scale = 1, elite = false) {
   const d = ENEMY[type], hpMul = (1 + (floor - 1) * 0.35) * (elite ? 2.2 : 1), rs = elite ? 1.15 : 1;
   return { type, x, y, r: d.r * scale * rs, hp: d.hp * hpMul * scale, maxHp: d.hp * hpMul * scale, speed: d.speed * (1 + (floor - 1) * 0.08) * (elite ? 1.1 : 1), vx: 0, vy: 0, t: rand(0, 2), scale, flash: 0, state: 0, spawn: 0.6, elite };
@@ -683,7 +790,7 @@ function shoot() {
   if (Math.abs(dx) > 0.1) player.face = Math.sign(dx);
   if (player.cool > 0) return;
   player.cool = s.delay;
-  const base = Math.atan2(dy, dx);
+  const base = Math.atan2(dy, dx); player.aim = base; player.aimT = time;
   const dmg = s.dmg * (s.fullHp && player.hp >= player.maxHp ? 1.5 : 1);
   const fire = (a) => { const crit = Math.random() < s.crit; tears.push({ x: player.x, y: player.y, vx: Math.cos(a) * s.shotSpeed + player.vx * 0.3, vy: Math.sin(a) * s.shotSpeed + player.vy * 0.3, r: s.size * (crit ? 1.4 : 1), dmg: dmg * (crit ? 2.5 : 1), crit, travel: 0, range: s.range, pierce: s.pierce, homing: s.homing, spectral: s.spectral, bounces: s.bounce ? 2 : 0, wavy: s.wavy, wt: 0, split: s.split, hit: new Set() }); };
   for (let i = 0; i < s.multi; i++) fire(base + (i - (s.multi - 1) / 2) * 0.16);
@@ -703,7 +810,7 @@ function updatePlayer(dt) {
   if (keys.has('a')) mx--; if (keys.has('d')) mx++;
   if (keys.has('w')) my--; if (keys.has('s')) my++;
   const inPud = room.puddles.some((q) => Math.hypot(player.x - q.x, player.y - q.y) < q.r);
-  const l = Math.hypot(mx, my) || 1, sp = player.s.speed * (inPud ? 0.55 : 1);
+  const l = Math.hypot(mx, my) || 1, sp = player.s.speed * (inPud && !player.s.noPuddle ? 0.55 : 1) * (floor === 5 && !stats.won ? 0.85 : 1);
   player.vx += (mx / l * sp - player.vx) * 0.22; player.vy += (my / l * sp - player.vy) * 0.22;
   player.x += player.vx * dt * 60; player.y += player.vy * dt * 60;
   if (mx > 0) player.face = 1; else if (mx < 0) player.face = -1;
@@ -778,17 +885,8 @@ function update(dt) {
   updatePlayer(dt);
   if (state !== 'play') return;
   if (room.thorns && room.thorns.some((k) => Math.hypot(player.x - k.x, player.y - k.y) < k.r + player.r - 8)) hurtPlayer(1);
-  if (room.candles && room.next <= 4) for (const c of room.candles) {
-    const on = Math.hypot(player.x - c.x, player.y - c.y) < 22 + player.r;
-    if (on && !c.touch && !c.lit) {
-      if (c.n === room.next) { c.lit = true; room.next++; audio.tone(440 + c.n * 110, 0.3, 'triangle', 0.08); burst(c.x, c.y - 20, 10, 0.6);
-        if (room.next > 4) { const p = freeSpot(RCX, RCY, 18); pickups.push(makeItemPickup(p.x, p.y)); banner = { text: L('puzzle'), sub: L('puzzleDone'), t: 2.6 }; sfx.item(); } }
-      else { for (const o of room.candles) o.lit = false; room.next = 1; floatText(L('puzzleWrong'), c.x, c.y - 40); audio.tone(110, 0.3, 'sine', 0.1); }
-    }
-    c.touch = on;
-  }
-  if (floor === 4 && !stats.won && Math.random() < 0.08) particles.push({ x: player.x + rand(-10, 10), y: player.y - 18, vx: 0, vy: 1.2, life: 0.5, max: 0.5, r: 2, c: '#888' });
-  if (floor >= 5 && !stats.won && Math.random() < 0.04) particles.push({ x: player.x + rand(-6, 6), y: player.y - 4, vx: rand(-0.2, 0.2), vy: 1.4, life: 0.6, max: 0.6, r: 2.5, c: '#ddd' });
+  if (room.pz && !room.pz.done) pzUpdate(dt);
+  if (floor >= 2 && !stats.won && Math.random() < 0.03 + Math.min(7, floor) * 0.015) particles.push({ x: player.x + player.face * 4 + pick([-7, 7]), y: player.y - 4, vx: rand(-0.2, 0.2), vy: 1.5, life: 0.6, max: 0.6, r: floor >= 4 ? 3 : 2.2, c: '#fff' });
   for (const e of enemies) {
     updateEnemy(e, dt);
     if (e.spawn <= 0 && !e.ghost && !e.air && dist(e, player) < e.r + player.r - 3) hurtPlayer(e.boss && floor > 2 ? 2 : 1);
@@ -800,6 +898,7 @@ function update(dt) {
       if (best) { const sp = Math.hypot(t.vx, t.vy), a = Math.atan2(best.y - t.y, best.x - t.x), ca = Math.atan2(t.vy, t.vx); let da = a - ca; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2; const na = ca + clamp(da, -0.12, 0.12); t.vx = Math.cos(na) * sp; t.vy = Math.sin(na) * sp; }
     }
     t.x += t.vx * dt * 60; t.y += t.vy * dt * 60;
+    if (!t.enemy && room.pz && !room.pz.done && pzTear(t)) { t.dead = true; continue; }
     if (t.wavy) { t.wt += dt; const l = Math.hypot(t.vx, t.vy) || 1, w = Math.cos(t.wt * 14) * 2.2; t.x += -t.vy / l * w; t.y += t.vx / l * w; }
     if (t.enemy) {
       t.life -= dt;
@@ -906,7 +1005,14 @@ function drawMotif(m, t) {
     case 'candle': ctx.strokeRect(-14, 0, 28, 90); ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 20; ctx.fillStyle = '#f4f4f4'; ctx.beginPath(); ctx.ellipse(sw * 2, -14, 7, 16 + sw * 2, 0, 0, 7); ctx.fill(); ctx.restore(); break;
     case 'mask': inkCircle(0, 20, 80, '#000', '#eee', 3, 0.15, t); for (const s of [-1, 1]) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(s * 28, 5, 9, 14, 0, 0, 7); ctx.fill(); } ctx.beginPath(); ctx.moveTo(-25, 60); ctx.quadraticCurveTo(0, 45, 25, 60); ctx.stroke(); break;
     case 'theo': { const fadeOut = cut && cut.i >= 9 ? Math.max(0, 1 - cut.t / 2) : 1; child(-70, 20, 1); ctx.save(); ctx.globalAlpha *= fadeOut; child(60, 42, 0.65, true); ctx.fillStyle = '#e8e8e8'; ctx.save(); ctx.translate(18, 40); ctx.rotate(-0.15 + sw * 0.03); ctx.fillRect(-16, -12, 32, 24); ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-10, 6); ctx.quadraticCurveTo(-2, -8, 4, 2); ctx.lineTo(10, -6); ctx.stroke(); ctx.restore(); ctx.restore(); break; }
-    case 'sky': { ctx.beginPath(); ctx.moveTo(-260, 90); ctx.lineTo(260, 90); ctx.stroke(); const k = Math.min(1, t / 6); ctx.lineWidth = 2; for (let i = 0; i < 4; i++) { if (k < i / 4) break; const x = -180 + i * 120, y = -40 + (i % 2) * 30; ctx.beginPath(); ctx.arc(x, y, 22, Math.PI, 0); ctx.arc(x + 30, y, 16, Math.PI, 0); ctx.stroke(); } ctx.beginPath(); ctx.arc(170, -70, 26, 0, Math.PI * 2 * k); ctx.stroke(); child(-200, 50, 0.8); ctx.beginPath(); ctx.moveTo(-185, 52); ctx.lineTo(-150, 20 - sw * 6); ctx.stroke(); break; }
+    case 'sky': { drawRide(70, -60, 0.9); ctx.beginPath(); ctx.moveTo(-260, 90); ctx.lineTo(260, 90); ctx.stroke(); const k = Math.min(1, t / 6); ctx.lineWidth = 2; for (let i = 0; i < 4; i++) { if (k < i / 4) break; const x = -180 + i * 120, y = -40 + (i % 2) * 30; ctx.beginPath(); ctx.arc(x, y, 22, Math.PI, 0); ctx.arc(x + 30, y, 16, Math.PI, 0); ctx.stroke(); } ctx.beginPath(); ctx.arc(170, -70, 26, 0, Math.PI * 2 * k); ctx.stroke(); child(-200, 50, 0.8); ctx.beginPath(); ctx.moveTo(-185, 52); ctx.lineTo(-150, 20 - sw * 6); ctx.stroke(); break; }
+    case 'ada': { const n = cut && /^f\d$/.test(cut.id) ? +cut.id[1] + 1 : 1; ctx.strokeStyle = '#555'; ctx.lineWidth = 2; ctx.strokeRect(-150, -120, 300, 240); drawAda(0, 30, n, 3.4, { ay: 0.3 }); break; }
+    case 'blank': case 'notepage': case 'ride': {
+      ctx.save(); ctx.rotate(-0.03); ctx.fillStyle = '#e9e9e4'; ctx.fillRect(-170, -110, 340, 220); ctx.strokeStyle = '#b8b8b8'; ctx.lineWidth = 1; for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.moveTo(-160, -80 + i * 26); ctx.lineTo(160, -80 + i * 26); ctx.stroke(); } ctx.restore();
+      if (m === 'notepage') { ctx.strokeStyle = '#222'; ctx.lineWidth = 2; const k = Math.min(1, t / 2.5); ctx.beginPath(); for (let x = -130; x < -130 + 220 * k; x += 6) ctx.lineTo(x, 60 + Math.sin(x * 0.7) * 4); ctx.stroke(); }
+      if (m === 'ride') { ctx.globalAlpha = Math.min(1, t / 2); drawRide(0, 10, 1.3, t / 2); }
+      break;
+    }
     case 'dragon': ctx.fillStyle = '#e8e8e8'; ctx.save(); ctx.rotate(-0.05); ctx.fillRect(-120, -60, 240, 160); ctx.strokeStyle = '#111'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-80, 50); ctx.quadraticCurveTo(-40, -10, 0, 30); ctx.quadraticCurveTo(40, 70, 70, 0); ctx.lineTo(90, -20); ctx.lineTo(75, 10); ctx.stroke(); for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(-60 + i * 25, 20 - Math.sin(i) * 10); ctx.lineTo(-52 + i * 25, 5 - Math.sin(i) * 10); ctx.lineTo(-44 + i * 25, 22 - Math.sin(i) * 10); ctx.stroke(); } ctx.beginPath(); ctx.arc(78, -6, 3, 0, 7); ctx.fillStyle = '#111'; ctx.fill(); ctx.restore(); break;
   }
   ctx.restore();
@@ -1043,7 +1149,7 @@ function inkCircle(x, y, r, fill, stroke = '#000', lw = 2.5, wobble = 0.08, seed
 function drawRoom() {
   ctx.drawImage(grain, 0, 0);
   // splats from killed enemies stay on the floor
-  if (room.note) { ctx.save(); ctx.translate(RCX + 150, RY1 - 40); ctx.rotate(-0.04); ctx.font = 'italic 15px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(230,230,230,0.22)'; ctx.font = 'italic 16px "Comic Sans MS", "Segoe Print", cursive'; ctx.fillText(NOTES_TXT[lang][room.note], 0, 0); ctx.restore(); }
+  if (room.note !== undefined) { ctx.save(); ctx.translate(RCX + 150, RY1 - 40); ctx.rotate(-0.04); ctx.font = 'italic 15px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(230,230,230,0.22)'; ctx.font = 'italic 16px "Comic Sans MS", "Segoe Print", cursive'; ctx.fillText(NOTES_TXT[lang][room.note], 0, 0); ctx.restore(); }
   for (const q of room.puddles) { ctx.globalAlpha = Math.min(1, q.life / 1.5) * 0.85; inkCircle(q.x, q.y, q.r, '#000', '#3a3a3a', 1.5, 0.12, q.x); ctx.globalAlpha = 1; }
   for (const s of splats) if (s.room === room) { ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rot); ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.beginPath(); ctx.ellipse(0, 0, s.r, s.r * 0.7, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
   // walls
@@ -1070,7 +1176,7 @@ function drawRoom() {
   }
   for (const k of room.rocks) { inkCircle(k.x, k.y + 4, k.r, '#000', null); inkCircle(k.x, k.y, k.r, '#4a4a4a', '#cfcfcf', 2, 0.12, k.x); ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(k.x - k.r * 0.4, k.y - k.r * 0.2); ctx.lineTo(k.x + k.r * 0.1, k.y + k.r * 0.3); ctx.stroke(); }
   if (room.thorns) for (const k of room.thorns) { ctx.strokeStyle = '#8a8a8a'; ctx.lineWidth = 2; for (let i = 0; i < 9; i++) { const a = i * 0.7 + k.x; ctx.beginPath(); ctx.moveTo(k.x + Math.cos(a) * 6, k.y + Math.sin(a) * 6); ctx.lineTo(k.x + Math.cos(a) * k.r, k.y + Math.sin(a) * k.r * 0.7); ctx.stroke(); } inkCircle(k.x, k.y, 7, '#000', '#aaa', 1.5, 0.2, k.y); }
-  if (room.candles) for (const c of room.candles) { ctx.fillStyle = '#e8e8e8'; ctx.fillRect(c.x - 6, c.y - 18, 12, 30); ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.strokeRect(c.x - 6, c.y - 18, 12, 30); if (c.lit) { ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 16; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(c.x + Math.sin(time * 9 + c.n) * 1.5, c.y - 26, 4, 8, 0, 0, 7); ctx.fill(); ctx.restore(); } ctx.fillStyle = 'rgba(220,220,220,0.4)'; ctx.font = 'italic 18px "Comic Sans MS", "Segoe Print", cursive'; ctx.textAlign = 'center'; ctx.fillText(String(c.n), c.x + 18, c.y - 24); }
+  if (room.pz) pzDraw();
   if (room.type === 'shop') { const x = RCX, y = RCY - 80, b = Math.sin(time * 2) * 2; inkCircle(x, y + 14 + b, 20, '#d0d0d0', '#000', 2.5, 0.05, 1); inkCircle(x, y - 12 + b, 16, '#e4e4e4', '#000', 2.5, 0.04, 2); for (const s of [-1, 1]) { ctx.save(); ctx.translate(x + s * 8, y - 36 + b); ctx.rotate(s * 0.25 + Math.sin(time * 1.5) * 0.05 * s); ctx.fillStyle = '#e4e4e4'; ctx.beginPath(); ctx.ellipse(0, 0, 5, 16, 0, 0, 7); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke(); ctx.restore(); ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(x + s * 6, y - 13 + b, 3.5, 0, 7); ctx.fill(); ctx.strokeStyle = '#999'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + s * 4, y - 13 + b); ctx.lineTo(x + s * 8, y - 13 + b); ctx.stroke(); } ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x - 5, y + 8 + b); ctx.lineTo(x + 5, y + 20 + b); ctx.stroke(); }
   if (room.type === 'trade') { ctx.fillStyle = '#151515'; ctx.fillRect(RCX - 40, RCY + 30, 80, 26); ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.strokeRect(RCX - 40, RCY + 30, 80, 26); }
   if (room.type === 'start' && floor === 1) {
@@ -1198,22 +1304,53 @@ function drawHelpers() {
   if (player.shieldUp) { ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(player.x, player.y - 2, 24, 0, 7); ctx.stroke(); }
 }
 
+// Ada's look changes per floor: f2+ tear streaks, f4 soaked hair, f5 hunched, f6 veil, f7 glowing cracks; after the win a green scarf and a smile
+function drawAda(x, y, f, sc, o = {}) {
+  const ax = o.ax || 0, ay = o.ay || 0, won = !!o.won, hunch = f >= 5 && !won;
+  ctx.save(); ctx.translate(x, y - (o.bob || 0)); ctx.scale(sc, sc);
+  const hx = hunch ? ax * 2 : 0, H0 = hunch ? -3 : -10, wet = f >= 4 && !won;
+  if (f >= 6 && !won) { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.moveTo(hx - 23, 21); ctx.quadraticCurveTo(hx - 27, H0 - 25, hx, H0 - 25); ctx.quadraticCurveTo(hx + 27, H0 - 25, hx + 23, 21); ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#eee'; ctx.lineWidth = 1.6; ctx.stroke(); }
+  ctx.fillStyle = wet ? '#a8a8a8' : '#d4d4d4'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.beginPath();
+  if (hunch) { ctx.moveTo(-13, 18); ctx.quadraticCurveTo(-14, 2, 0, 0); ctx.quadraticCurveTo(14, 2, 13, 18); } else { ctx.moveTo(-11, 18); ctx.lineTo(-7, -2); ctx.lineTo(7, -2); ctx.lineTo(11, 18); }
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.arc(hx, H0, 15, 0, 7); ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.stroke(); ctx.fillStyle = wet ? '#e2e2e2' : '#fafafa'; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = '#000'; ctx.stroke();
+  ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(hx, H0 - 3, 15, Math.PI * 1.05, Math.PI * 1.95); ctx.quadraticCurveTo(hx, H0 - 9, hx - 14, H0 - 6); ctx.fill();
+  if (wet) { ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 2.4; for (const k of [-1, 1]) { ctx.beginPath(); ctx.moveTo(hx + k * 13, H0 - 6); ctx.quadraticCurveTo(hx + k * 18, H0 + 6, hx + k * 14, H0 + 17); ctx.stroke(); ctx.fillStyle = '#ccc'; ctx.beginPath(); ctx.arc(hx + k * 14, H0 + 19 + ((time * 1.3 + k) % 1) * 6, 1.5, 0, 7); ctx.fill(); } }
+  if (ay >= 0) {
+    const ey = H0 + 1 + ay * 2 + (hunch ? 2 : 0);
+    for (const k of [-1, 1]) {
+      const ex = hx + k * 5.5 + ax * 3;
+      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(ex, ey, 3, hunch ? 2.4 : 4.5, 0, 0, 7); ctx.fill();
+      if (won || f < 2) continue;
+      const len = f === 2 ? 7 : f === 3 ? 12 : 17;
+      ctx.beginPath(); ctx.moveTo(ex, ey + 3); ctx.quadraticCurveTo(ex + k * 1.5, ey + 3 + len / 2, ex, ey + 3 + len);
+      ctx.strokeStyle = '#000'; ctx.lineWidth = f >= 4 ? 4.6 : 3.6; ctx.stroke(); ctx.strokeStyle = '#fff'; ctx.lineWidth = f >= 4 ? 2.6 : 1.8; ctx.stroke();
+      const dp = (time * 1.6 + k * 0.5) % 1; ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.arc(ex, ey + 4 + len + dp * 9, f >= 4 ? 2.4 : 1.9, 0, 7); ctx.fill(); ctx.stroke();
+    }
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 1.6; ctx.beginPath(); const mx = hx + ax * 3;
+    if (won) ctx.arc(mx, H0 + 5, 4.5, 0.25, Math.PI - 0.25); else { const my = H0 + 9 + (hunch ? 2 : 0), d = f >= 3 ? 1.5 : 0; ctx.moveTo(mx - 3, my + d); ctx.quadraticCurveTo(mx, my - d * 1.5, mx + 3, my + d); }
+    ctx.stroke();
+  }
+  if (f >= 6 && !won) { ctx.fillStyle = 'rgba(0,0,0,0.94)'; ctx.beginPath(); ctx.moveTo(hx - 19, H0 + 7); ctx.quadraticCurveTo(hx - 20, H0 - 23, hx, H0 - 22); ctx.quadraticCurveTo(hx + 20, H0 - 23, hx + 19, H0 + 7); ctx.quadraticCurveTo(hx + 12, H0 - 8, hx, H0 - 8); ctx.quadraticCurveTo(hx - 12, H0 - 8, hx - 19, H0 + 7); ctx.fill(); ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1.2; ctx.stroke(); }
+  if (f >= 7 && !won) { ctx.save(); ctx.shadowColor = '#fff'; ctx.shadowBlur = 10; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx - 3, H0 - 15); ctx.lineTo(hx + 1, H0 - 9); ctx.lineTo(hx - 4, H0 - 4); ctx.moveTo(hx + 11, H0 - 4); ctx.lineTo(hx + 7, H0 + 2); ctx.lineTo(hx + 10, H0 + 6); ctx.moveTo(6, 3); ctx.lineTo(2, 9); ctx.lineTo(6, 15); ctx.moveTo(-8, 6); ctx.lineTo(-4, 12); ctx.lineTo(-7, 17); ctx.stroke(); ctx.restore(); }
+  if (won) { ctx.strokeStyle = '#6fbf73'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(-9, 1); ctx.quadraticCurveTo(0, 5, 9, 1); ctx.lineTo(12, 10); ctx.stroke(); }
+  ctx.restore();
+}
+function drawRide(x, y, s, k = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.lineCap = 'round';
+  ctx.strokeStyle = '#6fbf73'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-90, 10); ctx.quadraticCurveTo(-40, 30 + Math.sin(time * 2) * 4, 20, 10); ctx.quadraticCurveTo(60, -5, 80, -30); ctx.stroke();
+  ctx.beginPath(); ctx.arc(88, -36, 11, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-90, 10); ctx.lineTo(-110, 0); ctx.stroke();
+  const wf = Math.sin(time * 3) * 12; ctx.beginPath(); ctx.moveTo(-10, 12); ctx.lineTo(-30, -40 - wf); ctx.lineTo(20, 4); ctx.stroke();
+  if (k > 0.3) { child(-30, -22, 0.45); child(0, -18, 0.38); }
+  ctx.restore();
+}
 function drawPlayer() {
   if (player.inv > 0 && Math.floor(player.inv * 15) % 2) return;
-  const p = player, bob = Math.abs(Math.sin(time * 10)) * (Math.hypot(p.vx, p.vy) > 0.5 ? 2 : 0);
-  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.beginPath(); ctx.ellipse(p.x, p.y + 15, 13, 4, 0, 0, 7); ctx.fill();
-  const f = stats.won ? 0 : Math.min(7, floor), soak = f >= 4, hunch = f >= 5 ? 3 : 0;
-  inkCircle(p.x, p.y + 6 - bob, 10, soak ? '#b4b4b4' : '#d9d9d9', '#000', 2.5, 0.04, 1); // body
-  inkCircle(p.x, p.y - 8 - bob + hunch, 15, soak ? '#dcdcdc' : '#f4f4f4', '#000', 2.5, 0.03, 2); // head
-  if (soak) { ctx.strokeStyle = '#5a5a5a'; ctx.lineWidth = 1.5; for (const s of [-1, 0, 1]) { ctx.beginPath(); ctx.moveTo(p.x + s * 9, p.y - 20 - bob + hunch); ctx.quadraticCurveTo(p.x + s * 13, p.y - 10 - bob + hunch, p.x + s * 12, p.y - 2 - bob + hunch); ctx.stroke(); } }
-  if (f >= 6) { ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.moveTo(p.x - 17, p.y + 4 - bob); ctx.quadraticCurveTo(p.x - 18, p.y - 26 - bob + hunch, p.x, p.y - 25 - bob + hunch); ctx.quadraticCurveTo(p.x + 18, p.y - 26 - bob + hunch, p.x + 17, p.y + 4 - bob); ctx.quadraticCurveTo(p.x, p.y - 12 - bob + hunch, p.x - 17, p.y + 4 - bob); ctx.fill(); }
-  if (f >= 7) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(p.x - 4, p.y - 23 - bob + hunch); ctx.lineTo(p.x - 1, p.y - 16 - bob + hunch); ctx.lineTo(p.x - 6, p.y - 11 - bob + hunch); ctx.moveTo(p.x + 9, p.y + 2 - bob); ctx.lineTo(p.x + 5, p.y + 8 - bob); ctx.lineTo(p.x + 8, p.y + 14 - bob); ctx.moveTo(p.x + 12, p.y - 14 - bob + hunch); ctx.lineTo(p.x + 7, p.y - 9 - bob + hunch); ctx.stroke(); }
-  if (stats.won) { ctx.strokeStyle = '#6fbf73'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(p.x - 8, p.y - 1 - bob); ctx.quadraticCurveTo(p.x, p.y + 3 - bob, p.x + 8, p.y - 1 - bob); ctx.lineTo(p.x + 11, p.y + 7 - bob); ctx.stroke(); }
+  const p = player, f = stats.won ? 0 : Math.min(7, floor), bob = Math.abs(Math.sin(time * (f >= 5 ? 7 : 10))) * (Math.hypot(p.vx, p.vy) > 0.5 ? 2 : 0);
+  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.beginPath(); ctx.ellipse(p.x, p.y + 22, 16, 5, 0, 0, 7); ctx.fill();
   let ax = p.face, ay = 0;
   if (keys.has('arrowup')) { ax = 0; ay = -1; } else if (keys.has('arrowdown')) { ax = 0; ay = 1; }
-  if (ay >= 0) for (const s of [-1, 1]) { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(p.x + s * 5.5 + ax * 3, p.y - 8 - bob + ay * 2 + hunch + (hunch ? 1 : 0), 3, hunch ? 3.5 : 4.5, 0, 0, 7); ctx.fill(); }
-  if (ay >= 0 && f >= 3) { ctx.strokeStyle = '#8a8a8a'; ctx.lineWidth = 1.6; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(p.x + s * 5.5 + ax * 3, p.y - 4 - bob + hunch); ctx.quadraticCurveTo(p.x + s * 6.5 + ax * 3, p.y + 2 - bob + hunch, p.x + s * 5.5 + ax * 3, p.y + 7 - bob + hunch); ctx.stroke(); } }
-  if (ay >= 0) { ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(p.x + s * 5.5 + ax * 3, p.y - 3 - bob); ctx.lineTo(p.x + s * 5.5 + ax * 3, p.y + 1 - bob); ctx.stroke(); } }
+  drawAda(p.x, p.y - 2, f, 1.3, { bob, ax, ay, won: stats.won });
 }
 
 function drawTears() {
@@ -1280,7 +1417,8 @@ function render() {
   ctx.globalAlpha = 1;
   ctx.fillStyle = '#ddd'; ctx.font = '14px Georgia, "Times New Roman", serif'; ctx.textAlign = 'center';
   for (const f of floatTexts) { ctx.globalAlpha = f.t; ctx.fillText(f.text, f.x, f.y); } ctx.globalAlpha = 1;
-  if (floor === 3 && !stats.won) { const fl = Math.sin(time * 13) * Math.sin(time * 3.1) > 0.7 ? 0.82 : room.type === 'boss' ? 0.3 : 0.5; const g = ctx.createRadialGradient(player.x, player.y, 90, player.x, player.y, 330); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${fl})`); ctx.fillStyle = g; ctx.fillRect(0, HUD, W, H - HUD); }
+  if (room.pz) pzDrawOver();
+  if (floor === 3 && !stats.won && !(room.pz && room.pz.k === 3 && !room.pz.done)) { const fl = Math.sin(time * 13) * Math.sin(time * 3.1) > 0.7 ? 0.82 : room.type === 'boss' ? 0.3 : 0.5; const g = ctx.createRadialGradient(player.x, player.y, 90, player.x, player.y, 330); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${fl})`); ctx.fillStyle = g; ctx.fillRect(0, HUD, W, H - HUD); }
   if (floor === 4 && !stats.won) { ctx.strokeStyle = 'rgba(200,200,200,0.12)'; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i < 40; i++) { const x = (i * 97 + time * 60) % W, y = HUD + (i * 131 + time * 520) % (H - HUD); ctx.moveTo(x, y); ctx.lineTo(x - 3, y + 14); } ctx.stroke(); }
   if (fade > 0) { ctx.fillStyle = `rgba(0,0,0,${fade})`; ctx.fillRect(0, HUD, W, H - HUD); }
   ctx.restore();
@@ -1312,4 +1450,4 @@ requestAnimationFrame(frame);
 
 // Small hook for automated smoke tests
 window.__ink = { get state() { return state; }, get floor() { return floor; }, get room() { return room; }, get map() { return map; }, get enemies() { return enemies; }, get player() { return player; }, get pickups() { return pickups; }, get cut() { return cut; }, get lang() { return lang; }, get stats() { return stats; }, tears: () => tears, setLang, col, get menuSel() { return menuSel; }, colKey, menuDo,
-  newRun, nextFloor, enterRoom, killEnemy, damage: (e) => damageEnemy(e, player.s.dmg, 0, 0), makeEnemy, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, killAll: () => enemies.forEach((e) => killEnemy(e)) };
+  newRun, nextFloor, enterRoom, killEnemy, damage: (e) => damageEnemy(e, player.s.dmg, 0, 0), makeEnemy, freeSpot, playCut, advanceCut, endCut, debugBoss, ITEMS, BOSSES, makeItemPickup, killAll: () => enemies.forEach((e) => killEnemy(e)) };
