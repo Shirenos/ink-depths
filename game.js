@@ -21,20 +21,31 @@ const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = rand
 // ---------- input ----------
 const keys = new Set();
 let mouse = { x: 0, y: 0, down: false };
-addEventListener('keydown', (e) => {
-  const k = e.key.toLowerCase();
+// Normalise a keyboard event to a layout-independent token. e.code is the physical
+// key, so WASD works with any layout (Russian included) and with Caps Lock on.
+const CODE_MAP = { KeyW: 'w', KeyA: 'a', KeyS: 's', KeyD: 'd', KeyP: 'p', KeyR: 'r', KeyM: 'm',
+  ArrowUp: 'arrowup', ArrowDown: 'arrowdown', ArrowLeft: 'arrowleft', ArrowRight: 'arrowright',
+  Escape: 'escape', Enter: 'enter', NumpadEnter: 'enter', Space: ' ' };
+const CYR_MAP = { 'ц': 'w', 'ф': 'a', 'ы': 's', 'в': 'd', 'з': 'p', 'к': 'r', 'ь': 'm' };
+function keyToken(e) {
+  if (e.code && CODE_MAP[e.code]) return CODE_MAP[e.code];
+  const k = (e.key || '').toLowerCase();
+  return CYR_MAP[k] || k;
+}
+window.addEventListener('keydown', (e) => {
+  const k = keyToken(e);
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault();
   if (!keys.has(k)) onPress(k);
   keys.add(k);
 });
-addEventListener('keyup', (e) => keys.delete(e.key.toLowerCase()));
+window.addEventListener('keyup', (e) => keys.delete(keyToken(e)));
 addEventListener('blur', () => { keys.clear(); mouse.down = false; if (state === 'play') state = 'pause'; });
 function toCanvas(e) {
   const r = cv.getBoundingClientRect();
   return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height };
 }
 cv.addEventListener('mousemove', (e) => { const p = toCanvas(e); mouse.x = p.x; mouse.y = p.y; });
-cv.addEventListener('mousedown', (e) => { const p = toCanvas(e); mouse.x = p.x; mouse.y = p.y; mouse.down = true; audio.init(); if (state === 'title' || state === 'dead') newRun(); });
+cv.addEventListener('mousedown', (e) => { const p = toCanvas(e); mouse.x = p.x; mouse.y = p.y; mouse.down = true; cv.focus(); audio.init(); if (state === 'title' || state === 'dead') newRun(); });
 addEventListener('mouseup', () => (mouse.down = false));
 cv.addEventListener('contextmenu', (e) => e.preventDefault());
 
@@ -428,7 +439,7 @@ function floatText(text, x, y) { floatTexts.push({ text, x, y, t: 1 }); }
 function onPress(k) {
   audio.init();
   if (k === 'm') { audio.muted = !audio.muted; localStorage.setItem('ink-muted', audio.muted ? '1' : '0'); return; }
-  if (state === 'title' && (k === 'enter' || k === ' ')) return newRun();
+  if (state === 'title') { cv.focus(); return newRun(); }
   if (state === 'dead' && (k === 'enter' || k === ' ' || k === 'r')) return newRun();
   if (k === 'escape' || k === 'p') { if (state === 'play') state = 'pause'; else if (state === 'pause') state = 'play'; return; }
   if (state === 'pause' && k === 'r') return newRun();
@@ -610,7 +621,7 @@ function render() {
     ctx.drawImage(grain, 0, 0);
     for (let i = 0; i < 6; i++) inkCircle(W / 2 + Math.cos(time * 0.3 + i) * 300, H / 2 + Math.sin(time * 0.4 + i * 2) * 180, 30 + i * 6, 'rgba(0,0,0,0.6)', '#333', 2, 0.2, i);
     ctx.restore();
-    drawCenterText('INK DEPTHS', ['A roguelike drawn in ink', '', 'WASD move  ·  Arrows or mouse shoot  ·  Esc pause  ·  M mute', '', Math.floor(time * 2) % 2 ? 'Press ENTER or click to descend' : ''], 0.35);
+    drawCenterText('INK DEPTHS', ['A roguelike drawn in ink', '', 'WASD move  ·  Arrows or mouse shoot  ·  Esc pause  ·  M mute', '', Math.floor(time * 2) % 2 ? 'Press any key or click to start' : ''], 0.35);
     return;
   }
   drawRoom(); drawPickups();
