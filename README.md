@@ -16,16 +16,46 @@ Pure HTML5 Canvas and vanilla JavaScript: no build step, no dependencies.
 | Esc / P | Pause |
 | R | Restart (from pause or the death screen) |
 | M | Mute sound |
+|## Story
+
+Ada stopped drawing the day her little brother Theo did not come home. One night the ink in her old pen
+pools on the floor like an open door, and she follows his laughter down. Every floor is a memory of him:
+the nursery, the garden, the white hospital corridor, nine days of rain, his empty room, the last goodbye,
+and at the bottom, the page she never finished. Typed ink cutscenes play at the start, after every boss,
+before the final fight and at the ending.
+
+## Bosses
+
+Seven floors, each with its own boss (every boss gets angrier below half health):
+
+1. **The Cradle Moth**: flutters in a figure eight, fires spreads, calls flies, then spins a dust spiral
+2. **The Thorn Gardener**: stalks you, throws thorn rings with a single gap and lines of vines, plants turrets
+3. **The Night Nurse**: fades out, reappears far away and fires aimed bursts
+4. **The Rain Choir**: sways along the top wall while rain falls across the room, later from the sides too
+5. **The Hollow Toybox**: charges and bounces off walls, spilling shots on every hit, releases splitters
+6. **The Mourning Bell**: rotating spiral arms with short rests and slow tolling rings
+7. **The Unwritten** (final): three phases: a mirror that copies you from across the room, echoes of every earlier memory, and a dense unravelling spiral
+
+Beating the final boss plays the ending and a credits screen with run stats; you can restart or keep descending into endless floors.
+
+## Items
+
+Thirty items: stat ups, piercing, homing, multishot, spectral, backward, slowing, poison, critical, splitting,
+bouncing and wavy tears, orbiting moths, shadow familiars, knockback, life-steal, a shield that blocks the
+first hit per room, exploding enemies, a damaging aura, healing on room clear and more. Some pairs form
+synergies (for example Third Eye + Iron Needle, Forked Tongue + Twin Shadow, Salt Tear + Nightshade Ink).
+Every pickup shows its name and effect.
 
 ## Features
 
 - Procedurally generated floors on a grid: doors lock until a room is cleared, minimap in the corner
-- Six enemy types: flies, chasers, shooters that keep their distance, splitters, dashers that telegraph their charge, radial turrets
-- Treasure room on every floor and a boss room with a multi-phase boss (aimed spreads, radial bursts, charges, summons, an enraged second half)
-- Twelve items that change your stats and shots: damage, tears rate, speed, range, piercing, homing, multishot, spectral and backward tears, extra health
-- Hearts drop from cleared rooms; each new floor is bigger and its enemies are tougher
-- Death screen with run stats (floor, kills, rooms, items, time)
+- Six enemy types: flies, chasers, shooters, splitters, dashers, radial turrets
+- Treasure room on every floor; hearts drop from cleared rooms, always on a free spot
+- Death and ending screens with run stats
 - Ink aesthetic: paper grain, wobbling ink outlines, splats, particles and screen shake
+- Procedural sound effects made with the Web Audio API
+
+shake
 - Procedural sound effects made with the Web Audio API
 
 ## Run locally
